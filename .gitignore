@@ -6,3 +6,9 @@ Intermediate/
 
 #Library Debug Database
 *.pdb
+
+#Project&Solution files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
