@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="DDSTextureLoader">
+      <UniqueIdentifier>{681569CE-540E-8820-7D40-6DA56998672C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TGAFBXImporter">
+      <UniqueIdentifier>{738425AE-5F52-19B4-48E6-89DA3453F518}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DDSTextureLoader\DDSTextureLoader11.h">
+      <Filter>DDSTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="TGAFBXImporter\FBXImporter.h">
+      <Filter>TGAFBXImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="TGAFBXImporter\FBXImporterStructs.h">
+      <Filter>TGAFBXImporter</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DDSTextureLoader\DDSTextureLoader11.cpp">
+      <Filter>DDSTextureLoader</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
