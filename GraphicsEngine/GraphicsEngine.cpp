@@ -151,7 +151,6 @@ void GraphicsEngine::RenderFrame()
 	for (auto& model : models) 
 	{
 		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
-		std::cout << "yo" << std::endl;
 		model->Update();
 	}
 
