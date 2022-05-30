@@ -1,6 +1,8 @@
 #include "NuggetBox.pch.h"
 #include "GraphicsEngine.h"
 
+#include <iostream>
+
 #include "Camera.h"
 #include "Model.h"
 #include "InputHandler.h"
@@ -149,6 +151,7 @@ void GraphicsEngine::RenderFrame()
 	for (auto& model : models) 
 	{
 		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		std::cout << "yo" << std::endl;
 		model->Update();
 	}
 

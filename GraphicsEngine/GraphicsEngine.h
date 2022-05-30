@@ -22,6 +22,6 @@ public:
 	void EndFrame();
 	void RenderFrame();
 
-	[[nodiscard]] HWND FORCEINLINE GetWindowHandle() const { return myWindowHandle; }
 	[[nodiscard]] SIZE FORCEINLINE GetWindowSize() const { return myWindowSize; }
+	[[nodiscard]] HWND FORCEINLINE GetWindowHandle() const { return myWindowHandle; }
 };

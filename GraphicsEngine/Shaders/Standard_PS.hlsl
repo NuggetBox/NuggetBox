@@ -14,6 +14,7 @@ PixelOutput main(VertexToPixel input)
 	// UV coordinate visualization
 	//result.myColor = float4(input.myUV0.r, input.myUV0.g, 0, 1);
 
+	//Albedo Texture sampling
 	result.myColor.rgb = albedoTexture.Sample(defaultSampler, input.myUV0).rgb;
 	result.myColor.a = 1;
 

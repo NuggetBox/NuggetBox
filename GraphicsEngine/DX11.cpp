@@ -37,7 +37,7 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 		Device.GetAddressOf(),
 		nullptr,
 		&Context
-	));
+	))
 
 	ComPtr<ID3D11Texture2D> backBufferTexture;
 	AssertIfFailed(SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(backBufferTexture.GetAddressOf())))
