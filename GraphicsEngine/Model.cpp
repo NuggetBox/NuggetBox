@@ -236,7 +236,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 				//Copy bone weights
 				memcpy_s(&vertices[i].BoneWeights, sizeof(float[4]), &loadedMesh.Vertices[i].BoneWeights, sizeof(float[4]));
 
-				// TODO: Remove random vertex colors if needed
+				// TODO: Remove random vertex colors when they will be used
 				for (int col = 0; col < 4; col++)
 				{
 					vertices[i].VertexColors[0][col] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
@@ -247,7 +247,6 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			indices = loadedMesh.Indices;
 
 			//TODO: String tools & refactor
-			std::string path = aPath.string();
 			size_t slash = path.rfind('/');
 			size_t dot = path.rfind('.');
 			const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);

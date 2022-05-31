@@ -4,7 +4,6 @@
 #include "Math/Matrix4x4.hpp"
 #include "SceneObject.h"
 #include "Mesh.h"
-#include "Material.h"
 #include "EngineDefines.h"
 
 //using namespace Microsoft::WRL;
@@ -14,6 +13,14 @@ using namespace Utility;
 //struct ID3D11InputLayout;
 //struct ID3D11VertexShader;
 //struct ID3D11PixelShader;
+
+//TODO: Fix registry to use this struct instead
+struct ModelData
+{
+	std::vector<Mesh> myMeshes;
+	//TODO: Make skeletondata just that, only data, animations should be stored per model!
+	std::shared_ptr<SkeletonData> mySkeleton = nullptr;
+};
 
 class Model : public SceneObject
 {
@@ -25,7 +32,7 @@ public:
 	void AddSubMesh(const Mesh& aMesh);
 
 	//TODO: Separate loading and getting? To have more flexibility later when they are called.
-	static std::shared_ptr<Model> Load(const std::filesystem::path& aFilepath);
+	static std::shared_ptr<Model> Load(const std::filesystem::path& aFath);
 
 	void LoadAnimation(const std::filesystem::path& aFilepath, const std::string& aNewAnimationName);
 	void PlayAnimation(const std::string& anAnimationName);
@@ -46,7 +53,6 @@ private:
 	//static std::unordered_map<std::string, AnimationData> ourAnimationRegistry;
 
 	std::vector<Mesh> myMeshes;
-
 	std::shared_ptr<SkeletonData> mySkeleton = nullptr;
 
 	//TODO: REFACTOR ANIMATIONS

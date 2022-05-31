@@ -23,5 +23,7 @@
 #include <unordered_map>
 #include <wrl.h>
 #include <memory>
+#include <filesystem>
+#include <iostream>
 
 #endif //GRAPHICSENGINE_PCH

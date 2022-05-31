@@ -88,17 +88,6 @@ struct VertexData
 	float BoneWeights[4] = { 0, 0, 0, 0 };
 };
 
-struct FBXMeshData
-{
-	std::vector<VertexData> Vertices;
-	std::vector<unsigned int> Indices;
-};
-
-struct ModelData
-{
-	std::vector<FBXMeshData> Meshes;
-};
-
 struct FrameData
 {
 	std::vector<Utility::Matrix4f> LocalTransforms;
