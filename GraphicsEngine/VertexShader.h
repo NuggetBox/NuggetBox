@@ -16,10 +16,10 @@ public:
 private:
 	static void SetInputLayout(const std::string& someVertexShaderData);
 
-	static std::unordered_map<std::string, std::shared_ptr<VertexShader>> ourVertexShaderRegistry;
+	static inline std::unordered_map<std::string, std::shared_ptr<VertexShader>> ourVertexShaderRegistry;
 
 	ComPtr<ID3D11VertexShader> myVertexShader;
 	//Needed?
-	static ComPtr<ID3D11InputLayout> ourInputLayout;
-	static bool ourInputLayoutIsSet;
+	static inline ComPtr<ID3D11InputLayout> ourInputLayout;
+	static inline bool ourInputLayoutIsSet;
 };

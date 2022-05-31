@@ -26,8 +26,8 @@ namespace Utility
 		//Assignment operator (compiler generated)
 		Vector4<T>& operator=(const Vector4<T>& aVector4) = default;
 
-		T& operator[](const int& anIndex);
-		const T& operator[](const int& anIndex) const;
+		T& operator[](const size_t anIndex);
+		const T& operator[](const size_t anIndex) const;
 
 		//Destructor (compiler generated)
 		~Vector4<T>() = default;
@@ -69,7 +69,7 @@ namespace Utility
 	}
 
 	template <class T>
-	T& Vector4<T>::operator[](const int& anIndex)
+	T& Vector4<T>::operator[](const size_t anIndex)
 	{
 		assert(anIndex >= 0 && anIndex < 4 && "Tried to access a Vector4 value outside of index range, 0 gives x, 1 gives y, 2 gives z, 3 gives w");
 
@@ -89,7 +89,7 @@ namespace Utility
 	}
 
 	template <class T>
-	const T& Vector4<T>::operator[](const int& anIndex) const
+	const T& Vector4<T>::operator[](const size_t anIndex) const
 	{
 		assert(anIndex >= 0 && anIndex < 4 && "Tried to access a Vector4 value outside of index range, 0 gives x, 1 gives y, 2 gives z, 3 gives w");
 

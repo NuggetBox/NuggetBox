@@ -1,7 +1,7 @@
 #include "NuggetBox.pch.h"
 #include "PixelShader.h"
 
-std::unordered_map<std::string, std::shared_ptr<PixelShader>> PixelShader::ourPixelShaderRegistry;
+//std::unordered_map<std::string, std::shared_ptr<PixelShader>> PixelShader::ourPixelShaderRegistry;
 
 void PixelShader::Bind() const
 {

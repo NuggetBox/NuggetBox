@@ -24,9 +24,9 @@ void ForwardRenderer::Initialize()
     bufferDescription.ByteWidth = sizeof(ObjectBufferData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myObjectBuffer.GetAddressOf()))
 
-    //Create material buffer
-    bufferDescription.ByteWidth = sizeof(MaterialData);
-    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myMaterialBuffer.GetAddressOf()))
+    //Create material buffer, unused now?
+    /*bufferDescription.ByteWidth = sizeof(MaterialData);
+    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myMaterialBuffer.GetAddressOf()))*/
 }
 
 void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList)
@@ -67,7 +67,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
             //Map material buffer resource
             if (meshData.myMaterial)
             {
-                meshData.myMaterial->SetAsResource(myMaterialBuffer);
+                meshData.myMaterial->SetAsResource(/*myMaterialBuffer*/);
             }
             else
             {
@@ -93,7 +93,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
             DX11::Context->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
             DX11::Context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
 
-            DX11::Context->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
+            //DX11::Context->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
 
             DX11::Context->DrawIndexed(meshData.myNumberOfIndices, 0, 0);
         }

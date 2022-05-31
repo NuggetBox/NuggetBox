@@ -17,12 +17,12 @@ namespace Utility
 		Matrix4x4<T>(const Matrix4x4<T>& aMatrix);
 
 		// () operator for read/writing element (row, column)
-		T& operator()(int aRow, int aColumn);
+		T& operator()(size_t aRow, size_t aColumn);
 		// () operator for reading element (row, column)
-		const T& operator()(int aRow, int aColumn) const;
+		const T& operator()(size_t aRow, size_t aColumn) const;
 
-		Vector4<T> GetRowVector(int aRow) const;
-		Vector4<T> GetColumnVector(int aColumn) const;
+		Vector4<T> GetRowVector(size_t aRow) const;
+		Vector4<T> GetColumnVector(size_t aColumn) const;
 
 		void operator+=(const Matrix4x4<T>& aMatrix);
 		void operator-=(const Matrix4x4<T>& aMatrix);
@@ -69,7 +69,7 @@ namespace Utility
 	}
 
 	template <class T>
-	T& Matrix4x4<T>::operator()(const int aRow, const int aColumn)
+	T& Matrix4x4<T>::operator()(const size_t aRow, const size_t aColumn)
 	{
 		assert(aRow >= 1 && aRow <= 4 && "Row index out of range, allowed indices for Matrix4x4 row: 1, 2, 3, 4");
 		assert(aColumn >= 1 && aColumn <= 4 && "Column index out of range, allowed indices for Matrix4x4 column: 1, 2, 3, 4");
@@ -78,7 +78,7 @@ namespace Utility
 	}
 
 	template <class T>
-	const T& Matrix4x4<T>::operator()(const int aRow, const int aColumn) const
+	const T& Matrix4x4<T>::operator()(const size_t aRow, const size_t aColumn) const
 	{
 		assert(aRow >= 1 && aRow <= 4 && "Row index out of range, allowed indices for Matrix4x4 row: 1, 2, 3, 4");
 		assert(aColumn >= 1 && aColumn <= 4 && "Column index out of range, allowed indices for Matrix4x4 column: 1, 2, 3, 4");
@@ -87,7 +87,7 @@ namespace Utility
 	}
 
 	template <class T>
-	Vector4<T> Matrix4x4<T>::GetRowVector(const int aRow) const
+	Vector4<T> Matrix4x4<T>::GetRowVector(const size_t aRow) const
 	{
 		assert(aRow >= 1 && aRow <= 4 && "Row index out of range, allowed indices for Matrix4x4 row: 1, 2, 3, 4");
 
@@ -95,7 +95,7 @@ namespace Utility
 	}
 
 	template <class T>
-	Vector4<T> Matrix4x4<T>::GetColumnVector(const int aColumn) const
+	Vector4<T> Matrix4x4<T>::GetColumnVector(const size_t aColumn) const
 	{
 		assert(aColumn >= 1 && aColumn <= 4 && "Column index out of range, allowed indices for Matrix4x4 column: 1, 2, 3, 4");
 

@@ -1,9 +1,9 @@
 #include "NuggetBox.pch.h"
 #include "VertexShader.h"
 
-std::unordered_map<std::string, std::shared_ptr<VertexShader>> VertexShader::ourVertexShaderRegistry;
-ComPtr<ID3D11InputLayout> VertexShader::ourInputLayout;
-bool VertexShader::ourInputLayoutIsSet;
+//std::unordered_map<std::string, std::shared_ptr<VertexShader>> VertexShader::ourVertexShaderRegistry;
+//ComPtr<ID3D11InputLayout> VertexShader::ourInputLayout;
+//bool VertexShader::ourInputLayoutIsSet;
 
 void VertexShader::Bind() const
 {
