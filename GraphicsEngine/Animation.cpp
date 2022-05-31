@@ -2,6 +2,7 @@
 #include "Animation.h"
 
 #include <cassert>
+#include <filesystem>
 
 #include "TGAFBXImporter/FBXImporter.h"
 #include "TGAFBXImporter/FBXImporterStructs.h"
@@ -9,7 +10,12 @@
 
 //std::unordered_map<std::string, AnimationData> Animation::ourAnimationRegistry;
 
-std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, const std::string& aNewAnimationName, const std::shared_ptr<Skeleton>& aSkeleton)
+Animation::Animation(const AnimationData& someAnimationData)
+{
+	myAnimationData = someAnimationData;
+}
+
+std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, const std::string& aNewAnimationName, std::shared_ptr<Skeleton> aSkeleton)
 {
 	TGA::FBXAnimation loadedAnimation;
 	assert(TGA::FBXImporter::LoadAnimation(aPath.string(), aSkeleton->GetBoneNames(), loadedAnimation));
@@ -32,4 +38,5 @@ std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, c
 	}
 
 	ourAnimationRegistry.insert(std::pair(aNewAnimationName, animation));
+	return std::make_shared<Animation>(animation);
 }

@@ -7,7 +7,7 @@ Skeleton::Skeleton(const SkeletonData& someSkeletonData)
 }
 
 //TODO: Cache bone names
-const std::vector<std::string>& Skeleton::GetBoneNames() const
+std::vector<std::string> Skeleton::GetBoneNames() const
 {
 	std::vector<std::string> boneNames;
 	boneNames.reserve(mySkeletonData.Bones.size());

@@ -8,30 +8,35 @@
 #include "FBXStructs.h"
 #include "Timer.h"
 
+//Fixed with static inline
 //std::unordered_map<std::string, std::shared_ptr<Model>> Model::ourModelRegistry;
 //std::unordered_map<std::string, AnimationData> Model::ourAnimationRegistry;
 
+Model::Model(const ModelData& someModelData)
+{
+	myModelData = someModelData;
+}
+
 const std::vector<Mesh>& Model::GetMeshes() const
 {
-	return myMeshes;
+	return myModelData.myMeshes;
 }
 
 void Model::AddSubMesh(const Mesh& aMesh)
 {
-	myMeshes.push_back(aMesh);
+	myModelData.myMeshes.push_back(aMesh);
 }
 
 std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 {
 	std::string path = aPath.string();
+	ModelData modelData;
 
-	//TODO: Fix registry so we can have multiple instances of the same model, modelinstance? Store only modeldata probably
 	if (ourModelRegistry.contains(path))
 	{
-		return ourModelRegistry.at(path);
+		modelData = ourModelRegistry.at(path);
+		return std::make_shared<Model>(modelData);
 	}
-
-	std::shared_ptr<Model> model = std::make_shared<Model>();
 
 	if (path == "Cube")
 	{
@@ -125,7 +130,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
 
 		cube.SetMaterial(meshMaterial);
-		model->AddSubMesh(cube);
+		modelData.myMeshes.push_back(cube);
 	}
 	else if (path == "Pyramid")
 	{
@@ -187,15 +192,12 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
 
 		pyramid.SetMaterial(meshMaterial);
-		model->AddSubMesh(pyramid);
+		modelData.myMeshes.push_back(pyramid);
 	}
 	else
 	{
 		TGA::FBXModel tgaModel;
 		assert(TGA::FBXImporter::LoadModel(path, tgaModel));
-
-		//std::vector<Mesh> meshes;
-		//meshes.reserve(tgaModel.Meshes.size());
 
 		//Load meshes
 		for (auto& loadedMesh : tgaModel.Meshes)
@@ -246,7 +248,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			//Copy vertex indices
 			indices = loadedMesh.Indices;
 
-			//TODO: String tools & refactor
+			//TODO: Refactor material loading + string tools
 			size_t slash = path.rfind('/');
 			size_t dot = path.rfind('.');
 			const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);
@@ -260,14 +262,14 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 			Mesh mesh(vertices, indices);
 			mesh.SetMaterial(meshMaterial);
-			model->AddSubMesh(mesh);
+			modelData.myMeshes.push_back(mesh);
 		}
 
 		//Load skeleton
 		if (tgaModel.Skeleton.GetRoot() != nullptr)
 		{
 			SkeletonData skeleton;
-			skeleton.Name = tgaModel.Skeleton.Name;
+			//skeleton.Name = tgaModel.Skeleton.Name;
 			skeleton.BoneNameToIndex.reserve(tgaModel.Skeleton.Joints.size());
 
 			skeleton.Bones.resize(tgaModel.Skeleton.Joints.size());
@@ -298,49 +300,19 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 				skeleton.Bones[i].Children = tgaModel.Skeleton.Joints[i].Children;
 			}
 
-			model->SetSkeleton(skeleton);
+			modelData.mySkeleton = std::make_shared<Skeleton>(skeleton);
 		}
 	}
 
-	ourModelRegistry.insert(std::pair(path, model));
-	return model;
+	ourModelRegistry.insert(std::pair(path, modelData));
+	return std::make_shared<Model>(modelData);
 }
 
 void Model::LoadAnimation(const std::filesystem::path& aPath, const std::string& aNewAnimationName)
 {
-	/*if (ourAnimationRegistry.contains(aFilepath.string()))
-	{
-		return ourAnimationRegistry.at(aFilepath.string());
-	}*/
-
-	if (HasSkeleton())
-	{
-		std::shared_ptr<Animation> animation = Animation::Load(aPath, aNewAnimationName, mySkeleton);
-		myAnimations.insert(std::pair(aNewAnimationName, animation));
-
-		/*TGA::FBXAnimation loadedAnimation;
-		assert(TGA::FBXImporter::LoadAnimation(aFilepath.string(), mySkeleton->GetBoneNames(), loadedAnimation));
-
-		AnimationData animation;
-		animation.Name = loadedAnimation.Name;
-		animation.Length = loadedAnimation.Length;
-		animation.Duration = static_cast<float>(loadedAnimation.Duration);
-		animation.FramesPerSecond = loadedAnimation.FramesPerSecond;
-
-		animation.Frames.resize(loadedAnimation.Frames.size());
-		for (size_t f = 0; f < loadedAnimation.Frames.size(); ++f)
-		{
-			animation.Frames[f].LocalTransforms.resize(loadedAnimation.Frames[f].LocalTransforms.size());
-			for (size_t t = 0; t < loadedAnimation.Frames[f].LocalTransforms.size(); ++t)
-			{
-				memcpy_s(&animation.Frames[f].LocalTransforms[t], sizeof(Matrix4f), &loadedAnimation.Frames[f].LocalTransforms[t], sizeof(TGA::Matrix));
-				animation.Frames[f].LocalTransforms[t] = Matrix4f::Transpose(animation.Frames[f].LocalTransforms[t]);
-			}
-		}
-
-		mySkeleton->Animations.insert(std::pair(aNewAnimationName, animation));*/
-
-	}
+	assert(HasSkeleton());
+	std::shared_ptr<Animation> animation = Animation::Load(aPath, aNewAnimationName, myModelData.mySkeleton);
+	myAnimations.insert(std::pair(aNewAnimationName, animation));
 }
 
 void Model::PlayAnimation(const std::string& anAnimationName)
@@ -348,48 +320,54 @@ void Model::PlayAnimation(const std::string& anAnimationName)
 	myCurrentAnim = anAnimationName;
 }
 
-void Model::SetSkeleton(const Skeleton& aSkeleton)
-{
-	mySkeleton = std::make_shared<Skeleton>(aSkeleton);
-}
-
-bool Model::HasSkeleton() const
-{
-	return mySkeleton != nullptr;
-}
-
 void Model::Update()
 {
 	//TODO: Animation state check == Playing
 
-	if (HasSkeleton())
+	if (HasAnimations())
 	{
 		//TODO: Refactor animation stepping code
 		myAnimationTimer += Timer::GetDeltaTime();
 
 		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
 
-		while (myAnimationTimer > currentAnim.Duration)
+		while (myAnimationTimer > currentAnim->GetDuration())
 		{
-			myAnimationTimer -= currentAnim.Duration;
+			myAnimationTimer -= currentAnim->GetDuration();
 		}
 
-		size_t currentFrame = myAnimationTimer * currentAnim.FramesPerSecond;
+		size_t currentFrame = myAnimationTimer * currentAnim->GetFPS();
 
 		const size_t nextFrame = 0;
 		UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
 	}
 }
 
+void Model::SetSkeleton(const SkeletonData& aSkeleton)
+{
+	myModelData.mySkeleton = std::make_shared<Skeleton>(aSkeleton);
+}
+
+bool Model::HasAnimations() const
+{
+	return HasSkeleton() && !myAnimations.empty();
+}
+
+bool Model::HasSkeleton() const
+{
+	return myModelData.mySkeleton != nullptr;
+}
+
 bool Model::HasBones() const
 {
-	return HasSkeleton() && mySkeleton->GetRoot() != nullptr;
+	return HasSkeleton() && myModelData.mySkeleton->GetRoot() != nullptr;
 }
+
 
 void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms)
 {
-	const BoneData& currentBone = mySkeleton->Bones[aBoneIndex];
-	const Matrix4f currentBoneLocalTransform = mySkeleton->Animations[myCurrentAnim].Frames[aCurrentFrame].LocalTransforms[aBoneIndex];
+	const BoneData& currentBone = myModelData.mySkeleton->GetBones()[aBoneIndex];
+	const Matrix4f currentBoneLocalTransform = myAnimations[myCurrentAnim]->GetFrames()[aCurrentFrame].LocalTransforms[aBoneIndex];
 	const Matrix4f currentBoneGlobalTransform = aParentTransform * currentBoneLocalTransform;
 
 	Matrix4f finalBoneTransform;

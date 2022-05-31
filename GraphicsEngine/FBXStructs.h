@@ -114,7 +114,7 @@ struct BoneData
 
 struct SkeletonData
 {
-	std::string Name;
+	//std::string Name;
 	std::vector<BoneData> Bones;
 	std::unordered_map<std::string, size_t> BoneNameToIndex;
 	/*std::unordered_map<std::string, AnimationData> Animations;

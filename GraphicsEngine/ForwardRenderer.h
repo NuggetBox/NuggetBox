@@ -45,9 +45,9 @@ private:
 
 	FrameBufferData myFrameBufferData;
 	ObjectBufferData myObjectBufferData{};
-	MaterialData myMaterialBufferData;
+	//MaterialData myMaterialBufferData;
 
 	ComPtr<ID3D11Buffer> myFrameBuffer;
 	ComPtr<ID3D11Buffer> myObjectBuffer;
-	ComPtr<ID3D11Buffer> myMaterialBuffer;
+	//ComPtr<ID3D11Buffer> myMaterialBuffer;
 };

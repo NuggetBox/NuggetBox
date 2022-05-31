@@ -50,12 +50,20 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.AddGameObject(chest);
 
 	auto gremlin = Model::Load("Meshes/gremlin.fbx");
-	gremlin->AddPosition(0, -50, 0);
+	gremlin->AddPosition(-25, -50, 0);
 	gremlin->AddRotation(0, 180, 0);
 	gremlin->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
 	gremlin->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
-	gremlin->PlayAnimation("Run");
+	gremlin->PlayAnimation("Walk");
 	myScene.AddGameObject(gremlin);
+
+	auto gremlin2 = Model::Load("Meshes/gremlin.fbx");
+	gremlin2->AddPosition(25, -50, 0);
+	gremlin2->AddRotation(0, 180, 0);
+	gremlin2->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
+	gremlin2->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
+	gremlin2->PlayAnimation("Run");
+	myScene.AddGameObject(gremlin2);
 
 	auto spiderCat = Model::Load("meshes/SpiderCat.fbx");
 	spiderCat->AddPosition(0, 100, 0);
@@ -142,15 +150,14 @@ void GraphicsEngine::RenderFrame()
 
 	if (InputHandler::GetRightClickHeld())
 	{
-		camera->SetRotation(Vector3f(camera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, 
-			camera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
+		camera->SetRotation(Vector3f(camera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, camera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
 	}
 
 	float rotationPerSec = 90.0f;
 
 	for (auto& model : models) 
 	{
-		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
 		model->Update();
 	}
 

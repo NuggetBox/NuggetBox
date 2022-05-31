@@ -21,41 +21,46 @@ struct ModelData
 {
 	std::vector<Mesh> myMeshes;
 	//TODO: Make skeletondata just that, only data, animations should be stored per model!
-	std::shared_ptr<SkeletonData> mySkeleton = nullptr;
+	std::shared_ptr<Skeleton> mySkeleton = nullptr;
 };
 
 class Model : public SceneObject
 {
 public:
 	Model() = default;
+	Model(const ModelData& someModelData);
 
 	const std::vector<Mesh>& GetMeshes() const;
-
-	void AddSubMesh(const Mesh& aMesh);
 
 	//TODO: Separate loading and getting? To have more flexibility later when they are called.
 	static std::shared_ptr<Model> Load(const std::filesystem::path& aPath);
 
-	void LoadAnimation(const std::filesystem::path& aFilepath, const std::string& aNewAnimationName);
+	void LoadAnimation(const std::filesystem::path& aPath, const std::string& aNewAnimationName);
 	void PlayAnimation(const std::string& anAnimationName);
+	void Update();
 
 	//TODO: Fix something
-	void SetSkeleton(const Skeleton& aSkeleton);
-	const std::shared_ptr<Skeleton>& GetSkeleton() const { return mySkeleton; }
+	void SetSkeleton(const SkeletonData& aSkeleton);
+	const std::shared_ptr<Skeleton>& GetSkeleton() const { return myModelData.mySkeleton; }
+	bool HasAnimations() const;
 	bool HasSkeleton() const;
-	void Update();
+	bool HasBones() const;
 
 	//TODO: Fix something
 	Matrix4f* GetBoneTransforms() { return myBoneTransforms; }
 
 private:
+	void AddSubMesh(const Mesh& aMesh);
+
 	//TODO: :eyes: Template registry? :eyes:
-	static inline std::unordered_map<std::string, std::shared_ptr<Model>> ourModelRegistry;
+	static inline std::unordered_map<std::string, ModelData> ourModelRegistry;
 	//TODO: Some sort of animation registry, maybe not AnimationData
 	//static std::unordered_map<std::string, AnimationData> ourAnimationRegistry;
 
-	std::vector<Mesh> myMeshes;
-	std::shared_ptr<Skeleton> mySkeleton = nullptr;
+	ModelData myModelData;
+
+	/*std::vector<Mesh> myMeshes;
+	std::shared_ptr<Skeleton> mySkeleton = nullptr;*/
 	//std::shared_ptr<SkeletonData> mySkeleton = nullptr;
 
 	std::unordered_map<std::string, std::shared_ptr<Animation>> myAnimations;

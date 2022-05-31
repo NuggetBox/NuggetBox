@@ -18,9 +18,13 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #ifdef _DEBUG
 	AllocConsole();
-	freopen("conin$", "r", stdin);
-	freopen("conout$", "w", stdout);
-	freopen("conout$", "w", stderr);
+	FILE* newstdin = nullptr;
+	FILE* newstdout = nullptr;
+	FILE* newstderr = nullptr;
+
+	freopen_s(&newstdin, "CONIN$", "r", stdin);
+	freopen_s(&newstdout, "CONOUT$", "w", stdout);
+	freopen_s(&newstderr, "CONOUT$", "w", stderr);
 #endif
 
     MSG msg = {nullptr};
