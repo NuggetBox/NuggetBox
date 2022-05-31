@@ -8,7 +8,7 @@
 #include "FBXStructs.h"
 #include "Timer.h"
 
-std::unordered_map<std::string, std::shared_ptr<Model>> Model::ourModelRegistry;
+//std::unordered_map<std::string, std::shared_ptr<Model>> Model::ourModelRegistry;
 //std::unordered_map<std::string, AnimationData> Model::ourAnimationRegistry;
 
 const std::vector<Mesh>& Model::GetMeshes() const
@@ -306,7 +306,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 	return model;
 }
 
-void Model::LoadAnimation(const std::filesystem::path& aFilepath, const std::string& aNewAnimationName)
+void Model::LoadAnimation(const std::filesystem::path& aPath, const std::string& aNewAnimationName)
 {
 	/*if (ourAnimationRegistry.contains(aFilepath.string()))
 	{
@@ -315,7 +315,10 @@ void Model::LoadAnimation(const std::filesystem::path& aFilepath, const std::str
 
 	if (HasSkeleton())
 	{
-		TGA::FBXAnimation loadedAnimation;
+		std::shared_ptr<Animation> animation = Animation::Load(aPath, aNewAnimationName, mySkeleton);
+		myAnimations.insert(std::pair(aNewAnimationName, animation));
+
+		/*TGA::FBXAnimation loadedAnimation;
 		assert(TGA::FBXImporter::LoadAnimation(aFilepath.string(), mySkeleton->GetBoneNames(), loadedAnimation));
 
 		AnimationData animation;
@@ -335,7 +338,8 @@ void Model::LoadAnimation(const std::filesystem::path& aFilepath, const std::str
 			}
 		}
 
-		mySkeleton->Animations.insert(std::pair(aNewAnimationName, animation));
+		mySkeleton->Animations.insert(std::pair(aNewAnimationName, animation));*/
+
 	}
 }
 
@@ -344,9 +348,9 @@ void Model::PlayAnimation(const std::string& anAnimationName)
 	myCurrentAnim = anAnimationName;
 }
 
-void Model::SetSkeleton(const SkeletonData& aSkeleton)
+void Model::SetSkeleton(const Skeleton& aSkeleton)
 {
-	mySkeleton = std::make_shared<SkeletonData>(aSkeleton);
+	mySkeleton = std::make_shared<Skeleton>(aSkeleton);
 }
 
 bool Model::HasSkeleton() const
@@ -363,7 +367,7 @@ void Model::Update()
 		//TODO: Refactor animation stepping code
 		myAnimationTimer += Timer::GetDeltaTime();
 
-		const AnimationData& currentAnim = mySkeleton->Animations[myCurrentAnim];
+		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
 
 		while (myAnimationTimer > currentAnim.Duration)
 		{

@@ -17,7 +17,6 @@
 #include <WinUser.h>
 #include <array>
 #include <cassert>
-#include <string>
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -25,5 +24,6 @@
 #include <memory>
 #include <filesystem>
 #include <iostream>
+#include <string>
 
 #endif //GRAPHICSENGINE_PCH

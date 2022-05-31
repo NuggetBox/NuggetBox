@@ -14,7 +14,7 @@ public:
 	static std::shared_ptr<PixelShader> Load(const std::filesystem::path& aPath);
 
 private:
-	static std::unordered_map<std::string, std::shared_ptr<PixelShader>> ourPixelShaderRegistry;
+	static inline std::unordered_map<std::string, std::shared_ptr<PixelShader>> ourPixelShaderRegistry;
 
 	ComPtr<ID3D11PixelShader> myPixelShader;
 };
