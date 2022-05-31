@@ -8,6 +8,11 @@ void Material::SetAlbedoTexture(std::shared_ptr<Texture> aTexture)
 	myTextures[MaterialTextureChannel::Albedo] = aTexture;
 }
 
+void Material::SetNormalMap(std::shared_ptr<Texture> aTexture)
+{
+	myTextures[MaterialTextureChannel::Normal] = aTexture;
+}
+
 void Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 {
 	D3D11_MAPPED_SUBRESOURCE bufferData;
@@ -19,5 +24,10 @@ void Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 	if (myTextures[MaterialTextureChannel::Albedo])
 	{
 		myTextures[MaterialTextureChannel::Albedo]->SetAsResource(MaterialTextureChannel::Albedo);
+	}
+
+	if (myTextures[MaterialTextureChannel::Normal])
+	{
+		myTextures[MaterialTextureChannel::Normal]->SetAsResource(MaterialTextureChannel::Normal);
 	}
 }

@@ -22,13 +22,36 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 	//Couldn't find a texture that matches our TGA standard, load default texture
 	else
 	{
-		if (ourTextureRegistry.contains(myDefaultAlbedoPath))
+		//TODO: Refactor
+		size_t dot = aPath.string().rfind('.');
+		std::string defaultPath = myDefaultAlbedoPath;
+
+		//Check if there is a dot at all in the file name
+		if (dot < aPath.string().length())
 		{
-			return ourTextureRegistry.at(myDefaultAlbedoPath);
+			std::string ending = aPath.string().substr(dot - 3, 2);
+
+			if (ending == "_C")
+			{
+				defaultPath = myDefaultAlbedoPath;
+			}
+			else if (ending == "_N")
+			{
+				defaultPath = myDefaultNormalPath;
+			}
+			else if (ending == "_M")
+			{
+				defaultPath = myDefaultRoughnessPath;
+			}
+
+			if (ourTextureRegistry.contains(defaultPath))
+			{
+				return ourTextureRegistry.at(defaultPath);
+			}
 		}
 
-		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), std::wstring(myDefaultAlbedoPath.begin(), myDefaultAlbedoPath.end()).c_str(), texture.myTexture.GetAddressOf(), texture.myShaderResourceView.GetAddressOf()))
-		ourTextureRegistry.insert(std::pair(myDefaultAlbedoPath, std::make_shared<Texture>(texture)));
+		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), std::wstring(defaultPath.begin(), defaultPath.end()).c_str(), texture.myTexture.GetAddressOf(), texture.myShaderResourceView.GetAddressOf()))
+		ourTextureRegistry.insert(std::pair(defaultPath, std::make_shared<Texture>(texture)));
 	}
 
 	return std::make_shared<Texture>(texture);

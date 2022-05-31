@@ -21,4 +21,6 @@ private:
 	ComPtr<ID3D11ShaderResourceView> myShaderResourceView;
 
 	inline static const std::string myDefaultAlbedoPath = "Textures/Defaults/T_Default_C.dds";
+	inline static const std::string myDefaultNormalPath = "Textures/Defaults/T_Default_N.dds";
+	inline static const std::string myDefaultRoughnessPath = "Textures/Defaults/T_Default_M.dds";
 };

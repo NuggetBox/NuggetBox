@@ -25,6 +25,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 {
 	std::string path = aPath.string();
 
+	//TODO: Fix registry so we can have multiple instances of the same model, modelinstance? Store only modeldata probably
 	if (ourModelRegistry.contains(path))
 	{
 		return ourModelRegistry.at(path);
@@ -117,37 +118,75 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		};*/
 
 		Mesh cube(cubeVertices, cubeIndices);
+
 		//TODO: Fix default material load
-		std::shared_ptr<Material> material = std::make_shared<Material>();
-		material->SetAlbedoTexture(Texture::Load("BLABLA"));
-		cube.SetMaterial(material);
+		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
+		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
+		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
+
+		cube.SetMaterial(meshMaterial);
 		model->AddSubMesh(cube);
 	}
 	else if (path == "Pyramid")
 	{
-		std::vector<VertexData> pyramidVertices;
+		//std::vector<VertexData> pyramidVertices;
 
-		pyramidVertices.reserve(5);
+		/*pyramidVertices.reserve(5);
 		pyramidVertices.emplace_back(0.0f, 50.f, 0.0f, 1, 0, 0, 1, 1, 1);
 		pyramidVertices.emplace_back(-50.f, -50.f, 50.f, 0, 1, 0, 1, 1, 0);
 		pyramidVertices.emplace_back(50.f, -50.f, 50.f, 0, 0, 1, 1, 1, 0);
 		pyramidVertices.emplace_back(50.f, -50.f, -50.f, 1, 0.5f, 1, 1, 1, 0);
-		pyramidVertices.emplace_back(-50.f, -50.f, -50.f, 0.5f, 1, 0, 1, 1, 0);
+		pyramidVertices.emplace_back(-50.f, -50.f, -50.f, 0.5f, 1, 0, 1, 1, 0);*/
+
+		//x: 0.894427180
+		//y: 0.447213590
+
+		const float xN = 0.894427180f;
+		const float yN = 0.447213590f;
+
+		std::vector<VertexData> pyramidVertices =
+		{
+			//Front face
+			{0.0f, 50.0f, 0.0f, 0.5f, 0.5f, 0.0f, yN, -xN, 1.0f, 0.0f, 0.0f, 0.0f, -xN, -yN},
+			{-50.0f, -50.0f, -50.0f, 0.0f, 1.0f, 0.0f, yN, -xN, 1.0f, 0.0f, 0.0f, 0.0f, -xN, -yN},
+			{50.0f, -50.0f, -50.0f, 1.0f, 1.0f, 0.0f, yN, -xN, 1.0f, 0.0f, 0.0f, 0.0f, -xN, -yN},
+			//Right face
+			{0.0f, 50.0f, 0.0f, 0.5f, 0.5f, xN, yN, 0.0f, 0.0f, 0.0f, 1.0f, yN, -xN, 0.0f},
+			{50.0f, -50.0f, -50.0f, 0.0f, 1.0f, xN, yN, 0.0f, 0.0f, 0.0f, 1.0f, yN, -xN, 0.0f},
+			{50.0f, -50.0f, 50.0f, 1.0f, 1.0f, xN, yN, 0.0f, 0.0f, 0.0f, 1.0f, yN, -xN, 0.0f},
+			//Back face
+			{0.0f, 50.0f, 0.0f, 0.5f, 0.5f, 0.0f, yN, xN, -1.0f, 0.0f, 0.0f, 0.0f, -xN, yN},
+			{50.0f, -50.0f, 50.0f, 0.0f, 1.0f, 0.0f, yN, xN, -1.0f, 0.0f, 0.0f, 0.0f, -xN, yN},
+			{-50.0f, -50.0f, 50.0f, 1.0f, 1.0f, 0.0f, yN, xN, -1.0f, 0.0f, 0.0f, 0.0f, -xN, yN},
+			//Left face
+			{0.0f, 50.0f, 0.0f, 0.5f, 0.5f, -xN, yN, 0.0f, 0.0f, 0.0f, -1.0f, -yN, -xN, 0.0f},
+			{-50.0f, -50.0f, 50.0f, 0.0f, 1.0f, -xN, yN, 0.0f, 0.0f, 0.0f, -1.0f, -yN, -xN, 0.0f},
+			{-50.0f, -50.0f, -50.0f, 1.0f, 1.0f, -xN, yN, 0.0f, 0.0f, 0.0f, -1.0f, -yN, -xN, 0.0f},
+			//Bottom face
+			{-50.0f, -50.0f, -50.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f},
+			{50.0f, -50.0f, -50.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f},
+			{50.0f, -50.0f, 50.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f},
+			{-50.0f, -50.0f, 50.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}
+		};
 
 		std::vector<unsigned int> pyramidIndices =
 		{
-			0, 3, 4,
-			0, 2, 3,
-			0, 1, 2,
-			0, 4, 1,
-			4, 3, 2,
-			2, 1, 4
+			0, 2, 1,
+			3, 5, 4,
+			6, 8, 7,
+			9, 11, 10,
+			12, 13, 14,
+			12, 14, 15
 		};
 
 		Mesh pyramid(pyramidVertices, pyramidIndices);
-		std::shared_ptr<Material> material = std::make_shared<Material>();
-		material->SetAlbedoTexture(Texture::Load("BLABLA"));
-		pyramid.SetMaterial(material);
+
+		//TODO: Fix default material load
+		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
+		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
+		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
+
+		pyramid.SetMaterial(meshMaterial);
 		model->AddSubMesh(pyramid);
 	}
 	else
@@ -207,16 +246,18 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			//Copy vertex indices
 			indices = loadedMesh.Indices;
 
-			//TODO: String tools
+			//TODO: String tools & refactor
 			std::string path = aPath.string();
 			size_t slash = path.rfind('/');
 			size_t dot = path.rfind('.');
 			const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);
 			const std::string albedoFileName = "T_" + baseFileName + "_C.dds";
+			const std::string normalFileName = "T_" + baseFileName + "_N.dds";
 
 			//Load Material
 			std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 			meshMaterial->SetAlbedoTexture(Texture::Load("Textures/" + albedoFileName));
+			meshMaterial->SetNormalMap(Texture::Load("Textures/" + normalFileName));
 
 			Mesh mesh(vertices, indices);
 			mesh.SetMaterial(meshMaterial);

@@ -287,7 +287,7 @@ inline Vector3f Transform::GetScale() const
 inline Vector3<float> Transform::GetRight()
 {
 	Matrix4f transform = GetMatrix();
-	return Vector3f(transform(1, 1), transform(1, 2), transform(1, 3));
+	return Vector3f(transform(1, 1), transform(1, 2), transform(1, 3)).GetNormalized();
 }
 
 inline Vector3<float> Transform::GetLeft()
@@ -298,7 +298,7 @@ inline Vector3<float> Transform::GetLeft()
 inline Vector3<float> Transform::GetUp()
 {
 	Matrix4f transform = GetMatrix();
-	return Vector3f(transform(2, 1), transform(2, 2), transform(2, 3));
+	return Vector3f(transform(2, 1), transform(2, 2), transform(2, 3)).GetNormalized();
 }
 
 inline Vector3<float> Transform::GetDown()
@@ -309,7 +309,7 @@ inline Vector3<float> Transform::GetDown()
 inline Vector3<float> Transform::GetForward()
 {
 	Matrix4f transform = GetMatrix();
-	return Vector3f(transform(3, 1), transform(3, 2), transform(3, 3));
+	return Vector3f(transform(3, 1), transform(3, 2), transform(3, 3)).GetNormalized();
 }
 
 inline Vector3<float> Transform::GetBackward()

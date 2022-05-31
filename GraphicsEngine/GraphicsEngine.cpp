@@ -150,7 +150,7 @@ void GraphicsEngine::RenderFrame()
 
 	for (auto& model : models) 
 	{
-		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
 		model->Update();
 	}
 
