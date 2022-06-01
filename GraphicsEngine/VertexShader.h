@@ -19,6 +19,7 @@ private:
 	static inline std::unordered_map<std::string, std::shared_ptr<VertexShader>> ourVertexShaderRegistry;
 
 	ComPtr<ID3D11VertexShader> myVertexShader;
+
 	//Needed?
 	static inline ComPtr<ID3D11InputLayout> ourInputLayout;
 	static inline bool ourInputLayoutIsSet;

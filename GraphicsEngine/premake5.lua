@@ -8,6 +8,9 @@ project "GraphicsEngine"
 	targetname("%{prj.name}")
 	objdir ("../Intermediate/%{cfg.buildcfg}/%{prj.name}")
 
+	pchheader "NuggetBox.pch.h"
+	pchsource "NuggetBox.pch.cpp"
+
 	includedirs{
 		"../Utility/",
 		"../External/"
@@ -38,9 +41,11 @@ project "GraphicsEngine"
 
 	filter "configurations:Debug"
 		runtime "Debug"
+		defines {"_DEBUG"}
 		symbols "on"
 	filter "configurations:Release"
 		runtime "Release"
+		defines {"_RELEASE"}
 		optimize "on"
 
 	filter "system:windows"

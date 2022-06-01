@@ -53,12 +53,11 @@ cbuffer ObjectBuffer : register(b1)
 	//float3 OB_padding;
 }
 
-//Unused now that we sample from textures?
-//cbuffer MaterialBuffer : register(b2)
-//{
-//	float3 MB_Albedo;
-//	float padding;
-//}
+cbuffer MaterialBuffer : register(b2)
+{
+	float3 MB_Albedo;
+	float padding;
+}
 
 SamplerState defaultSampler : register(s0);
 

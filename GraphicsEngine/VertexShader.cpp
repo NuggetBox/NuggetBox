@@ -17,7 +17,7 @@ std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aP
 		return ourVertexShaderRegistry.at(aPath.string());
 	}
 
-	//TODO: Maybe not assert later, right now I want it to crash and not default to a standard
+	//TODO: Maybe not assert later, right now I want it to crash and not default to a standard vertex shader
 	assert(std::filesystem::exists(aPath));
 
 	std::ifstream vsFile;
@@ -34,9 +34,9 @@ std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aP
 		ourInputLayoutIsSet = true;
 	}
 
-	std::shared_ptr<VertexShader> loadedVertexShader = std::make_shared<VertexShader>();
-	loadedVertexShader->myVertexShader = vertexShader;
-	return loadedVertexShader;
+	VertexShader loadedVertexShader;
+	loadedVertexShader.myVertexShader = vertexShader;
+	return std::make_shared<VertexShader>(loadedVertexShader);
 }
 
 void VertexShader::SetInputLayout(const std::string& someVertexShaderData)

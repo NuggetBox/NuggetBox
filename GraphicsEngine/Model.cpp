@@ -96,32 +96,6 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			23, 21, 22
 		};
 
-		/*cubeVertices.reserve(8);
-		cubeVertices.emplace_back(-50.f, -50.f, -50.f, 1, 0, 0, 1, 0, 1);
-		cubeVertices.emplace_back(-50.f, 50.f, -50.f, 0, 1, 0, 1, 0, 0);
-		cubeVertices.emplace_back(50.f, 50.f, -50.f, 0, 0, 1, 1, 1, 0);
-		cubeVertices.emplace_back(50.f, -50.f, -50.f, 1, 0.5f, 1, 1, 1, 1);
-		cubeVertices.emplace_back(50.f, -50.f, 50.f, 0.5f, 1, 0, 1, 0, 1);
-		cubeVertices.emplace_back(50.f, 50.f, 50.f, 1, 0, 0.5f, 1, 0, 0);
-		cubeVertices.emplace_back(-50.f, 50.f, 50.f, 1, 0.5f, 0, 1, 1, 0);
-		cubeVertices.emplace_back(-50.f, -50.f, 50.f, 0.5f, 0, 1, 1, 1, 1);
-
-		std::vector<unsigned int> cubeIndices =
-		{
-			0, 1, 3,
-			2, 3, 1,
-			3, 2, 4,
-			5, 4, 2,
-			4, 5, 7,
-			6, 7, 5,
-			0, 7, 1,
-			6, 1, 7,
-			1, 6, 2,
-			5, 2, 6,
-			0, 3, 7,
-			4, 7, 3
-		};*/
-
 		Mesh cube(cubeVertices, cubeIndices);
 
 		//TODO: Fix default material load
@@ -134,18 +108,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 	}
 	else if (path == "Pyramid")
 	{
-		//std::vector<VertexData> pyramidVertices;
-
-		/*pyramidVertices.reserve(5);
-		pyramidVertices.emplace_back(0.0f, 50.f, 0.0f, 1, 0, 0, 1, 1, 1);
-		pyramidVertices.emplace_back(-50.f, -50.f, 50.f, 0, 1, 0, 1, 1, 0);
-		pyramidVertices.emplace_back(50.f, -50.f, 50.f, 0, 0, 1, 1, 1, 0);
-		pyramidVertices.emplace_back(50.f, -50.f, -50.f, 1, 0.5f, 1, 1, 1, 0);
-		pyramidVertices.emplace_back(-50.f, -50.f, -50.f, 0.5f, 1, 0, 1, 1, 0);*/
-
-		//x: 0.894427180
-		//y: 0.447213590
-
+		// X and Y component of a normalized 2d vector with angle 30degrees to X-axis
 		const float xN = 0.894427180f;
 		const float yN = 0.447213590f;
 

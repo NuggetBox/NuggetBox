@@ -28,12 +28,6 @@ struct ObjectBufferData
 	//Vector3f padding;
 };
 
-//struct MaterialBufferData
-//{
-//	Vector3f Albedo;
-//	float padding;
-//};
-
 class ForwardRenderer
 {
 public:
@@ -45,9 +39,9 @@ private:
 
 	FrameBufferData myFrameBufferData;
 	ObjectBufferData myObjectBufferData{};
-	//MaterialData myMaterialBufferData;
+	MaterialData myMaterialBufferData;
 
 	ComPtr<ID3D11Buffer> myFrameBuffer;
 	ComPtr<ID3D11Buffer> myObjectBuffer;
-	//ComPtr<ID3D11Buffer> myMaterialBuffer;
+	ComPtr<ID3D11Buffer> myMaterialBuffer;
 };

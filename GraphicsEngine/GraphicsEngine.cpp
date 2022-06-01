@@ -153,7 +153,7 @@ void GraphicsEngine::RenderFrame()
 		camera->SetRotation(Vector3f(camera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, camera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
 	}
 
-	float rotationPerSec = 90.0f;
+	float rotationPerSec = 30.0f;
 
 	for (auto& model : models) 
 	{
