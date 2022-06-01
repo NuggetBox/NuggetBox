@@ -50,7 +50,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.AddGameObject(chest);
 
 	auto gremlin = Model::Load("Meshes/gremlin.fbx");
-	gremlin->AddPosition(-25, -50, 0);
+	gremlin->AddPosition(-20, -50, 0);
 	gremlin->AddRotation(0, 180, 0);
 	gremlin->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
 	gremlin->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
@@ -58,7 +58,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.AddGameObject(gremlin);
 
 	auto gremlin2 = Model::Load("Meshes/gremlin.fbx");
-	gremlin2->AddPosition(25, -50, 0);
+	gremlin2->AddPosition(40, -50, 0);
 	gremlin2->AddRotation(0, 180, 0);
 	gremlin2->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
 	gremlin2->LoadAnimation("Meshes/gremlin@run.fbx", "Run");

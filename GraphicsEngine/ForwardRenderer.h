@@ -7,6 +7,7 @@
 #include "Math/Matrix4x4.hpp"
 #include "Camera.h"
 #include "Model.h"
+#include "Light.h"
 
 using namespace Microsoft::WRL;
 using namespace Utility;
@@ -40,8 +41,10 @@ private:
 	FrameBufferData myFrameBufferData;
 	ObjectBufferData myObjectBufferData{};
 	MaterialData myMaterialBufferData;
+	LightBufferData myLightBufferData;
 
 	ComPtr<ID3D11Buffer> myFrameBuffer;
 	ComPtr<ID3D11Buffer> myObjectBuffer;
 	ComPtr<ID3D11Buffer> myMaterialBuffer;
+	ComPtr<ID3D11Buffer> myLightBuffer;
 };

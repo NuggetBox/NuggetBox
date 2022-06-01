@@ -16,9 +16,10 @@ PixelOutput main(VertexToPixel input)
 	//result.myColor = float4(input.myUV0.r, input.myUV0.g, 0, 1);
 
 	//Albedo Texture sampling
-	//result.myColor.rgb = albedoTexture.Sample(defaultSampler, input.myUV0).rgb;
-	//result.myColor.a = 1;
+	/*result.myColor.rgb = albedoTexture.Sample(defaultSampler, input.myUV0).rgb;
+	result.myColor.a = 1;*/
 
+	//Normal debugging
 	const float3x3 TangentSpaceMatrix = float3x3
 	(
 		normalize(input.myTangent),
@@ -33,7 +34,6 @@ PixelOutput main(VertexToPixel input)
 	normalMap = normalize(normalMap);
 	const float3 pixelNormal = normalize(mul(normalMap, TangentSpaceMatrix));
 
-	//Normal debugging
 	float3 debugNormal = pixelNormal;
 	const float signedLength = (debugNormal.r + debugNormal.g + debugNormal.b) / 3;
 	if (signedLength < 0)

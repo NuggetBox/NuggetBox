@@ -326,7 +326,6 @@ bool Model::HasBones() const
 	return HasSkeleton() && myModelData.mySkeleton->GetRoot() != nullptr;
 }
 
-
 void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms)
 {
 	const BoneData& currentBone = myModelData.mySkeleton->GetBones()[aBoneIndex];
