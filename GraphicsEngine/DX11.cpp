@@ -44,7 +44,7 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 
 	AssertIfFailed(Device->CreateRenderTargetView(backBufferTexture.Get(), nullptr, BackBuffer.GetAddressOf()))
 
-	AssertIfFailed(backBufferTexture->Release())
+	//AssertIfFailed(backBufferTexture->Release())
 
 	RECT clientRect = { 0, 0, 0, 0 };
 	GetClientRect(aWindowHandle, &clientRect);

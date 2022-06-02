@@ -70,9 +70,21 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	spiderCat->AddRotation(0, 180, 0);
 	myScene.AddGameObject(spiderCat);
 
+	auto sphere = Model::Load("meshes/sphere.fbx");
+	sphere->AddPosition(0, -150, 0);
+	sphere->SetScale(Vector3f(75, 75, 75));
+	myScene.AddGameObject(sphere);
+
+	/*auto skybox = Model::Load("meshes/Sphere.fbx");
+	skybox->SetScale(Vector3f(9000, 9000, 9000));
+	myScene.AddGameObject(skybox);*/
+
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	camera->SetPosition(0, 0, -300);
 	myScene.SetCamera(camera);
+
+	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 3.0f, Vector3f(1, -1, 1)));
+	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	myForwardRenderer.Initialize();
 
@@ -161,7 +173,7 @@ void GraphicsEngine::RenderFrame()
 		model->Update();
 	}
 
-	myForwardRenderer.Render(camera, models);
+	myForwardRenderer.Render(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight());
 	InputHandler::UpdatePreviousState();
 }
 

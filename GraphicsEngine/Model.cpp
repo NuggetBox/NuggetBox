@@ -218,6 +218,9 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			const std::string albedoFileName = "T_" + baseFileName + "_C.dds";
 			const std::string normalFileName = "T_" + baseFileName + "_N.dds";
 
+			//TODO: Get material name from .fbx file
+			//loadedMesh.MaterialName
+
 			//Load Material
 			std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 			meshMaterial->SetAlbedoTexture(Texture::Load("Textures/" + albedoFileName));

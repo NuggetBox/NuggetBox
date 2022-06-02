@@ -1,15 +1,19 @@
 #include "NuggetBox.pch.h"
 #include "ForwardRenderer.h"
+
+#include "AmbientLight.h"
+#include "DirectionalLight.h"
 #include "DX11.h"
 
 void ForwardRenderer::Initialize()
 {
+    // Rasterizer that disables backface culling
     /*D3D11_RASTERIZER_DESC cmDesc = {};
     cmDesc.FillMode = D3D11_FILL_SOLID;
-    cmDesc.CullMode = D3D11_CULL_BACK;
+    cmDesc.CullMode = D3D11_CULL_NONE;
     cmDesc.FrontCounterClockwise = false;
-    DX11::Device->CreateRasterizerState(&cmDesc, myRasterizerSate.GetAddressOf());*/
-    //DX11::Context->RSSetState(myRasterizerSate.Get());
+    DX11::Device->CreateRasterizerState(&cmDesc, myRasterizerSate.GetAddressOf());
+    DX11::Context->RSSetState(myRasterizerSate.Get());*/
 
     D3D11_BUFFER_DESC bufferDescription = { 0 };
     bufferDescription.Usage = D3D11_USAGE_DYNAMIC;
@@ -27,9 +31,14 @@ void ForwardRenderer::Initialize()
     //Create material buffer, unused now?
     bufferDescription.ByteWidth = sizeof(MaterialData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myMaterialBuffer.GetAddressOf()))
+
+    //Create light buffer
+    bufferDescription.ByteWidth = sizeof(LightBufferData);
+    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myLightBuffer.GetAddressOf()))
 }
 
-void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList)
+void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, 
+    const std::shared_ptr<DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight)
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
@@ -78,6 +87,16 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
             AssertIfFailed(DX11::Context->Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData))
             memcpy_s(bufferData.pData, sizeof(MaterialData), &myMaterialBufferData, sizeof(MaterialData));
             DX11::Context->Unmap(myMaterialBuffer.Get(), 0);
+
+            //Set lights as resources
+            if (aDirectionalLight)
+            {
+                aDirectionalLight->SetAsResource(myLightBuffer);
+            }
+            if (anAmbientLight)
+            {
+                anAmbientLight->SetAsResource(nullptr);
+            }
 
             DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
             DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

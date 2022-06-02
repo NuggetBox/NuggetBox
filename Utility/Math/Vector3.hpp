@@ -48,6 +48,15 @@ namespace Utility
 
 		//Returns the cross product of this and aVector
 		Vector3<T> Cross(const Vector3<T>& aVector) const;
+
+		static Vector3<T> Zero() { return Vector3<T>(0, 0, 0); }
+		static Vector3<T> One() { return Vector3<T>(1, 1, 1); }
+		static Vector3<T> Up() { return Vector3<T>(0, 1, 0); }
+		static Vector3<T> Down() { return Vector3<T>(0, -1, 0); }
+		static Vector3<T> Right() { return Vector3<T>(1, 0, 0); }
+		static Vector3<T> Left() { return Vector3<T>(-1, 0, 0); }
+		static Vector3<T> Forward() { return Vector3<T>(0, 0, 1); }
+		static Vector3<T> Backward() { return Vector3<T>(0, 0, -1); }
 	};
 
 	typedef Vector3<float> Vector3f;

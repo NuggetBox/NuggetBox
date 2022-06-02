@@ -29,7 +29,7 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 		//Check if there is a dot at all in the file name
 		if (dot < aPath.string().length())
 		{
-			std::string ending = aPath.string().substr(dot - 3, 2);
+			std::string ending = aPath.string().substr(dot - 2, 2);
 
 			if (ending == "_C")
 			{

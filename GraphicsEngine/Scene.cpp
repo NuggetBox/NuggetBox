@@ -11,6 +11,16 @@ void Scene::SetCamera(std::shared_ptr<Camera> aCamera)
 	myCamera = std::move(aCamera);
 }
 
+void Scene::SetDirectionalLight(std::shared_ptr<DirectionalLight> aDirectionalLight)
+{
+	myDirectionalLight = aDirectionalLight;
+}
+
+void Scene::SetAmbientLight(std::shared_ptr<AmbientLight> anAmbientLight)
+{
+	myAmbientLight = anAmbientLight;
+}
+
 std::shared_ptr<Camera>& Scene::GetCamera()
 {
 	return myCamera;

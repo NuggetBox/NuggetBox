@@ -4,8 +4,10 @@
 #include <memory>
 #include <d3d11.h>
 
+#include "AmbientLight.h"
 #include "Math/Matrix4x4.hpp"
 #include "Camera.h"
+#include "DirectionalLight.h"
 #include "Model.h"
 #include "Light.h"
 
@@ -33,7 +35,8 @@ class ForwardRenderer
 {
 public:
 	void Initialize();
-	void Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList);
+	void Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, const std::shared_ptr<
+				DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight);
 
 private:
 	//ComPtr<ID3D11RasterizerState> myRasterizerSate;
