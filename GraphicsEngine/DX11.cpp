@@ -15,6 +15,41 @@ ComPtr<ID3D11DepthStencilView> DX11::DepthBuffer;
 
 void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 {
+	CreateSwapChain(aWindowHandle, aEnableDeviceDebug);
+
+	ComPtr<ID3D11Texture2D> backBufferTexture;
+	AssertIfFailed(SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(backBufferTexture.GetAddressOf())))
+
+	AssertIfFailed(Device->CreateRenderTargetView(backBufferTexture.Get(), nullptr, BackBuffer.GetAddressOf()))
+
+	RECT clientRect;
+	GetClientRect(aWindowHandle, &clientRect);
+
+	CreateDepthBuffer(clientRect);
+
+	Context->OMSetRenderTargets(1, BackBuffer.GetAddressOf(), DepthBuffer.Get());
+
+	SetViewport(clientRect);
+
+	CreateSamplerState();
+
+	//Seed random
+	srand(static_cast<unsigned>(time(0)));
+}
+
+void DX11::BeginFrame(std::array<float, 4> aClearColor)
+{
+	Context->ClearRenderTargetView(BackBuffer.Get(), &aClearColor[0]);
+	Context->ClearDepthStencilView(DepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
+void DX11::EndFrame()
+{
+	SwapChain->Present(1, 0);
+}
+
+void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
+{
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 4 färgkanaler RGBA, unsigned, normalized
@@ -38,21 +73,15 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 		nullptr,
 		&Context
 	))
+}
 
-	ComPtr<ID3D11Texture2D> backBufferTexture;
-	AssertIfFailed(SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(backBufferTexture.GetAddressOf())))
-
-	AssertIfFailed(Device->CreateRenderTargetView(backBufferTexture.Get(), nullptr, BackBuffer.GetAddressOf()))
-
-	//AssertIfFailed(backBufferTexture->Release())
-
-	RECT clientRect = { 0, 0, 0, 0 };
-	GetClientRect(aWindowHandle, &clientRect);
-
+void DX11::CreateDepthBuffer(RECT aClientRect)
+{
 	ComPtr<ID3D11Texture2D> depthBufferTexture;
-	D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
-	depthBufferDesc.Width = clientRect.right - clientRect.left;
-	depthBufferDesc.Height = clientRect.bottom - clientRect.top;
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
+	depthBufferDesc = {0};
+	depthBufferDesc.Width = aClientRect.right - aClientRect.left;
+	depthBufferDesc.Height = aClientRect.bottom - aClientRect.top;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	depthBufferDesc.SampleDesc.Count = 1;
@@ -61,19 +90,23 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 	AssertIfFailed(Device->CreateTexture2D(&depthBufferDesc, nullptr, depthBufferTexture.GetAddressOf()))
 
 	AssertIfFailed(Device->CreateDepthStencilView(depthBufferTexture.Get(), nullptr, DepthBuffer.GetAddressOf()))
+}
 
-	Context->OMSetRenderTargets(1, BackBuffer.GetAddressOf(), DepthBuffer.Get());
-
+void DX11::SetViewport(RECT aClientRect)
+{
 	D3D11_VIEWPORT viewport;
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(clientRect.right - clientRect.left);
-	viewport.Height = static_cast<float>(clientRect.bottom - clientRect.top);
+	viewport.Width = static_cast<float>(aClientRect.right - aClientRect.left);
+	viewport.Height = static_cast<float>(aClientRect.bottom - aClientRect.top);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
 	Context->RSSetViewports(1, &viewport);
+}
 
+void DX11::CreateSamplerState()
+{
 	D3D11_SAMPLER_DESC samplerDesc;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -90,18 +123,4 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 	samplerDesc.MaxLOD = -D3D11_FLOAT32_MAX;
 
 	AssertIfFailed(Device->CreateSamplerState(&samplerDesc, SampleStateDefault.GetAddressOf()))
-
-	//Seed random
-	srand(static_cast<unsigned>(time(0)));
-}
-
-void DX11::BeginFrame(std::array<float, 4> aClearColor)
-{
-	Context->ClearRenderTargetView(BackBuffer.Get(), &aClearColor[0]);
-	Context->ClearDepthStencilView(DepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-}
-
-void DX11::EndFrame()
-{
-	SwapChain->Present(1, 0);
 }

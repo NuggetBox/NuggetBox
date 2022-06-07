@@ -24,6 +24,11 @@ public:
 	static void BeginFrame(std::array<float, 4> aClearColor = { 0, 0, 0, 0 });
 	static void EndFrame();
 
+	static void CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug);
+	static void CreateDepthBuffer(RECT aClientRect);
+	static void SetViewport(RECT aClientRect);
+	static void CreateSamplerState();
+
 	static ComPtr<ID3D11Device> Device;
 	static ComPtr<ID3D11DeviceContext> Context;
 	static ComPtr<IDXGISwapChain> SwapChain;

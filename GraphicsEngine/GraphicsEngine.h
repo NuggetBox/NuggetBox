@@ -18,6 +18,8 @@ class GraphicsEngine
 public:
 	bool Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug);
 
+	void InitializeWindow(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight);
+
 	void BeginFrame();
 	void EndFrame();
 	void RenderFrame();

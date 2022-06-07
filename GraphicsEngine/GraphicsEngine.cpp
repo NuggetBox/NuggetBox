@@ -1,8 +1,6 @@
 #include "NuggetBox.pch.h"
 #include "GraphicsEngine.h"
 
-#include <iostream>
-
 #include "Camera.h"
 #include "Model.h"
 #include "InputHandler.h"
@@ -10,25 +8,7 @@
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
-	// Initialize our window:
-	WNDCLASS windowClass = {};
-	windowClass.style = CS_VREDRAW | CS_HREDRAW | CS_OWNDC;
-	windowClass.lpfnWndProc = GraphicsEngine::WinProc;
-	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	windowClass.lpszClassName = L"ModelViewer";
-	RegisterClass(&windowClass);
-
-	myWindowHandle = CreateWindow(
-		L"ModelViewer",
-		L"NuggetBox",
-		WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
-		someX,
-		someY,
-		someWidth,
-		someHeight,
-		nullptr, nullptr, nullptr,
-		this
-		);
+	InitializeWindow(someX, someY, someWidth, someHeight);
 
 	// F1 -- This is where we should init our Framework
 	// ex: myFramework.Initialize(myWindowHandle, false);
@@ -89,6 +69,29 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myForwardRenderer.Initialize();
 
 	return true;
+}
+
+void GraphicsEngine::InitializeWindow(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight)
+{
+	// Initialize our window:
+	WNDCLASS windowClass = {};
+	windowClass.style = CS_VREDRAW | CS_HREDRAW | CS_OWNDC;
+	windowClass.lpfnWndProc = WinProc;
+	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	windowClass.lpszClassName = L"ModelViewer";
+	RegisterClass(&windowClass);
+
+	myWindowHandle = CreateWindow(
+		L"ModelViewer",
+		L"NuggetBox",
+		WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
+		someX,
+		someY,
+		someWidth,
+		someHeight,
+		nullptr, nullptr, nullptr,
+		this
+	);
 }
 
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)

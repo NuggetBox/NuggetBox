@@ -16,6 +16,7 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
     UNREFERENCED_PARAMETER(nCmdShow);
 
+	//Open console window in debug
 #ifdef _DEBUG
 	AllocConsole();
 	FILE* newstdin = nullptr;
