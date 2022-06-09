@@ -249,6 +249,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 					if (skeleton.Bones[j].Name == tgaModel.Skeleton.Joints[i].Name)
 					{
 						//TODO: The bone that was just added has the same name as a bone that has already been added
+						std::cout << "Bone with name " << skeleton.Bones[j].Name << " was just added but it has the same name as a bone that was already added!" << std::endl;
 					}
 				}
 #endif
