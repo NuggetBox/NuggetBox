@@ -87,6 +87,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
             {
                 //TODO: Default material
             }
+
             myMaterialBufferData.Albedo = meshData.myMaterial->GetAlbedo();
             ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
             AssertIfFailed(DX11::Context->Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData))

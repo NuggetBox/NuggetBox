@@ -211,10 +211,11 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			//Copy vertex indices
 			indices = loadedMesh.Indices;
 
-			//TODO: Refactor material loading + string tools
-			size_t slash = path.rfind('/');
-			size_t dot = path.rfind('.');
-			const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);
+			//TODO: Refactor material loading
+			//size_t slash = path.rfind('/');
+			//size_t dot = path.rfind('.');
+			//const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);
+			const std::string baseFileName = aPath.stem().string();
 			const std::string albedoFileName = "T_" + baseFileName + "_C.dds";
 			const std::string normalFileName = "T_" + baseFileName + "_N.dds";
 
@@ -234,40 +235,40 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		//Load skeleton
 		if (tgaModel.Skeleton.GetRoot() != nullptr)
 		{
-			SkeletonData skeleton;
+			SkeletonData skeletonData;
 			//skeleton.Name = tgaModel.Skeleton.Name;
-			skeleton.BoneNameToIndex.reserve(tgaModel.Skeleton.Joints.size());
+			skeletonData.BoneNameToIndex.reserve(tgaModel.Skeleton.Joints.size());
 
-			skeleton.Bones.resize(tgaModel.Skeleton.Joints.size());
+			skeletonData.Bones.resize(tgaModel.Skeleton.Joints.size());
 			for (size_t i = 0; i < tgaModel.Skeleton.Joints.size(); ++i)
 			{
-				skeleton.Bones[i].Name = tgaModel.Skeleton.Joints[i].Name;
+				skeletonData.Bones[i].Name = tgaModel.Skeleton.Joints[i].Name;
 
 #ifdef _DEBUG
 				for (int j = 0; j < i; ++j)
 				{
-					if (skeleton.Bones[j].Name == tgaModel.Skeleton.Joints[i].Name)
+					if (skeletonData.Bones[j].Name == tgaModel.Skeleton.Joints[i].Name)
 					{
 						//TODO: The bone that was just added has the same name as a bone that has already been added
-						std::cout << "Bone with name " << skeleton.Bones[j].Name << " was just added but it has the same name as a bone that was already added!" << std::endl;
+						std::cout << "Bone with name " << skeletonData.Bones[j].Name << " was just added but it has the same name as a bone that was already added!" << std::endl;
 					}
 				}
 #endif
 
-				skeleton.BoneNameToIndex.insert(std::pair(tgaModel.Skeleton.Joints[i].Name, i));
+				skeletonData.BoneNameToIndex.insert(std::pair(tgaModel.Skeleton.Joints[i].Name, i));
 
-				skeleton.Bones[i].Parent = tgaModel.Skeleton.Joints[i].Parent;
-				memcpy_s(&skeleton.Bones[i].BindPoseInverse, sizeof(Matrix4f), &tgaModel.Skeleton.Joints[i].BindPoseInverse, sizeof(TGA::Matrix));
+				skeletonData.Bones[i].Parent = tgaModel.Skeleton.Joints[i].Parent;
+				memcpy_s(&skeletonData.Bones[i].BindPoseInverse, sizeof(Matrix4f), &tgaModel.Skeleton.Joints[i].BindPoseInverse, sizeof(TGA::Matrix));
 
 				/*skeleton.Bones[i].Children.resize(tgaModel.Skeleton.Joints[i].Children.size());
 				for (size_t c = 0; c < tgaModel.Skeleton.Joints[i].Children.size(); ++c)
 				{
 					skeleton.Bones[i].Children[c] = tgaModel.Skeleton.Joints[i].Children[c];
 				}*/
-				skeleton.Bones[i].Children = tgaModel.Skeleton.Joints[i].Children;
+				skeletonData.Bones[i].Children = tgaModel.Skeleton.Joints[i].Children;
 			}
 
-			modelData.mySkeleton = std::make_shared<Skeleton>(skeleton);
+			modelData.mySkeleton = std::make_shared<Skeleton>(skeletonData);
 		}
 	}
 
@@ -342,8 +343,8 @@ void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame
 
 	outBoneTransforms[aBoneIndex] = finalBoneTransform;
 
-	for (size_t c = 0; c < currentBone.Children.size(); ++c)
+	for (unsigned child : currentBone.Children)
 	{
-		UpdateAnimationHierarchy(aCurrentFrame, aNextFrame, currentBone.Children[c], currentBoneGlobalTransform, outBoneTransforms);
+		UpdateAnimationHierarchy(aCurrentFrame, aNextFrame, child, currentBoneGlobalTransform, outBoneTransforms);
 	}
 }
