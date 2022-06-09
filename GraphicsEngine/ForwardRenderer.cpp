@@ -4,6 +4,7 @@
 #include "AmbientLight.h"
 #include "DirectionalLight.h"
 #include "DX11.h"
+#include "GraphicsEngine.h"
 
 void ForwardRenderer::Initialize()
 {
@@ -38,12 +39,13 @@ void ForwardRenderer::Initialize()
 }
 
 void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, 
-    const std::shared_ptr<DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight)
+    const std::shared_ptr<DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, RenderMode aRenderMode)
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
     myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
+    myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
 
     //Map frame buffer resource
     ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -52,6 +54,9 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
     DX11::Context->Unmap(myFrameBuffer.Get(), 0);
 
     DX11::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+
+    //Seems needed to use rendermode in pixelshader
+    DX11::Context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
     for (auto& model : aModelList)
     {

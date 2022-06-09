@@ -94,6 +94,36 @@ void GraphicsEngine::InitializeWindow(unsigned someX, unsigned someY, unsigned s
 	);
 }
 
+void GraphicsEngine::InputRenderMode()
+{
+#ifdef _DEBUG
+	UINT currentRenderMode = static_cast<UINT>(myRenderMode);
+
+	if (Utility::InputHandler::GetKeyDown(VK_F6))
+	{
+		if (currentRenderMode == 0)
+		{
+			currentRenderMode = static_cast<UINT>(RenderMode::COUNT) - 1;
+		}
+		else
+		{
+			currentRenderMode--;
+		}
+	}
+	else if (Utility::InputHandler::GetKeyDown(VK_F7))
+	{
+		currentRenderMode++;
+
+		if (currentRenderMode == static_cast<UINT>(RenderMode::COUNT))
+		{
+			currentRenderMode = 0;
+		}
+	}
+
+	SetRenderMode(static_cast<RenderMode>(currentRenderMode));
+#endif
+}
+
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
 	// We want to be able to access the Graphics Engine instance from inside this function.
@@ -117,6 +147,16 @@ LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WP
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
+void GraphicsEngine::SetRenderMode(RenderMode aRenderMode)
+{
+	myRenderMode = aRenderMode;
+}
+
+RenderMode GraphicsEngine::GetRenderMode() const
+{
+	return myRenderMode;
+}
+
 void GraphicsEngine::BeginFrame()
 {
 	Timer::Update();
@@ -129,6 +169,8 @@ void GraphicsEngine::RenderFrame()
 {
 	auto& camera = myScene.GetCamera();
 	auto& models = myScene.GetModels();
+
+	InputRenderMode();
 
 	float cameraSpeed = 100.0f;
 
@@ -172,11 +214,11 @@ void GraphicsEngine::RenderFrame()
 
 	for (auto& model : models) 
 	{
-		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
 		model->Update();
 	}
 
-	myForwardRenderer.Render(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight());
+	myForwardRenderer.Render(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
 	InputHandler::UpdatePreviousState();
 }
 

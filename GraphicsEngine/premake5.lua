@@ -60,28 +60,30 @@ project "GraphicsEngine"
 	local shader_dir = "../Bin/Shaders/"
     os.mkdir(shader_dir)
 
+	shadermodel "5.0"
+
     filter("files:**.hlsl")
-        flags("ExcludeFromBuild")
-        shaderobjectfileoutput(shader_dir.."%{file.basename}"..".cso")
-        shadermodel "5.0"
+		flags("ExcludeFromBuild")
+		shaderobjectfileoutput(shader_dir.."%{file.basename}"..".cso")
+		
+		filter "configurations:Debug"
+			shaderdefines {"_DEBUG"}
+		filter "configurations:Release"
+			shaderdefines {"_RELEASE"}
 
     filter("files:**_ps.hlsl")
         removeflags("ExcludeFromBuild")
         shadertype("Pixel")
-        shadermodel "5.0"
 
     filter("files:**_vs.hlsl")
         removeflags("ExcludeFromBuild")
         shadertype("Vertex")
-        shadermodel "5.0"
 
     filter("files:**_gs.hlsl")
         removeflags("ExcludeFromBuild")
         shadertype("Geometry")
-        shadermodel "5.0"
 
     filter("files:**_cs.hlsl")
         removeflags("ExcludeFromBuild")
         shadertype("Compute")
-        shadermodel "5.0"
         filter ("files:**.c")

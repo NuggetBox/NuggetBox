@@ -43,6 +43,7 @@ cbuffer FrameBuffer : register(b0)
 {
 	float4x4 FB_ToView;
 	float4x4 FB_ToProjection;
+	unsigned int FB_RenderMode;
 }
 
 cbuffer ObjectBuffer : register(b1)

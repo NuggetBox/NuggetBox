@@ -16,10 +16,14 @@ using namespace Utility;
 
 struct ID3D11Buffer;
 
+enum class RenderMode;
+
 struct FrameBufferData
 {
 	Matrix4x4<float> View;
 	Matrix4x4<float> Projection;
+	UINT RenderMode;
+	Vector3f padding;
 };
 
 struct ObjectBufferData
@@ -34,9 +38,10 @@ struct ObjectBufferData
 class ForwardRenderer
 {
 public:
+	ForwardRenderer() = default;
 	void Initialize();
 	void Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, const std::shared_ptr<
-				DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight);
+				DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, RenderMode aRenderMode);
 
 private:
 	//ComPtr<ID3D11RasterizerState> myRasterizerSate;
