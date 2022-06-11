@@ -196,14 +196,7 @@ namespace Utility
 	template <class T>
 	Matrix4x4<T>& Matrix4x4<T>::operator=(const Matrix4x4<T>& aMatrix)
 	{
-		for (int i = 1; i <= 4; ++i)
-		{
-			for (int j = 1; j <= 4; ++j)
-			{
-				myMatrix[i - 1][j - 1] = aMatrix(i, j);
-			}
-		}
-
+		memcpy_s(this, sizeof(Matrix4x4<T>), &aMatrix, sizeof(Matrix4x4<T>));
 		return *this;
 	}
 
