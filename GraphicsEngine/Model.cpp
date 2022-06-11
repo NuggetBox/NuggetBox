@@ -6,7 +6,7 @@
 #include "Model.h"
 #include "TGAFBXImporter/FBXImporter.h"
 #include "FBXStructs.h"
-#include "Timer.h"
+#include "Time.h"
 
 //Fixed with static inline
 //std::unordered_map<std::string, std::shared_ptr<Model>> Model::ourModelRegistry;
@@ -295,7 +295,7 @@ void Model::Update()
 	if (HasAnimations())
 	{
 		//TODO: Refactor animation stepping code
-		myAnimationTimer += Timer::GetDeltaTime();
+		myAnimationTimer += Time::GetDeltaTime();
 
 		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
 

@@ -3,13 +3,13 @@
 
 namespace Utility
 {
-	class Timer
+	class Time
 	{
 	public:
-		Timer() = delete;
-		~Timer() = delete;
-		Timer(const Timer& aTimer) = delete;
-		Timer& operator=(const Timer& aTimer) = delete;
+		Time() = delete;
+		~Time() = delete;
+		Time(const Time& aTimer) = delete;
+		Time& operator=(const Time& aTimer) = delete;
 
 		static void Start();
 		static void Update();

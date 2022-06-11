@@ -1,31 +1,31 @@
-#include "Timer.h"
+#include "Time.h"
 
 namespace Utility
 {
-	std::chrono::time_point<std::chrono::high_resolution_clock> Timer::myStartTime;
-	std::chrono::duration<double> Timer::myTotalTime;
-	std::chrono::duration<float> Timer::myDeltaTime;
+	std::chrono::time_point<std::chrono::high_resolution_clock> Time::myStartTime;
+	std::chrono::duration<double> Time::myTotalTime;
+	std::chrono::duration<float> Time::myDeltaTime;
 
-	void Timer::Start()
+	void Time::Start()
 	{
 		myStartTime = std::chrono::high_resolution_clock::now();
 		myTotalTime = std::chrono::seconds(0);
 		myDeltaTime = std::chrono::seconds(0);
 	}
 
-	void Timer::Update()
+	void Time::Update()
 	{
 		const std::chrono::duration<double> totalTimeLastFrame = myTotalTime;
 		myTotalTime = std::chrono::high_resolution_clock::now() - myStartTime;
 		myDeltaTime = myTotalTime - totalTimeLastFrame;
 	}
 
-	float Timer::GetDeltaTime()
+	float Time::GetDeltaTime()
 	{
 		return myDeltaTime.count();
 	}
 
-	double Timer::GetTotalTime()
+	double Time::GetTotalTime()
 	{
 		return myTotalTime.count();
 	}

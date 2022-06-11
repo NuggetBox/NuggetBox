@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Model.h"
 #include "InputHandler.h"
-#include "Timer.h"
+#include "Time.h"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
@@ -14,7 +14,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	// ex: myFramework.Initialize(myWindowHandle, false);
 	DX11::Initialize(myWindowHandle, enableDeviceDebug);
 
-	Utility::Timer::Start();
+	Utility::Time::Start();
 
 	auto cube = Model::Load("Cube");
 	cube->SetPosition(0, 0, 150);
@@ -159,7 +159,7 @@ RenderMode GraphicsEngine::GetRenderMode() const
 
 void GraphicsEngine::BeginFrame()
 {
-	Timer::Update();
+	Time::Update();
 	// F1 - This is where we clear our buffers and start the DX frame.
 	// ex: myFramework.BeginFrame({1, 0.5f, 0, 1});
 	DX11::BeginFrame({0.6f, 0.2f, 0.4f, 1.0f});
@@ -182,27 +182,27 @@ void GraphicsEngine::RenderFrame()
 	//TODO: Atomisera camera movement
 	if (InputHandler::GetKeyHeld('W'))
 	{
-		camera->AddPosition(camera->GetTransform().GetForward() * Timer::GetDeltaTime() * cameraSpeed);
+		camera->AddPosition(camera->GetTransform().GetForward() * Time::GetDeltaTime() * cameraSpeed);
 	}
 	if (InputHandler::GetKeyHeld('A'))
 	{
-		camera->AddPosition(camera->GetTransform().GetLeft() * Timer::GetDeltaTime() * cameraSpeed);
+		camera->AddPosition(camera->GetTransform().GetLeft() * Time::GetDeltaTime() * cameraSpeed);
 	}
 	if (InputHandler::GetKeyHeld('S'))
 	{
-		camera->AddPosition(camera->GetTransform().GetBackward() * Timer::GetDeltaTime() * cameraSpeed);
+		camera->AddPosition(camera->GetTransform().GetBackward() * Time::GetDeltaTime() * cameraSpeed);
 	}
 	if (InputHandler::GetKeyHeld('D'))
 	{
-		camera->AddPosition(camera->GetTransform().GetRight() * Timer::GetDeltaTime() * cameraSpeed);
+		camera->AddPosition(camera->GetTransform().GetRight() * Time::GetDeltaTime() * cameraSpeed);
 	}
 	if (InputHandler::GetKeyHeld(VK_CONTROL))
 	{
-		camera->AddPosition(Vector3f(0, -1, 0) * Timer::GetDeltaTime() * cameraSpeed);
+		camera->AddPosition(Vector3f(0, -1, 0) * Time::GetDeltaTime() * cameraSpeed);
 	}
 	if (InputHandler::GetKeyHeld(VK_SPACE))
 	{
-		camera->AddPosition(Vector3f(0, 1, 0) * Timer::GetDeltaTime() * cameraSpeed);
+		camera->AddPosition(Vector3f(0, 1, 0) * Time::GetDeltaTime() * cameraSpeed);
 	}
 
 	if (InputHandler::GetRightClickHeld())
@@ -214,7 +214,7 @@ void GraphicsEngine::RenderFrame()
 
 	for (auto& model : models) 
 	{
-		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		model->AddRotation(0.f, rotationPerSec * Time::GetDeltaTime(), 0.f);
 		model->Update();
 	}
 
