@@ -41,6 +41,8 @@ void ForwardRenderer::Initialize()
     bufferDescription.ByteWidth = sizeof(LightBufferData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myLightBuffer.GetAddressOf()));
     DEBUGLOG("Created Light Buffer");
+
+    DEBUGLOG("Forward Renderer Initialized");
 }
 
 void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, 
@@ -60,7 +62,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
 
     DX11::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
-    //Seems needed to use rendermode in pixelshader
+    //Needed to use rendermode in pixelshader
     DX11::Context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
     for (auto& model : aModelList)

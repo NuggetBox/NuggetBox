@@ -18,6 +18,7 @@ std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, c
 {
 	if (ourAnimationRegistry.contains(aNewAnimationName))
 	{
+		DEBUGLOG("Loaded Animation " + aPath.filename().string() + " from registry");
 		return std::make_shared<Animation>(ourAnimationRegistry.at(aNewAnimationName));
 	}
 
