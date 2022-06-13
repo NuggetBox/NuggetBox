@@ -1,23 +1,30 @@
 #include "NuggetBox.pch.h"
 #include "DebugLogger.h"
-#include <iostream>
-#include "color.hpp"
-#include "Timer.h"
 #include <filesystem>
+#include <iostream>
+#include <csignal>
+
+#include "Timer.h"
+#include "color.hpp"
 
 void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, const std::string& aFilename, const std::string& aCodeLine)
 {
-    myLog << GetTimeStamp();
+    myLog << "[" << GetTime() << "] ";
 
     switch (aMessageType)
     {
-    case MessageType::Message: /*myLog << "Message ";*/ break;
-    case MessageType::Warning: myLog << "Warning "; break;
-    case MessageType::Error: myLog << "Error "; break;
+    case MessageType::Message: myLog << "[MESSAGE"; break;
+    case MessageType::Warning: myLog << "[WARNING"; break;
+    case MessageType::Error: myLog << "[ERROR"; break;
     }
 
-    const std::filesystem::path path(aFilename);
-    myLog << aMessage << " " << path.filename().string() << ":" << aCodeLine << "\n";
+    if (aMessageType == MessageType::Error && !aFilename.empty())
+    {
+		const std::filesystem::path path(aFilename);
+        myLog << " in " << path.filename().string() << ":" << aCodeLine;
+    }
+
+    myLog << "] " << aMessage << "\n";
 
 #ifdef _DEBUG
     std::cout << dye::grey(GetTimeStamp());
@@ -43,20 +50,47 @@ void DebugLogger::Warning(const std::string& aMessage, const std::string& aFilen
 
 void DebugLogger::Error(const std::string& aMessage, const std::string& aFilename, const std::string& aCodeLine)
 {
-    Log(aMessage, MessageType::Error);
+    Log(aMessage, MessageType::Error, aFilename, aCodeLine);
+}
+
+void DebugLogger::SetupCrashDump()
+{
+    if (std::signal(SIGSEGV, SignalHandler) == SIG_ERR)
+        DEBUGERROR("Unable to set signal handler for SIGSEGV");
+    if (std::signal(SIGINT, SignalHandler) == SIG_ERR)
+        DEBUGERROR("Unable to set signal handler for SIGINT");
+    if (std::signal(SIGILL, SignalHandler) == SIG_ERR)
+        DEBUGERROR("Unable to set signal handler for SIGILL");
+    if (std::signal(SIGABRT, SignalHandler) == SIG_ERR)
+        DEBUGERROR("Unable to set signal handler for SIGABRT");
+    if (std::signal(SIGFPE, SignalHandler) == SIG_ERR)
+        DEBUGERROR("Unable to set signal handler for SIGFPE");
 }
 
 void DebugLogger::WriteCrashLog()
 {
-    //TODO: Fix a good filepath for crashlogs
+    std::string filename = GetTimeStampRaw();
+    std::ranges::replace(filename, ':', '-');
+    std::ranges::replace(filename, '.', '-');
+
     std::ofstream outFile;
-    const std::string filename = GetTimeStamp(false) + ".txt";
-    outFile.open("CrashLogs/" + filename);
+    outFile.open(myCrashLogsDir + filename + ".txt");
     outFile << myLog.rdbuf();
     outFile.close();
 }
 
-std::string DebugLogger::GetTimeStamp(bool formatted)
+void DebugLogger::SignalHandler(int signal)
+{
+    DEBUGLOG("Crash signal detected, writing crash log file");
+    WriteCrashLog();
+}
+
+std::string DebugLogger::GetTimeStamp()
+{
+    return "[" + GetTimeStampRaw() + "] ";
+}
+
+std::string DebugLogger::GetTimeStampRaw()
 {
     const std::chrono::time_point curTime = std::chrono::system_clock::now();
     const __time64_t timeT = std::chrono::system_clock::to_time_t(curTime);
@@ -70,17 +104,7 @@ std::string DebugLogger::GetTimeStamp(bool formatted)
     char timeStr[] = "yyyy.mm.dd HH:MM:SS.fff";
     strftime(timeStr, strlen(timeStr), dateFormat, timeStruct);
 
-    if (!formatted)
-    {
-        std::string raw(timeStr);
-        std::replace(raw.begin(), raw.end(), '.', '-');
-        std::replace(raw.begin(), raw.end(), ':', '-');
-        return raw;
-    }
-
-    std::string result("[");
-    result.append(timeStr);
-    // Show frames as last part of time?
+    std::string result(timeStr);
     result.append(".");
 
     //Append extra 0's to fill millisecond gap
@@ -93,7 +117,21 @@ std::string DebugLogger::GetTimeStamp(bool formatted)
         result.append("0");
     }
 
-    result.append(std::to_string(milliseconds.count()) + "] ");
-
+    result.append(std::to_string(milliseconds.count()));
     return result;
+}
+
+std::string DebugLogger::GetDate()
+{
+    //yyyy.mm.dd HH:MM:SS.fff
+    std::string timeStamp = GetTimeStampRaw();
+    timeStamp.erase(10, 13);
+    return timeStamp;
+}
+
+std::string DebugLogger::GetTime()
+{
+    std::string timeStamp = GetTimeStampRaw();
+    timeStamp.erase(0, 11);
+    return timeStamp;
 }

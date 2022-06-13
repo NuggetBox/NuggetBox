@@ -9,6 +9,8 @@
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
+	DebugLogger::SetupCrashDump();
+
 	InitializeWindow(someX, someY, someWidth, someHeight);
 
 	// F1 -- This is where we should init our Framework
@@ -93,6 +95,8 @@ void GraphicsEngine::InitializeWindow(unsigned someX, unsigned someY, unsigned s
 		nullptr, nullptr, nullptr,
 		this
 	);
+
+	DEBUGLOG("Initialized Window");
 }
 
 void GraphicsEngine::InputRenderMode()
@@ -100,10 +104,6 @@ void GraphicsEngine::InputRenderMode()
 #ifdef _DEBUG
 	UINT currentRenderMode = static_cast<UINT>(myRenderMode);
 
-	if (InputHandler::GetKeyDown(VK_F5))
-	{
-		DebugLogger::WriteCrashLog();
-	}
 	if (Utility::InputHandler::GetKeyDown(VK_F6))
 	{
 		if (currentRenderMode == 0)
@@ -129,13 +129,7 @@ void GraphicsEngine::InputRenderMode()
 		return;
 	}
 	SetRenderMode(static_cast<RenderMode>(currentRenderMode));
-	//TODO: Move outside debug define
 	DebugLogger::Log("Render Mode set to: " + RenderModeToString(myRenderMode));
-	DebugLogger::Warning("YO PAUDA THIS IS WARNING");
-	DebugLogger::Error("ERROR");
-	std::string wtf("asd");
-	LOG("DEFINE!!!");
-
 #endif
 }
 

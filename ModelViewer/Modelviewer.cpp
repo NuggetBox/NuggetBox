@@ -11,10 +11,10 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					   _In_ LPWSTR lpCmdLine,
 					   _In_ int nCmdShow)->int
 {
-    UNREFERENCED_PARAMETER(hInstance);
+    /*UNREFERENCED_PARAMETER(hInstance);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    UNREFERENCED_PARAMETER(nCmdShow);
+    UNREFERENCED_PARAMETER(nCmdShow);*/
 
 	//Open console window in debug
 #ifdef _DEBUG
@@ -39,8 +39,7 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		(GetSystemMetrics(SM_CYSCREEN) - windowSize.cy) / 2,
 		windowSize.cx,
 		windowSize.cy,
-		true
-	);
+		true);
 
 	while (bShouldRun)
 	{

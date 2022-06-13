@@ -1,9 +1,11 @@
 #include "NuggetBox.pch.h"
+#include "Model.h"
+
 #include <filesystem>
 #include <vector>
 #include <d3d11.h>
 
-#include "Model.h"
+#include "DebugLogger.h"
 #include "TGAFBXImporter/FBXImporter.h"
 #include "FBXStructs.h"
 #include "Timer.h"
@@ -34,6 +36,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 	if (ourModelRegistry.contains(path))
 	{
+		DEBUGLOG("Loaded Model " + aPath.filename().string() + " from registry");
 		modelData = ourModelRegistry.at(path);
 		return std::make_shared<Model>(modelData);
 	}
@@ -105,6 +108,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 		cube.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(cube);
+		DEBUGLOG("Created Primitive Cube Mesh");
 	}
 	else if (path == "Pyramid")
 	{
@@ -156,6 +160,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 		pyramid.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(pyramid);
+		DEBUGLOG("Created Primitive Pyramid Mesh");
 	}
 	else
 	{
@@ -249,8 +254,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 				{
 					if (skeletonData.Bones[j].Name == tgaModel.Skeleton.Joints[i].Name)
 					{
-						//TODO: The bone that was just added has the same name as a bone that has already been added
-						std::cout << "Bone with name " << skeletonData.Bones[j].Name << " was just added but it has the same name as a bone that was already added!" << std::endl;
+						DEBUGWARNING("Bone with name " + skeletonData.Bones[j].Name + " was just added but it has the same name as a bone that was already added!");
 					}
 				}
 #endif
@@ -269,9 +273,11 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			}
 
 			modelData.mySkeleton = std::make_shared<Skeleton>(skeletonData);
+			DEBUGLOG("Loaded Skeleton");
 		}
 	}
 
+	DEBUGLOG("Loaded Model " + aPath.filename().string());
 	ourModelRegistry.insert(std::pair(path, modelData));
 	return std::make_shared<Model>(modelData);
 }

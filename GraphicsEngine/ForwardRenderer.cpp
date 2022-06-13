@@ -2,6 +2,7 @@
 #include "ForwardRenderer.h"
 
 #include "AmbientLight.h"
+#include "DebugLogger.h"
 #include "DirectionalLight.h"
 #include "DX11.h"
 #include "GraphicsEngine.h"
@@ -23,19 +24,23 @@ void ForwardRenderer::Initialize()
 
     //Create frame buffer
     bufferDescription.ByteWidth = sizeof(FrameBufferData);
-    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myFrameBuffer.GetAddressOf()))
+    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myFrameBuffer.GetAddressOf()));
+    DEBUGLOG("Created Frame Buffer");
 
     //Create object buffer
     bufferDescription.ByteWidth = sizeof(ObjectBufferData);
-    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myObjectBuffer.GetAddressOf()))
+    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myObjectBuffer.GetAddressOf()));
+    DEBUGLOG("Created Object Buffer");
 
     //Create material buffer, unused now?
     bufferDescription.ByteWidth = sizeof(MaterialData);
-    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myMaterialBuffer.GetAddressOf()))
+    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myMaterialBuffer.GetAddressOf()));
+    DEBUGLOG("Created Material Buffer");
 
     //Create light buffer
     bufferDescription.ByteWidth = sizeof(LightBufferData);
-    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myLightBuffer.GetAddressOf()))
+    AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myLightBuffer.GetAddressOf()));
+    DEBUGLOG("Created Light Buffer");
 }
 
 void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, 
@@ -49,7 +54,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
 
     //Map frame buffer resource
     ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-    AssertIfFailed(DX11::Context->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData))
+    AssertIfFailed(DX11::Context->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
     memcpy_s(bufferData.pData, sizeof(FrameBufferData), &myFrameBufferData, sizeof(FrameBufferData));
     DX11::Context->Unmap(myFrameBuffer.Get(), 0);
 
@@ -74,7 +79,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
 
             //Map object buffer resource
             ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-            AssertIfFailed(DX11::Context->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData))
+            AssertIfFailed(DX11::Context->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
             memcpy_s(bufferData.pData, sizeof(ObjectBufferData), &myObjectBufferData, sizeof(ObjectBufferData));
             DX11::Context->Unmap(myObjectBuffer.Get(), 0);
 
@@ -90,7 +95,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
 
             myMaterialBufferData.Albedo = meshData.myMaterial->GetAlbedo();
             ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-            AssertIfFailed(DX11::Context->Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData))
+            AssertIfFailed(DX11::Context->Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
             memcpy_s(bufferData.pData, sizeof(MaterialData), &myMaterialBufferData, sizeof(MaterialData));
             DX11::Context->Unmap(myMaterialBuffer.Get(), 0);
 

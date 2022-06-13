@@ -21,7 +21,7 @@ void Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 	//Unused now that we sample from textures?
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	AssertIfFailed(DX11::Context->Map(aMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData))
+	AssertIfFailed(DX11::Context->Map(aMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
 	memcpy_s(bufferData.pData, sizeof(MaterialData), &myMaterialData, sizeof(MaterialData));
 	DX11::Context->Unmap(aMaterialBuffer.Get(), 0);
 

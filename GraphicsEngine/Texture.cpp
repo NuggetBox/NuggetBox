@@ -1,11 +1,14 @@
 #include "NuggetBox.pch.h"
 #include "Texture.h"
+
+#include "DebugLogger.h"
 #include "DDSTextureLoader/DDSTextureLoader11.h"
 
 std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 {
 	if (ourTextureRegistry.contains(aPath.string()))
 	{
+		DEBUGLOG("Loaded Texture " + aPath.filename().string() + " from registry");
 		return ourTextureRegistry.at(aPath.string());
 	}
 
@@ -14,7 +17,8 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 	//Try to load texture from file
 	if (std::filesystem::exists(aPath))
 	{
-		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), aPath.c_str(), texture->myTexture.GetAddressOf(), texture->myShaderResourceView.GetAddressOf()))
+		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), aPath.c_str(), texture->myTexture.GetAddressOf(), texture->myShaderResourceView.GetAddressOf()));
+		DEBUGLOG("Loaded Texture " + aPath.filename().string());
 		ourTextureRegistry.insert(std::pair(aPath.string(), texture));
 	}
 	//Couldn't find a texture that matches our TGA standard, load default texture
@@ -48,7 +52,8 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 			}
 		}
 
-		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), std::wstring(defaultPath.begin(), defaultPath.end()).c_str(), texture->myTexture.GetAddressOf(), texture->myShaderResourceView.GetAddressOf()))
+		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), std::wstring(defaultPath.begin(), defaultPath.end()).c_str(), texture->myTexture.GetAddressOf(), texture->myShaderResourceView.GetAddressOf()));
+		DEBUGLOG("Loaded Texture " + aPath.filename().string());
 		ourTextureRegistry.insert(std::pair(defaultPath, texture));
 	}
 

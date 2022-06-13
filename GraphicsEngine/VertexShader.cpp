@@ -1,6 +1,8 @@
 #include "NuggetBox.pch.h"
 #include "VertexShader.h"
 
+#include "DebugLogger.h"
+
 //std::unordered_map<std::string, std::shared_ptr<VertexShader>> VertexShader::ourVertexShaderRegistry;
 //ComPtr<ID3D11InputLayout> VertexShader::ourInputLayout;
 //bool VertexShader::ourInputLayoutIsSet;
@@ -14,6 +16,7 @@ std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aP
 {
 	if (ourVertexShaderRegistry.contains(aPath.string()))
 	{
+		DEBUGLOG("Loaded Vertex Shader " + aPath.filename().string() + " from registry");
 		return ourVertexShaderRegistry.at(aPath.string());
 	}
 
@@ -26,7 +29,9 @@ std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aP
 	vsFile.close();
 
 	ComPtr<ID3D11VertexShader> vertexShader;
-	AssertIfFailed(DX11::Device->CreateVertexShader(vsData.data(), vsData.size(), nullptr, vertexShader.GetAddressOf()))
+	AssertIfFailed(DX11::Device->CreateVertexShader(vsData.data(), vsData.size(), nullptr, vertexShader.GetAddressOf()));
+
+	DEBUGLOG("Loaded Vertex Shader " + aPath.filename().string());
 
 	if (!ourInputLayoutIsSet)
 	{
@@ -34,9 +39,10 @@ std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aP
 		ourInputLayoutIsSet = true;
 	}
 
-	VertexShader loadedVertexShader;
-	loadedVertexShader.myVertexShader = vertexShader;
-	return std::make_shared<VertexShader>(loadedVertexShader);
+	std::shared_ptr<VertexShader> loadedVertexShader = std::make_shared<VertexShader>();
+	loadedVertexShader->myVertexShader = vertexShader;
+	ourVertexShaderRegistry.insert(std::pair(aPath.string(), loadedVertexShader));
+	return loadedVertexShader;
 }
 
 void VertexShader::SetInputLayout(const std::string& someVertexShaderData)
@@ -59,6 +65,6 @@ void VertexShader::SetInputLayout(const std::string& someVertexShaderData)
 		{"BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	AssertIfFailed(DX11::Device->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexShaderData.data(), someVertexShaderData.size(), ourInputLayout.GetAddressOf()))
+	AssertIfFailed(DX11::Device->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexShaderData.data(), someVertexShaderData.size(), ourInputLayout.GetAddressOf()));
 	DX11::Context->IASetInputLayout(ourInputLayout.Get());
 }

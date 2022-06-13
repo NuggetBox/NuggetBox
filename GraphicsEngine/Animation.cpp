@@ -4,11 +4,10 @@
 #include <cassert>
 #include <filesystem>
 
+#include "DebugLogger.h"
 #include "TGAFBXImporter/FBXImporter.h"
 #include "TGAFBXImporter/FBXImporterStructs.h"
 #include "Skeleton.h"
-
-//std::unordered_map<std::string, AnimationData> Animation::ourAnimationRegistry;
 
 Animation::Animation(const AnimationData& someAnimationData)
 {
@@ -24,6 +23,7 @@ std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, c
 
 	TGA::FBXAnimation loadedAnimation;
 	assert(TGA::FBXImporter::LoadAnimation(aPath.string(), aSkeleton->GetBoneNames(), loadedAnimation));
+	DEBUGLOG("Loaded Animation " + aPath.filename().string());
 
 	AnimationData animationData;
 	animationData.Name = loadedAnimation.Name;

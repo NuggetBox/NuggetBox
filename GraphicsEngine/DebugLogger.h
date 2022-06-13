@@ -1,9 +1,9 @@
 #pragma once
 #include <sstream>
 
-#define LOG(message) DebugLogger::Log(message, MessageType::Message, __FILE__, std::to_string(__LINE__))
-#define WARNING(message) DebugLogger::Log(message, MessageType::Warning, __FILE__, std::to_string(__LINE__))
-#define ERROR(message) DebugLogger::Log(message, MessageType::Error, __FILE__, std::to_string(__LINE__))
+#define DEBUGLOG(message) DebugLogger::Log(message, MessageType::Message, __FILE__, std::to_string(__LINE__))
+#define DEBUGWARNING(message) DebugLogger::Log(message, MessageType::Warning, __FILE__, std::to_string(__LINE__))
+#define DEBUGERROR(message) DebugLogger::Log(message, MessageType::Error, __FILE__, std::to_string(__LINE__))
 
 enum class MessageType
 {
@@ -21,10 +21,17 @@ public:
 	static void Warning(const std::string& aMessage, const std::string& aFilename = "", const std::string& aCodeLine = "");
 	static void Error(const std::string& aMessage, const std::string& aFilename = "", const std::string& aCodeLine = "");
 
-	//TODO: File write log
+	static void SetupCrashDump();
 	static void WriteCrashLog();
 
 private:
-	static std::string GetTimeStamp(bool formatted = true);
+	static void SignalHandler(int signal);
+
+	static std::string GetTimeStamp();
+	static std::string GetTimeStampRaw();
+	static std::string GetDate();
+	static std::string GetTime();
+
+	inline static const std::string myCrashLogsDir = "CrashLogs/";
 	inline static std::stringstream myLog;
 };

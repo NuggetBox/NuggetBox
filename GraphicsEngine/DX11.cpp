@@ -2,6 +2,7 @@
 #include <d3d11.h>
 
 #include "DX11.h"
+#include "DebugLogger.h"
 
 ComPtr<ID3D11Device> DX11::Device;
 ComPtr<ID3D11DeviceContext> DX11::Context;
@@ -18,9 +19,9 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 	CreateSwapChain(aWindowHandle, aEnableDeviceDebug);
 
 	ComPtr<ID3D11Texture2D> backBufferTexture;
-	AssertIfFailed(SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(backBufferTexture.GetAddressOf())))
+	AssertIfFailed(SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(backBufferTexture.GetAddressOf())));
 
-	AssertIfFailed(Device->CreateRenderTargetView(backBufferTexture.Get(), nullptr, BackBuffer.GetAddressOf()))
+	AssertIfFailed(Device->CreateRenderTargetView(backBufferTexture.Get(), nullptr, BackBuffer.GetAddressOf()));
 
 	RECT clientRect;
 	GetClientRect(aWindowHandle, &clientRect);
@@ -79,7 +80,9 @@ void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
 		Device.GetAddressOf(),
 		nullptr,
 		&Context
-	))
+	));
+
+	DEBUGLOG("Created Swap Chain");
 }
 
 void DX11::CreateDepthBuffer(RECT aClientRect)
@@ -94,9 +97,11 @@ void DX11::CreateDepthBuffer(RECT aClientRect)
 	depthBufferDesc.SampleDesc.Count = 1;
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-	AssertIfFailed(Device->CreateTexture2D(&depthBufferDesc, nullptr, depthBufferTexture.GetAddressOf()))
+	AssertIfFailed(Device->CreateTexture2D(&depthBufferDesc, nullptr, depthBufferTexture.GetAddressOf()));
 
-	AssertIfFailed(Device->CreateDepthStencilView(depthBufferTexture.Get(), nullptr, DepthBuffer.GetAddressOf()))
+	AssertIfFailed(Device->CreateDepthStencilView(depthBufferTexture.Get(), nullptr, DepthBuffer.GetAddressOf()));
+
+	DEBUGLOG("Created Depth Buffer");
 }
 
 void DX11::SetViewport(RECT aClientRect)
@@ -110,6 +115,8 @@ void DX11::SetViewport(RECT aClientRect)
 	viewport.MaxDepth = 1.0f;
 
 	Context->RSSetViewports(1, &viewport);
+
+	DEBUGLOG("Viewport set");
 }
 
 void DX11::CreateSamplerState()
@@ -129,5 +136,7 @@ void DX11::CreateSamplerState()
 	samplerDesc.MinLOD = -D3D11_FLOAT32_MAX;
 	samplerDesc.MaxLOD = -D3D11_FLOAT32_MAX;
 
-	AssertIfFailed(Device->CreateSamplerState(&samplerDesc, SampleStateDefault.GetAddressOf()))
+	AssertIfFailed(Device->CreateSamplerState(&samplerDesc, SampleStateDefault.GetAddressOf()));
+
+	DEBUGLOG("Created Sampler State");
 }

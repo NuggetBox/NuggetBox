@@ -12,7 +12,7 @@ struct ID3D11SamplerState;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 
-#define AssertIfFailed(x) assert((x) == S_OK);
+#define AssertIfFailed(x) assert((x) == S_OK)
 
 class DX11
 {

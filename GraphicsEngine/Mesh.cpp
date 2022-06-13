@@ -17,7 +17,7 @@ Mesh::Mesh(std::vector<VertexData>& someVertices, std::vector<unsigned>& someInd
 	vertexSubresourceData.pSysMem = &someVertices[0];
 
 	ID3D11Buffer* vertexBuffer;
-	AssertIfFailed(DX11::Device->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, &vertexBuffer))
+	AssertIfFailed(DX11::Device->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, &vertexBuffer));
 
 	D3D11_BUFFER_DESC indexBufferDesc {};
 	indexBufferDesc.ByteWidth = static_cast<UINT>(someIndices.size()) * static_cast<UINT>(sizeof(unsigned int));
@@ -28,7 +28,7 @@ Mesh::Mesh(std::vector<VertexData>& someVertices, std::vector<unsigned>& someInd
 	indexSubresourceData.pSysMem = &someIndices[0];
 
 	ID3D11Buffer* indexBuffer;
-	AssertIfFailed(DX11::Device->CreateBuffer(&indexBufferDesc, &indexSubresourceData, &indexBuffer))
+	AssertIfFailed(DX11::Device->CreateBuffer(&indexBufferDesc, &indexSubresourceData, &indexBuffer));
 
 	//Load Vertex Shader
 	std::shared_ptr<VertexShader> vertexShader = VertexShader::Load("Shaders/Standard_VS.cso");
