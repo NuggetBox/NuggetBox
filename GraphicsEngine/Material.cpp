@@ -11,6 +11,11 @@ void Material::SetNormalMap(std::shared_ptr<Texture> aTexture)
 	myTextures[MaterialTextureChannel::Normal] = aTexture;
 }
 
+void Material::SetSurfaceTexture(std::shared_ptr<Texture> aTexture)
+{
+	myTextures[MaterialTextureChannel::Surface] = aTexture;
+}
+
 void Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 {
 	//Unused now that we sample from textures?
@@ -28,5 +33,10 @@ void Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 	if (myTextures[MaterialTextureChannel::Normal])
 	{
 		myTextures[MaterialTextureChannel::Normal]->SetAsResource(MaterialTextureChannel::Normal);
+	}
+
+	if (myTextures[MaterialTextureChannel::Surface])
+	{
+		myTextures[MaterialTextureChannel::Surface]->SetAsResource(MaterialTextureChannel::Surface);
 	}
 }

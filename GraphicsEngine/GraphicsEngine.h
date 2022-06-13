@@ -2,7 +2,7 @@
 #include "ForwardRenderer.h"
 #include "Scene.h"
 
-enum class RenderMode
+enum class RenderMode //Update RenderModeToString when adding new rendermodes
 {
 	Default,
 	UV,
@@ -15,6 +15,10 @@ enum class RenderMode
 	DiffuseLightNoAlbedo,
 	AmbientLight,
 	AmbientLightNoAlbedo,
+	AmbientOcclusion,
+	Roughness,
+	Metalness,
+	Emissiveness,
 	COUNT
 };
 
@@ -39,6 +43,8 @@ public:
 	RenderMode GetRenderMode() const;
 
 private:
+	std::string RenderModeToString(RenderMode aRenderMode);
+
 	SIZE myWindowSize{0, 0};
 	HWND myWindowHandle{};
 

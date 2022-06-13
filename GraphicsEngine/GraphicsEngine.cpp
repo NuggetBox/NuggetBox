@@ -2,6 +2,7 @@
 #include "GraphicsEngine.h"
 
 #include "Camera.h"
+#include "DebugLogger.h"
 #include "Model.h"
 #include "InputHandler.h"
 #include "Timer.h"
@@ -99,6 +100,10 @@ void GraphicsEngine::InputRenderMode()
 #ifdef _DEBUG
 	UINT currentRenderMode = static_cast<UINT>(myRenderMode);
 
+	if (InputHandler::GetKeyDown(VK_F5))
+	{
+		DebugLogger::WriteCrashLog();
+	}
 	if (Utility::InputHandler::GetKeyDown(VK_F6))
 	{
 		if (currentRenderMode == 0)
@@ -119,8 +124,18 @@ void GraphicsEngine::InputRenderMode()
 			currentRenderMode = 0;
 		}
 	}
-
+	else
+	{
+		return;
+	}
 	SetRenderMode(static_cast<RenderMode>(currentRenderMode));
+	//TODO: Move outside debug define
+	DebugLogger::Log("Render Mode set to: " + RenderModeToString(myRenderMode));
+	DebugLogger::Warning("YO PAUDA THIS IS WARNING");
+	DebugLogger::Error("ERROR");
+	std::string wtf("asd");
+	LOG("DEFINE!!!");
+
 #endif
 }
 
@@ -155,6 +170,29 @@ void GraphicsEngine::SetRenderMode(RenderMode aRenderMode)
 RenderMode GraphicsEngine::GetRenderMode() const
 {
 	return myRenderMode;
+}
+
+std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
+{
+	switch (aRenderMode)
+	{
+	case RenderMode::Default: return "Default";
+	case RenderMode::UV: return "UV";
+	case RenderMode::VertexColor: return "Vertex Color";
+	case RenderMode::VertexNormal: return "Vertex Normal";
+	case RenderMode::PixelNormal: return "Pixel Normal";
+	case RenderMode::AlbedoMap: return "Albedo Texture";
+	case RenderMode::NormalMap: return "Normal Map";
+	case RenderMode::DiffuseLight: return "Diffuse Light & Albedo";
+	case RenderMode::DiffuseLightNoAlbedo: return "Diffuse Light Only";
+	case RenderMode::AmbientLight: return "Ambient Light & Albedo";
+	case RenderMode::AmbientLightNoAlbedo: return "Ambient Light Only";
+	case RenderMode::AmbientOcclusion: return "Ambient Occlusion";
+	case RenderMode::Roughness: return "Roughness";
+	case RenderMode::Metalness: return "Metalness";
+	case RenderMode::Emissiveness: return "Emissiveness";
+	default: return "Unknown";
+	}
 }
 
 void GraphicsEngine::BeginFrame()

@@ -1,0 +1,48 @@
+[2022.06.13 15:18:20.023] Render Mode set to: Emissiveness  
+[2022.06.13 15:18:20.049] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.050] Error ERROR  
+[2022.06.13 15:18:20.050] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.078] Render Mode set to: Default  
+[2022.06.13 15:18:20.079] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.080] Error ERROR  
+[2022.06.13 15:18:20.080] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.191] Render Mode set to: Emissiveness  
+[2022.06.13 15:18:20.194] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.194] Error ERROR  
+[2022.06.13 15:18:20.195] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.258] Render Mode set to: Default  
+[2022.06.13 15:18:20.259] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.259] Error ERROR  
+[2022.06.13 15:18:20.259] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.358] Render Mode set to: Emissiveness  
+[2022.06.13 15:18:20.359] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.359] Error ERROR  
+[2022.06.13 15:18:20.360] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.458] Render Mode set to: Default  
+[2022.06.13 15:18:20.460] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.461] Error ERROR  
+[2022.06.13 15:18:20.462] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.542] Render Mode set to: Emissiveness  
+[2022.06.13 15:18:20.543] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.543] Error ERROR  
+[2022.06.13 15:18:20.543] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.609] Render Mode set to: Default  
+[2022.06.13 15:18:20.609] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.610] Error ERROR  
+[2022.06.13 15:18:20.610] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.709] Render Mode set to: Emissiveness  
+[2022.06.13 15:18:20.714] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.714] Error ERROR  
+[2022.06.13 15:18:20.715] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:20.875] Render Mode set to: Metalness  
+[2022.06.13 15:18:20.876] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:20.876] Error ERROR  
+[2022.06.13 15:18:20.877] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:21.024] Render Mode set to: Roughness  
+[2022.06.13 15:18:21.025] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:21.026] Error ERROR  
+[2022.06.13 15:18:21.026] DEFINE!!! GraphicsEngine.cpp 137
+[2022.06.13 15:18:21.191] Render Mode set to: Ambient Occlusion  
+[2022.06.13 15:18:21.192] Warning YO PAUDA THIS IS WARNING  
+[2022.06.13 15:18:21.193] Error ERROR  
+[2022.06.13 15:18:21.193] DEFINE!!! GraphicsEngine.cpp 137

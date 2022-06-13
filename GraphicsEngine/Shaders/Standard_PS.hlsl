@@ -14,7 +14,14 @@ PixelOutput main(VertexToPixel input)
 
 	//Texture sampling
 	const float3 albedo = albedoTexture.Sample(defaultSampler, input.myUV0).rgb;
-	const float3 normalMap = normalTexture.Sample(defaultSampler, input.myUV0).agr;
+	const float3 normalMap = normalTexture.Sample(defaultSampler, input.myUV0).agb;
+	const float4 surface = surfaceTexture.Sample(defaultSampler, input.myUV0);
+
+	const float ambientOcclusion = normalMap.b;
+	const float metalness = surface.r;
+	const float roughness = surface.g;
+	const float emissive = surface.b;
+	const float emissiveStrength = surface.a;
 
 	//Construct TangetSpaceMatrix
 	const float3x3 TangentSpaceMatrix = float3x3
@@ -110,6 +117,22 @@ PixelOutput main(VertexToPixel input)
 			break;
 		case 10: //AmbientLightNoAlbedo
 			result.myColor.rgb = saturate(environment);
+			result.myColor.a = 1;
+			break;
+		case 11: //Ambient Occlusion
+			result.myColor.rgb = ambientOcclusion;
+			result.myColor.a = 1;
+			break;
+		case 12: //Roughness
+			result.myColor.rgb = roughness;
+			result.myColor.a = 1;
+			break;
+		case 13: //Metalness
+			result.myColor.rgb = metalness;
+			result.myColor.a = 1;
+			break;
+		case 14: //Emissiveness
+			result.myColor.rgb = emissive * emissiveStrength;
 			result.myColor.a = 1;
 			break;
 	}

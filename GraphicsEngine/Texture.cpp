@@ -2,8 +2,6 @@
 #include "Texture.h"
 #include "DDSTextureLoader/DDSTextureLoader11.h"
 
-std::unordered_map<std::string, std::shared_ptr<Texture>> Texture::ourTextureRegistry;
-
 std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 {
 	if (ourTextureRegistry.contains(aPath.string()))
@@ -11,13 +9,13 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 		return ourTextureRegistry.at(aPath.string());
 	}
 
-	Texture texture;
+	std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 
 	//Try to load texture from file
 	if (std::filesystem::exists(aPath))
 	{
-		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), aPath.c_str(), texture.myTexture.GetAddressOf(), texture.myShaderResourceView.GetAddressOf()))
-		ourTextureRegistry.insert(std::pair(aPath.string(), std::make_shared<Texture>(texture)));
+		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), aPath.c_str(), texture->myTexture.GetAddressOf(), texture->myShaderResourceView.GetAddressOf()))
+		ourTextureRegistry.insert(std::pair(aPath.string(), texture));
 	}
 	//Couldn't find a texture that matches our TGA standard, load default texture
 	else
@@ -50,11 +48,11 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 			}
 		}
 
-		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), std::wstring(defaultPath.begin(), defaultPath.end()).c_str(), texture.myTexture.GetAddressOf(), texture.myShaderResourceView.GetAddressOf()))
-		ourTextureRegistry.insert(std::pair(defaultPath, std::make_shared<Texture>(texture)));
+		AssertIfFailed(DirectX::CreateDDSTextureFromFile(DX11::Device.Get(), std::wstring(defaultPath.begin(), defaultPath.end()).c_str(), texture->myTexture.GetAddressOf(), texture->myShaderResourceView.GetAddressOf()))
+		ourTextureRegistry.insert(std::pair(defaultPath, texture));
 	}
 
-	return std::make_shared<Texture>(texture);
+	return texture;
 }
 
 void Texture::SetAsResource(UINT aSlot)

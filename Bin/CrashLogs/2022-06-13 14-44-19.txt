@@ -1,0 +1,33 @@
+Message [2022.06.13 14:44:18.041] Render Mode set to: Ambient Light & Albedo
+Warning [2022.06.13 14:44:18.042] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.043] ERROR
+Message [2022.06.13 14:44:18.108] Render Mode set to: Ambient Light Only
+Warning [2022.06.13 14:44:18.109] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.110] ERROR
+Message [2022.06.13 14:44:18.208] Render Mode set to: Ambient Light & Albedo
+Warning [2022.06.13 14:44:18.208] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.209] ERROR
+Message [2022.06.13 14:44:18.291] Render Mode set to: Ambient Light Only
+Warning [2022.06.13 14:44:18.292] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.292] ERROR
+Message [2022.06.13 14:44:18.358] Render Mode set to: Ambient Light & Albedo
+Warning [2022.06.13 14:44:18.359] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.360] ERROR
+Message [2022.06.13 14:44:18.441] Render Mode set to: Ambient Light Only
+Warning [2022.06.13 14:44:18.442] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.443] ERROR
+Message [2022.06.13 14:44:18.491] Render Mode set to: Ambient Light & Albedo
+Warning [2022.06.13 14:44:18.492] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.492] ERROR
+Message [2022.06.13 14:44:18.574] Render Mode set to: Ambient Light Only
+Warning [2022.06.13 14:44:18.575] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.576] ERROR
+Message [2022.06.13 14:44:18.641] Render Mode set to: Ambient Light & Albedo
+Warning [2022.06.13 14:44:18.642] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.643] ERROR
+Message [2022.06.13 14:44:18.724] Render Mode set to: Diffuse Light Only
+Warning [2022.06.13 14:44:18.725] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.726] ERROR
+Message [2022.06.13 14:44:18.841] Render Mode set to: Ambient Light & Albedo
+Warning [2022.06.13 14:44:18.842] YO PAUDA THIS IS WARNING
+Error [2022.06.13 14:44:18.843] ERROR
