@@ -2,6 +2,7 @@
 #define FLT_EPSILON 1.192092896e-07f
 #define nMipOffset 3
 #define PI 3.14159265358979323846f
+#include "Common.hlsli"
 
 float2 polarToCartesian(float polar, float2 vec)
 {
@@ -126,7 +127,7 @@ float3 Specular(float3 specularColor, float3 h, float3 v, float a, float NdL, fl
     return ((NormalDistribution_GGX(a, NdH) * Geometric_Smith_Schlick_GGX(a, NdV, NdL)) * Fresnel_Schlick(specularColor, h, v)) / (4.0f * NdL * NdV + 0.0001f);
 }
 
-float3 EvaluateAmbience(TextureCube lysBurleyCube, float3 pixelNormal, float3 vertexNormal, float3 toEye, float perceptualRoughness, float ao, float3 diffuseColor, float3 specularColor)
+float3 EvaluateAmbience(TextureCube lysBurleyCube, float3 pixelNormal, float3 vertexNormal, float3 toEye, float perceptualRoughness, float ao, float3 diffuseColor, float3 specularColor, SamplerState aSampler)
 {
     // Extract the number of Mipmaps that exist in this texture.
     const int numMips = GetNumMips(lysBurleyCube);
@@ -146,9 +147,9 @@ float3 EvaluateAmbience(TextureCube lysBurleyCube, float3 pixelNormal, float3 ve
     const float mipLevel = BurleyToMip(perceptualRoughness, numMips, RdotNsat);
 
     // Specular Radiance from the cubemap
-    const float3 specRad = lysBurleyCube.SampleLevel(defaultSampler, vR, mipLevel).xyz;
+    const float3 specRad = lysBurleyCube.SampleLevel(aSampler, vR, mipLevel).xyz;
     // Diffuse Irradiance from the cubemap.
-    const float3 diffRad = lysBurleyCube.SampleLevel(defaultSampler, pixelNormal, (float)(nrBrdMips - 1)).xyz;
+    const float3 diffRad = lysBurleyCube.SampleLevel(aSampler, pixelNormal, (float)(nrBrdMips - 1)).xyz;
 
     // The specular color temper.
     const float fT = 1.0 - RdotNsat;

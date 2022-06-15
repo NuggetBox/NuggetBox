@@ -22,8 +22,8 @@ struct FrameBufferData
 {
 	Matrix4x4<float> View;
 	Matrix4x4<float> Projection;
+	Vector3f CamTranslation;
 	UINT RenderMode;
-	Vector3f padding;
 };
 
 struct ObjectBufferData

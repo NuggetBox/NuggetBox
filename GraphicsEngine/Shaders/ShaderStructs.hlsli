@@ -19,6 +19,7 @@ struct VertexInput
 struct VertexToPixel
 {
 	float4 myPosition : SV_POSITION;
+	float4 myVertexPosition : POSITION;
 	float4 myVertexColor0 : COLOR0;
 	float4 myVertexColor1 : COLOR1;
 	float4 myVertexColor2 : COLOR2;
@@ -43,6 +44,7 @@ cbuffer FrameBuffer : register(b0)
 {
 	float4x4 FB_ToView;
 	float4x4 FB_ToProjection;
+	float3 FB_CamTranslation;
 	unsigned int FB_RenderMode;
 }
 

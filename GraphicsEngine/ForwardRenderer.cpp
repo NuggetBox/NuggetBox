@@ -52,6 +52,7 @@ void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::
 
     myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
+    myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
     myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
 
     //Map frame buffer resource

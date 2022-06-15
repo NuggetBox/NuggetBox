@@ -1,3 +1,4 @@
+#include "PBRFunctions.hlsli"
 #include "ShaderStructs.hlsli"
 
 PixelOutput main(VertexToPixel input)
@@ -22,6 +23,8 @@ PixelOutput main(VertexToPixel input)
 	const float roughness = surface.g;
 	const float emissive = surface.b;
 	const float emissiveStrength = surface.a;
+
+	const float3 toEye = normalize(FB_CamTranslation.xyz - input.myVertexPosition.xyz);
 
 	//Construct TangetSpaceMatrix
 	const float3x3 TangentSpaceMatrix = float3x3
@@ -48,19 +51,29 @@ PixelOutput main(VertexToPixel input)
 	const float3 C = LB_Color;
 	const float I = LB_Intensity;
 	const float3 finalPixelColor = LdotN * C * I;
-
-	const float3 diffuse = albedo * finalPixelColor;
+	float3 diffuse = albedo * finalPixelColor;
 
 	//IBL: Image based lightning
 	const float3 environment = environmentTexture.SampleLevel(defaultSampler, input.myNormal, 5).rgb;
-	const float3 ambient = albedo * environment;
+	float3 ambient = albedo * environment;
+
+	//PBR
+	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
+	const float3 diffuseColor = lerp((float3)0.00f, albedo, 1 - metalness);
+	const float3 ambientLighting = EvaluateAmbience(environmentTexture, pixelNormal, input.myNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
+	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, pixelNormal, roughness, LB_Color, LB_Intensity, -LB_Direction, toEye);
+
+	//PBR replace IBL temp
+	ambient = ambientLighting;
+	diffuse = directionalLighting;
 
 #ifdef _DEBUG
 	switch (FB_RenderMode)
 	{
 		default:
 		case 0: //Default
-			result.myColor.rgb = saturate(ambient + diffuse);
+			//result.myColor.rgb = saturate(ambient + diffuse);
+			result.myColor.rgb = LinearToGamma(ambient + diffuse);
 			result.myColor.a = 1;
 			break;
 		case 1: //UV
@@ -111,7 +124,6 @@ PixelOutput main(VertexToPixel input)
 			result.myColor.a = 1;
 			break;
 		case 9: //AmbientLight + Albedo
-			//IBL: Image based lightning
 			result.myColor.rgb = saturate(ambient);
 			result.myColor.a = 1;
 			break;

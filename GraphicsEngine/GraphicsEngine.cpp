@@ -66,7 +66,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	camera->SetPosition(0, 0, -300);
 	myScene.SetCamera(camera);
 
-	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 3.0f, Vector3f(1, -1, 1)));
+	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 2.0f, Vector3f(1, -1, 1)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	myForwardRenderer.Initialize();

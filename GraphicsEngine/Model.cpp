@@ -105,6 +105,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
 		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
+		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
 
 		cube.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(cube);
@@ -157,6 +158,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
 		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
+		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
 
 		pyramid.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(pyramid);
@@ -223,6 +225,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			const std::string baseFileName = aPath.stem().string();
 			const std::string albedoFileName = "T_" + baseFileName + "_C.dds";
 			const std::string normalFileName = "T_" + baseFileName + "_N.dds";
+			const std::string surfaceFileName = "T_" + baseFileName + "_M.dds";
 
 			//TODO: Get material name from .fbx file
 			//loadedMesh.MaterialName
@@ -231,6 +234,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 			meshMaterial->SetAlbedoTexture(Texture::Load("Textures/" + albedoFileName));
 			meshMaterial->SetNormalMap(Texture::Load("Textures/" + normalFileName));
+			meshMaterial->SetSurfaceTexture(Texture::Load("Textures/" + surfaceFileName));
 
 			Mesh mesh(vertices, indices);
 			mesh.SetMaterial(meshMaterial);
