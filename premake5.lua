@@ -7,7 +7,7 @@ workspace "NuggetBox"
 		"Release"
 	}
 
-include "ModelViewer"
-include "GraphicsEngine"
-include "Utility"
+include "Source/ModelViewer"
+include "Source/GraphicsEngine"
+include "Source/Utility"
 include "External"

@@ -1,12 +1,8 @@
 {
 	"Emitters": [
 		{
-			"TexturePath": "Textures/ParticleStar.dds",
-			"SettingsPath": "Json/Emitter1.json"
-		},
-		{
-			"TexturePath": "Textures/ParticleStar.dds",
-			"SettingsPath": "Json/Emitter1.json"
+			"SettingsPath": "Json/ParticleSystems/Emitter1.json",
+			"Transform": 1.0
 		}
 	]
 }

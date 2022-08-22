@@ -1,12 +1,13 @@
 {
-  "SpawnRate": 1.0,
+  "TexturePath": "Textures/ParticleStar.dds",
+  "SpawnRate": 10.0,
   "SpawnAngle": 0.0,
   "LifeTime": 3.0,
-  "StartVelocity": [ 0.0, 0.0, 0.0 ],
+  "StartVelocity": [ 0.0, 50.0, 0.0 ],
   "EndVelocity": [ 0.0, 0.0, 0.0 ],
   "GravityScale": 0.0,
-  "StartSize": 1.0,
-  "EndSize": 1.0,
+  "StartSize": 100.0,
+  "EndSize": 20.0,
   "StartColor": [ 1.0, 1.0, 1.0, 1.0 ],
-  "EndColor": [1.0, 1.0, 1.0, 1.0]
+  "EndColor": [ 1.0, 1.0, 1.0, 1.0 ]
 }
