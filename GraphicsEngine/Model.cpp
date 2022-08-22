@@ -6,7 +6,7 @@
 #include <d3d11.h>
 
 #include "DebugLogger.h"
-#include "TGAFBXImporter/FBXImporter.h"
+#include "TGAFBXImporter/include/FBXImporter.h"
 #include "FBXStructs.h"
 #include "Timer.h"
 

@@ -27,8 +27,7 @@ project "GraphicsEngine"
 		"External.lib",
 		"Utility.lib",
 		"d3d11.lib",
-		"libfbxsdk.dll",
-		"TGAFBXImporter.lib"
+		"libfbxsdk.dll"
 	}
 
 	files {

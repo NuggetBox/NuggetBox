@@ -5,8 +5,7 @@
 #include <filesystem>
 
 #include "DebugLogger.h"
-#include "TGAFBXImporter/FBXImporter.h"
-#include "TGAFBXImporter/FBXImporterStructs.h"
+#include "TGAFBXImporter/include/FBXImporter.h"
 #include "Skeleton.h"
 
 Animation::Animation(const AnimationData& someAnimationData)

@@ -10,13 +10,23 @@ project "External"
 
 	includedirs{
 		"imgui/",
-		"freetype/include/"
+		"freetype/include/",
+		"TGAFBXImporter/include/"
 	}
 
 	files {
 		"**.h",
 		"**.cpp",
 		"**.hpp"
+	}
+	
+
+	libdirs{
+		"TGAFBXImporter/lib/%{cfg.buildcfg}"
+	}
+
+	links{
+		"TGAFBXImporter.lib"
 	}
 
 	filter "configurations:Debug"
