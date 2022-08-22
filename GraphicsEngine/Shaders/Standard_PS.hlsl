@@ -26,7 +26,7 @@ PixelOutput main(VertexToPixel input)
 
 	const float3 toEye = normalize(FB_CamTranslation.xyz - input.myVertexPosition.xyz);
 
-	//Construct TangetSpaceMatrix
+	//Construct TangentSpaceMatrix
 	const float3x3 TangentSpaceMatrix = float3x3
 	(
 		normalize(input.myTangent),

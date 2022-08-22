@@ -7,6 +7,8 @@
 #include "InputHandler.h"
 #include "Timer.h"
 
+#include "imgui/imgui.h"
+
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
 	DebugLogger::SetupCrashDump();
@@ -16,6 +18,8 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	// F1 -- This is where we should init our Framework
 	// ex: myFramework.Initialize(myWindowHandle, false);
 	DX11::Initialize(myWindowHandle, enableDeviceDebug);
+	SetupBlendStates();
+	SetupDepthStencilStates();
 
 	Utility::Timer::Start();
 
@@ -66,6 +70,8 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	camera->SetPosition(0, 0, -300);
 	myScene.SetCamera(camera);
 
+	//TODO: Create the particle system, make registry first, structure SceneObject maybe for the system&emitter
+	
 	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 2.0f, Vector3f(1, -1, 1)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
@@ -97,6 +103,30 @@ void GraphicsEngine::InitializeWindow(unsigned someX, unsigned someY, unsigned s
 	);
 
 	DEBUGLOG("Initialized Window");
+}
+
+void GraphicsEngine::ResizeWindow(HWND aHWND, UINT someWidth, UINT someHeight)
+{
+	//TODO: Resize Window WIP
+	//Resize funkar så länge fönstret är mindre än ursprungligen
+	if (DX11::SwapChain)
+	{
+		DX11::Context->OMSetRenderTargets(0, 0, 0);
+
+		DX11::BackBuffer->Release();
+
+		AssertIfFailed(DX11::SwapChain->ResizeBuffers(2, 0, 0, DXGI_FORMAT_UNKNOWN, 0));
+
+		ComPtr<ID3D11Texture2D> backBufferTexture;
+		AssertIfFailed(DX11::SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(backBufferTexture.GetAddressOf())));
+		AssertIfFailed(DX11::Device->CreateRenderTargetView(backBufferTexture.Get(), nullptr, DX11::BackBuffer.GetAddressOf()));
+
+		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+
+		RECT clientRect;
+		GetClientRect(aHWND, &clientRect);
+		DX11::SetViewport(clientRect);
+	}
 }
 
 void GraphicsEngine::InputRenderMode()
@@ -152,8 +182,23 @@ LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WP
 		const CREATESTRUCT* createdStruct = reinterpret_cast<CREATESTRUCT*>(lParam);
 		graphicsEnginePtr = static_cast<GraphicsEngine*>(createdStruct->lpCreateParams);
 	}
+	else if (uMsg == WM_SIZE)
+	{
+		//ResizeWindow(hWnd, LOWORD(lParam), HIWORD(lParam));
+		//return true;
+	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+void GraphicsEngine::SetBlendState(BlendState aBlendState)
+{
+	DX11::Context->OMSetBlendState(myBlendStates[static_cast<UINT>(aBlendState)].Get(), nullptr, 0xffffffff);
+}
+
+void GraphicsEngine::SetDepthStencilState(DepthStencilState aDepthStencilState)
+{
+	DX11::Context->OMSetDepthStencilState(myDepthStencilStates[static_cast<UINT>(aDepthStencilState)].Get(), 0);
 }
 
 void GraphicsEngine::SetRenderMode(RenderMode aRenderMode)
@@ -164,6 +209,55 @@ void GraphicsEngine::SetRenderMode(RenderMode aRenderMode)
 RenderMode GraphicsEngine::GetRenderMode() const
 {
 	return myRenderMode;
+}
+
+void GraphicsEngine::SetupBlendStates()
+{
+	//Setup Alpha Blend
+	D3D11_BLEND_DESC alphaBlendDesc = {};
+	alphaBlendDesc.RenderTarget[0].BlendEnable = true;
+	alphaBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	alphaBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	alphaBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	alphaBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	alphaBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	alphaBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+	alphaBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	AssertIfFailed(DX11::Device->CreateBlendState(&alphaBlendDesc, myBlendStates[static_cast<unsigned int>(BlendState::AlphaBlend)].GetAddressOf()));
+	//
+
+	//Setup Additive Blend
+	D3D11_BLEND_DESC additiveBlendDesc{};
+	additiveBlendDesc.RenderTarget[0].BlendEnable = true;
+	additiveBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	additiveBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	additiveBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+	additiveBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	AssertIfFailed(DX11::Device->CreateBlendState(&additiveBlendDesc, myBlendStates[static_cast<unsigned int>(BlendState::Additive)].GetAddressOf()));
+	//
+
+	//Setup BlendState None
+	myBlendStates[static_cast<UINT>(BlendState::None)] = nullptr;
+	//
+
+	DEBUGLOG("Blend States setup successfully");
+}
+
+void GraphicsEngine::SetupDepthStencilStates()
+{
+	D3D11_DEPTH_STENCIL_DESC readOnlyDepthDesc{};
+	readOnlyDepthDesc.DepthEnable = true;
+	readOnlyDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	readOnlyDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	readOnlyDepthDesc.StencilEnable = false;
+	AssertIfFailed(DX11::Device->CreateDepthStencilState(&readOnlyDepthDesc, &myDepthStencilStates[static_cast<UINT>(DepthStencilState::ReadOnly)]));
+
+	myDepthStencilStates[static_cast<UINT>(DepthStencilState::ReadWrite)] = nullptr;
+
+	DEBUGLOG("Depth Stencil States setup successfully");
 }
 
 std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
@@ -185,7 +279,7 @@ std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
 	case RenderMode::Roughness: return "Roughness";
 	case RenderMode::Metalness: return "Metalness";
 	case RenderMode::Emissiveness: return "Emissiveness";
-	default: return "Unknown";
+	default: return "Not implemented";
 	}
 }
 
@@ -199,8 +293,13 @@ void GraphicsEngine::BeginFrame()
 
 void GraphicsEngine::RenderFrame()
 {
+	ImGui::Begin("Yo window");
+	ImGui::Text("I am a text");
+	ImGui::End();
+
 	auto& camera = myScene.GetCamera();
 	auto& models = myScene.GetModels();
+	auto& particleSystems = myScene.GetParticleSystems();
 
 	InputRenderMode();
 
@@ -250,7 +349,18 @@ void GraphicsEngine::RenderFrame()
 		model->Update();
 	}
 
-	myForwardRenderer.Render(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
+	for (auto& particleSystem : particleSystems)
+	{
+		particleSystem->Update(Timer::GetDeltaTime());
+	}
+
+	SetBlendState(BlendState::Additive);
+	SetDepthStencilState(DepthStencilState::ReadOnly);
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::ReadWrite);
+
+	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
 	InputHandler::UpdatePreviousState();
 }
 

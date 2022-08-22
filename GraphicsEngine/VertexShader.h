@@ -5,22 +5,29 @@
 
 #include "DX11.h"
 
+enum class InputLayoutType
+{
+	MeshVertex,
+	ParticleVertex
+};
+
 class VertexShader
 {
 public:
 	VertexShader() = default;
 
 	void Bind() const;
-	static std::shared_ptr<VertexShader> Load(const std::filesystem::path& aPath);
+	static std::shared_ptr<VertexShader> Load(const std::filesystem::path& aPath, InputLayoutType anInputLayoutType = InputLayoutType::MeshVertex);
+
+	void CreateInputLayout(const std::string& someVertexShaderData, InputLayoutType anInputLayoutType = InputLayoutType::MeshVertex);
+	//const ComPtr<ID3D11InputLayout>& GetInputLayout() const;
 
 private:
-	static void SetInputLayout(const std::string& someVertexShaderData);
-
 	static inline std::unordered_map<std::string, std::shared_ptr<VertexShader>> ourVertexShaderRegistry;
 
 	ComPtr<ID3D11VertexShader> myVertexShader;
+	ComPtr<ID3D11InputLayout> myInputLayout;
 
-	//Needed?
-	static inline ComPtr<ID3D11InputLayout> ourInputLayout;
-	static inline bool ourInputLayoutIsSet;
+	//Might be useful
+	std::string myName;
 };

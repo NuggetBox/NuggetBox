@@ -7,6 +7,7 @@
 class Texture
 {
 public:
+	//TODO: Separate into load and get for more management opportunity? Unload needed?
 	static std::shared_ptr<Texture> Load(const std::filesystem::path& aPath);
 	void SetAsResource(UINT aSlot);
 

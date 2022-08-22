@@ -55,7 +55,6 @@ void DX11::EndFrame()
 void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-	//swapChainDesc.BufferCount = 1;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 4 färgkanaler RGBA, unsigned, normalized
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = aWindowHandle;
@@ -63,6 +62,7 @@ void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
 	swapChainDesc.Windowed = true;
 
 	//Daniels windows 8+ change
+	//swapChainDesc.BufferCount = 1;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.BufferCount = 2;
 

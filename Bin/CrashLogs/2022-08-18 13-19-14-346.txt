@@ -1,0 +1,65 @@
+[13:19:11.804] [MESSAGE in GraphicsEngine.cpp:101] Initialized Window
+[13:19:11.981] [MESSAGE in DX11.cpp:85] Created Swap Chain
+[13:19:11.982] [MESSAGE in DX11.cpp:104] Created Depth Buffer
+[13:19:11.982] [MESSAGE in DX11.cpp:119] Viewport set
+[13:19:11.983] [MESSAGE in DX11.cpp:141] Created Sampler State
+[13:19:11.989] [MESSAGE in VertexShader.cpp:34] Loaded Vertex Shader Standard_VS.cso
+[13:19:11.996] [MESSAGE in PixelShader.cpp:32] Loaded Pixel Shader Standard_PS.cso
+[13:19:11.999] [MESSAGE in Texture.cpp:21] Loaded Texture T_Default_C.dds
+[13:19:12.000] [MESSAGE in Texture.cpp:21] Loaded Texture T_Default_N.dds
+[13:19:12.000] [MESSAGE in Texture.cpp:21] Loaded Texture T_Default_M.dds
+[13:19:12.000] [MESSAGE in Model.cpp:112] Created Primitive Cube Mesh
+[13:19:12.000] [MESSAGE in Model.cpp:284] Loaded Model Cube
+[13:19:12.001] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.001] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.001] [MESSAGE in Texture.cpp:11] Loaded Texture T_Default_C.dds from registry
+[13:19:12.002] [MESSAGE in Texture.cpp:11] Loaded Texture T_Default_N.dds from registry
+[13:19:12.002] [MESSAGE in Texture.cpp:11] Loaded Texture T_Default_M.dds from registry
+[13:19:12.003] [MESSAGE in Model.cpp:165] Created Primitive Pyramid Mesh
+[13:19:12.003] [MESSAGE in Model.cpp:284] Loaded Model Pyramid
+[13:19:12.056] [MESSAGE in Texture.cpp:21] Loaded Texture T_Particle_Chest_C.dds
+[13:19:12.060] [MESSAGE in Texture.cpp:21] Loaded Texture T_Particle_Chest_N.dds
+[13:19:12.063] [MESSAGE in Texture.cpp:21] Loaded Texture T_Particle_Chest_M.dds
+[13:19:12.064] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.064] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.065] [MESSAGE in Texture.cpp:11] Loaded Texture T_Particle_Chest_C.dds from registry
+[13:19:12.066] [MESSAGE in Texture.cpp:11] Loaded Texture T_Particle_Chest_N.dds from registry
+[13:19:12.066] [MESSAGE in Texture.cpp:11] Loaded Texture T_Particle_Chest_M.dds from registry
+[13:19:12.067] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.067] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.067] [MESSAGE in Model.cpp:284] Loaded Model Particle_Chest.fbx
+[13:19:12.273] [MESSAGE in Texture.cpp:21] Loaded Texture T_gremlin_C.dds
+[13:19:12.277] [MESSAGE in Texture.cpp:21] Loaded Texture T_gremlin_N.dds
+[13:19:12.280] [MESSAGE in Texture.cpp:21] Loaded Texture T_gremlin_M.dds
+[13:19:12.280] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.281] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.282] [MESSAGE in Model.cpp:280] Loaded Skeleton
+[13:19:12.282] [MESSAGE in Model.cpp:284] Loaded Model gremlin.fbx
+[13:19:12.340] [MESSAGE in Animation.cpp:27] Loaded Animation gremlin@walk.fbx
+[13:19:12.391] [MESSAGE in Animation.cpp:27] Loaded Animation gremlin@run.fbx
+[13:19:12.393] [MESSAGE in Model.cpp:39] Loaded Model gremlin.fbx from registry
+[13:19:12.393] [MESSAGE in Animation.cpp:21] Loaded Animation gremlin@walk.fbx from registry
+[13:19:12.394] [MESSAGE in Animation.cpp:21] Loaded Animation gremlin@run.fbx from registry
+[13:19:12.451] [MESSAGE in Texture.cpp:21] Loaded Texture T_SpiderCat_C.dds
+[13:19:12.452] [MESSAGE in Texture.cpp:21] Loaded Texture T_SpiderCat_N.dds
+[13:19:12.453] [MESSAGE in Texture.cpp:21] Loaded Texture T_SpiderCat_M.dds
+[13:19:12.454] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.454] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.455] [MESSAGE in Texture.cpp:11] Loaded Texture T_SpiderCat_C.dds from registry
+[13:19:12.455] [MESSAGE in Texture.cpp:11] Loaded Texture T_SpiderCat_N.dds from registry
+[13:19:12.456] [MESSAGE in Texture.cpp:11] Loaded Texture T_SpiderCat_M.dds from registry
+[13:19:12.457] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.457] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.458] [MESSAGE in Model.cpp:284] Loaded Model SpiderCat.fbx
+[13:19:12.486] [MESSAGE in VertexShader.cpp:19] Loaded Vertex Shader Standard_VS.cso from registry
+[13:19:12.487] [MESSAGE in PixelShader.cpp:17] Loaded Pixel Shader Standard_PS.cso from registry
+[13:19:12.487] [MESSAGE in Model.cpp:284] Loaded Model sphere.fbx
+[13:19:12.488] [MESSAGE in DirectionalLight.cpp:12] Created Directional Light
+[13:19:12.514] [MESSAGE in Texture.cpp:21] Loaded Texture skansen_cubemap.dds
+[13:19:12.515] [MESSAGE in AmbientLight.cpp:10] Created Ambient Light
+[13:19:12.515] [MESSAGE in ForwardRenderer.cpp:28] Created Frame Buffer
+[13:19:12.516] [MESSAGE in ForwardRenderer.cpp:33] Created Object Buffer
+[13:19:12.516] [MESSAGE in ForwardRenderer.cpp:38] Created Material Buffer
+[13:19:12.517] [MESSAGE in ForwardRenderer.cpp:43] Created Light Buffer
+[13:19:12.517] [MESSAGE in ForwardRenderer.cpp:45] Forward Renderer Initialized
+[13:19:14.345] [MESSAGE in DebugLogger.cpp:84] Crash signal detected, writing crash log file

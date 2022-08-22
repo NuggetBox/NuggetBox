@@ -10,6 +10,7 @@
 #include "DirectionalLight.h"
 #include "Model.h"
 #include "Light.h"
+#include "ParticleSystem.h"
 
 using namespace Microsoft::WRL;
 using namespace Utility;
@@ -39,9 +40,14 @@ class ForwardRenderer
 {
 public:
 	ForwardRenderer() = default;
+
 	void Initialize();
-	void Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, const std::shared_ptr<
+
+	void RenderModels(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, const std::shared_ptr<
 				DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, RenderMode aRenderMode);
+	void RenderParticles(const std::shared_ptr<Camera>& aCamera, 
+						 const std::vector<std::shared_ptr<ParticleSystem>>& aParticleSystemList, 
+						 RenderMode aRenderMode);
 
 private:
 	//ComPtr<ID3D11RasterizerState> myRasterizerSate;

@@ -16,6 +16,9 @@ namespace Utility
 		//Creates a null-vector
 		Vector3<T>();
 
+		//Creates a vector where all components are the same
+		Vector3<T>(const T& aValue);
+
 		//Creates a vector (aX, aY, aZ)
 		Vector3<T>(const T& aX, const T& aY, const T& aZ);
 
@@ -67,6 +70,14 @@ namespace Utility
 		x = 0;
 		y = 0;
 		z = 0;
+	}
+
+	template <class T>
+	Vector3<T>::Vector3(const T& aValue)
+	{
+		x = aValue;
+		y = aValue;
+		z = aValue;
 	}
 
 	template <class T>

@@ -1,0 +1,66 @@
+[11:37:44.934] [MESSAGE] Initialized Window
+[11:37:45.079] [MESSAGE] Created Swap Chain
+[11:37:45.079] [MESSAGE] Created Depth Buffer
+[11:37:45.080] [MESSAGE] Viewport set
+[11:37:45.080] [MESSAGE] Created Sampler State
+[11:37:45.086] [MESSAGE] Loaded Vertex Shader Standard_VS.cso
+[11:37:45.093] [MESSAGE] Loaded Pixel Shader Standard_PS.cso
+[11:37:45.096] [MESSAGE] Loaded Texture T_Default_C.dds
+[11:37:45.097] [MESSAGE] Loaded Texture T_Default_N.dds
+[11:37:45.097] [MESSAGE] Loaded Texture T_Default_C.dds from registry
+[11:37:45.097] [MESSAGE] Created Primitive Cube Mesh
+[11:37:45.098] [MESSAGE] Loaded Model Cube
+[11:37:45.098] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.098] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.098] [MESSAGE] Loaded Texture T_Default_C.dds from registry
+[11:37:45.098] [MESSAGE] Loaded Texture T_Default_N.dds from registry
+[11:37:45.099] [MESSAGE] Loaded Texture T_Default_C.dds from registry
+[11:37:45.099] [MESSAGE] Created Primitive Pyramid Mesh
+[11:37:45.099] [MESSAGE] Loaded Model Pyramid
+[11:37:45.151] [MESSAGE] Loaded Texture T_Particle_Chest_C.dds
+[11:37:45.154] [MESSAGE] Loaded Texture T_Particle_Chest_N.dds
+[11:37:45.157] [MESSAGE] Loaded Texture T_Particle_Chest_M.dds
+[11:37:45.158] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.159] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.160] [MESSAGE] Loaded Texture T_Particle_Chest_C.dds from registry
+[11:37:45.160] [MESSAGE] Loaded Texture T_Particle_Chest_N.dds from registry
+[11:37:45.160] [MESSAGE] Loaded Texture T_Particle_Chest_M.dds from registry
+[11:37:45.161] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.161] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.161] [MESSAGE] Loaded Model Particle_Chest.fbx
+[11:37:45.364] [MESSAGE] Loaded Texture T_gremlin_C.dds
+[11:37:45.368] [MESSAGE] Loaded Texture T_gremlin_N.dds
+[11:37:45.370] [MESSAGE] Loaded Texture T_gremlin_M.dds
+[11:37:45.371] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.371] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.372] [MESSAGE] Loaded Skeleton
+[11:37:45.373] [MESSAGE] Loaded Model gremlin.fbx
+[11:37:45.428] [MESSAGE] Loaded Animation gremlin@walk.fbx
+[11:37:45.489] [MESSAGE] Loaded Animation gremlin@run.fbx
+[11:37:45.491] [MESSAGE] Loaded Model gremlin.fbx from registry
+[11:37:45.492] [MESSAGE] Loaded Animation gremlin@walk.fbx from registry
+[11:37:45.493] [MESSAGE] Loaded Animation gremlin@run.fbx from registry
+[11:37:45.548] [MESSAGE] Loaded Texture T_SpiderCat_C.dds
+[11:37:45.549] [MESSAGE] Loaded Texture T_SpiderCat_N.dds
+[11:37:45.550] [MESSAGE] Loaded Texture T_SpiderCat_M.dds
+[11:37:45.550] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.550] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.551] [MESSAGE] Loaded Texture T_SpiderCat_C.dds from registry
+[11:37:45.551] [MESSAGE] Loaded Texture T_SpiderCat_N.dds from registry
+[11:37:45.552] [MESSAGE] Loaded Texture T_SpiderCat_M.dds from registry
+[11:37:45.553] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.553] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.554] [MESSAGE] Loaded Model SpiderCat.fbx
+[11:37:45.579] [MESSAGE] Loaded Texture T_sphere_M.dds
+[11:37:45.580] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry
+[11:37:45.580] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry
+[11:37:45.580] [MESSAGE] Loaded Model sphere.fbx
+[11:37:45.581] [MESSAGE] Created Directional Light
+[11:37:45.608] [MESSAGE] Loaded Texture skansen_cubemap.dds
+[11:37:45.608] [MESSAGE] Created Ambient Light
+[11:37:45.609] [MESSAGE] Created Frame Buffer
+[11:37:45.610] [MESSAGE] Created Object Buffer
+[11:37:45.610] [MESSAGE] Created Material Buffer
+[11:37:45.611] [MESSAGE] Created Light Buffer
+[11:37:45.611] [MESSAGE] Forward Renderer Initialized
+[11:37:46.852] [MESSAGE] Crash signal detected, writing crash log file

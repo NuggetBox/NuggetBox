@@ -105,7 +105,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
 		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
-		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
+		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_M.dds"));
 
 		cube.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(cube);
@@ -158,7 +158,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
 		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
 		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
-		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
+		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_M.dds"));
 
 		pyramid.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(pyramid);
@@ -218,7 +218,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			//Copy vertex indices
 			indices = loadedMesh.Indices;
 
-			//TODO: Refactor material loading
+			//TODO: Refactor material loading, if not found, use default
 			//size_t slash = path.rfind('/');
 			//size_t dot = path.rfind('.');
 			//const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);

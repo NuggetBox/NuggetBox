@@ -31,8 +31,8 @@ struct VertexToPixel
 	float3 myNormal : NORMAL;
 	float3 myTangent : TANGENT;
 	float3 myBinormal : BINORMAL;
-	uint4 myBoneIDs : BONEIDS;
-	float4 myBoneWeights : BONEWEIGHTS;
+	//uint4 myBoneIDs : BONEIDS;
+	//float4 myBoneWeights : BONEWEIGHTS;
 };
 
 struct PixelOutput

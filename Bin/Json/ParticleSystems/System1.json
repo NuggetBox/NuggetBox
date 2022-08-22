@@ -1,0 +1,12 @@
+{
+	"Emitters": [
+		{
+			"TexturePath": "Textures/ParticleStar.dds",
+			"SettingsPath": "Json/Emitter1.json"
+		},
+		{
+			"TexturePath": "Textures/ParticleStar.dds",
+			"SettingsPath": "Json/Emitter1.json"
+		}
+	]
+}

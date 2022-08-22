@@ -1,0 +1,12 @@
+{
+  "SpawnRate": 1.0,
+  "SpawnAngle": 0.0,
+  "LifeTime": 3.0,
+  "StartVelocity": [ 0.0, 0.0, 0.0 ],
+  "EndVelocity": [ 0.0, 0.0, 0.0 ],
+  "GravityScale": 0.0,
+  "StartSize": 1.0,
+  "EndSize": 1.0,
+  "StartColor": [ 1.0, 1.0, 1.0, 1.0 ],
+  "EndColor": [1.0, 1.0, 1.0, 1.0]
+}

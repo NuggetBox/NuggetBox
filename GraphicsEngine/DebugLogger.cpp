@@ -1,5 +1,6 @@
 #include "NuggetBox.pch.h"
 #include "DebugLogger.h"
+
 #include <filesystem>
 #include <iostream>
 #include <csignal>

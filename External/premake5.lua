@@ -9,6 +9,8 @@ project "External"
 	objdir ("../Intermediate/%{cfg.buildcfg}/%{prj.name}")
 
 	includedirs{
+		"imgui/",
+		"freetype/include/"
 	}
 
 	files {

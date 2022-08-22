@@ -17,6 +17,9 @@ namespace Utility
 		//Creates a null-vector
 		Vector4<T>();
 
+		//Creates a vector where all components are the same
+		Vector4<T>(const T& aValue);
+
 		//Creates a vector (aX, aY, aZ, aW)
 		Vector4<T>(const T& aX, const T& aY, const T& aZ, const T& aW);
 
@@ -57,6 +60,15 @@ namespace Utility
 		y = 0;
 		z = 0;
 		w = 0;
+	}
+
+	template <class T>
+	Vector4<T>::Vector4(const T& aValue)
+	{
+		x = aValue;
+		y = aValue;
+		z = aValue;
+		w = aValue;
 	}
 
 	template <class T>

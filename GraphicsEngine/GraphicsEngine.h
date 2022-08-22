@@ -2,7 +2,7 @@
 #include "ForwardRenderer.h"
 #include "Scene.h"
 
-enum class RenderMode //Update RenderModeToString when adding new rendermodes
+enum class RenderMode
 {
 	Default,
 	UV,
@@ -19,6 +19,21 @@ enum class RenderMode //Update RenderModeToString when adding new rendermodes
 	Roughness,
 	Metalness,
 	Emissiveness,
+	COUNT //Update RenderModeToString when adding new RenderModes
+};
+
+enum class BlendState
+{
+	None,
+	AlphaBlend,
+	Additive,
+	COUNT
+};
+
+enum class DepthStencilState
+{
+	ReadWrite,
+	ReadOnly,
 	COUNT
 };
 
@@ -29,6 +44,7 @@ public:
 	bool Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug);
 
 	void InitializeWindow(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight);
+	static void ResizeWindow(HWND aHWND, UINT someWidth, UINT someHeight);
 
 	void InputRenderMode();
 
@@ -39,11 +55,20 @@ public:
 	[[nodiscard]] SIZE FORCEINLINE GetWindowSize() const { return myWindowSize; }
 	[[nodiscard]] HWND FORCEINLINE GetWindowHandle() const { return myWindowHandle; }
 
+	void SetBlendState(BlendState aBlendState);
+	void SetDepthStencilState(DepthStencilState aDepthStencilState);
+
 	void SetRenderMode(RenderMode aRenderMode);
 	RenderMode GetRenderMode() const;
 
 private:
+	void SetupBlendStates();
+	void SetupDepthStencilStates();
+
 	std::string RenderModeToString(RenderMode aRenderMode);
+
+	std::array<ComPtr<ID3D11BlendState>, static_cast<unsigned int>(BlendState::COUNT)> myBlendStates;
+	std::array<ComPtr<ID3D11DepthStencilState>, static_cast<unsigned int>(DepthStencilState::COUNT)> myDepthStencilStates;
 
 	SIZE myWindowSize{0, 0};
 	HWND myWindowHandle{};

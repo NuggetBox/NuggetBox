@@ -28,7 +28,8 @@ project "ModelViewer"
 	}
 
 	links{
-		"GraphicsEngine"
+		"GraphicsEngine",
+		"External"
 	}
 
 	filter "configurations:Debug"
