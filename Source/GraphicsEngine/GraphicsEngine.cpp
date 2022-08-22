@@ -6,7 +6,6 @@
 #include "Model.h"
 #include "InputHandler.h"
 #include "Timer.h"
-
 #include "imgui/imgui.h"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)

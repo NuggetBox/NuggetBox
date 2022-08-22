@@ -3,6 +3,8 @@
 #include <wrl.h>
 #include <cassert>
 
+#include "DebugLogger.h"
+
 using namespace Microsoft::WRL;
 
 struct ID3D11Device;
@@ -12,7 +14,7 @@ struct ID3D11SamplerState;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 
-#define AssertIfFailed(x) assert((x) == S_OK)
+#define AssertIfFailed(x) {HRESULT result = (x); if (result != S_OK) DEBUGERROR("Error HRESULT recieved: " + DX11::HResultToString(result)); assert((result) == S_OK);}
 
 class DX11
 {
@@ -28,6 +30,8 @@ public:
 	static void CreateDepthBuffer(RECT aClientRect);
 	static void SetViewport(RECT aClientRect);
 	static void CreateSamplerState();
+
+	static std::string HResultToString(HRESULT aResult);
 
 	static ComPtr<ID3D11Device> Device;
 	static ComPtr<ID3D11DeviceContext> Context;

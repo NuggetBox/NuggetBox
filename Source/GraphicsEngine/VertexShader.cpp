@@ -3,10 +3,6 @@
 
 #include "DebugLogger.h"
 
-//std::unordered_map<std::string, std::shared_ptr<VertexShader>> VertexShader::ourVertexShaderRegistry;
-//ComPtr<ID3D11InputLayout> VertexShader::ourInputLayout;
-//bool VertexShader::ourInputLayoutIsSet;
-
 void VertexShader::Bind() const
 {
 	if (myInputLayout != nullptr)
@@ -43,12 +39,6 @@ std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aP
 
 	std::string name = aPath.filename().string();
 	DEBUGLOG("Loaded Vertex Shader " + name);
-
-	/*if (!ourInputLayoutIsSet)
-	{
-		SetInputLayout(vsData);
-		ourInputLayoutIsSet = true;
-	}*/
 
 	std::shared_ptr<VertexShader> loadedVertexShader = std::make_shared<VertexShader>();
 	loadedVertexShader->myName = name;
@@ -108,5 +98,4 @@ void VertexShader::CreateInputLayout(const std::string& someVertexShaderData, In
 	}
 
 	DEBUGLOG("Created Input Layout for Vertex Shader " + myName);
-	//DX11::Context->IASetInputLayout(ourInputLayout.Get());
 }

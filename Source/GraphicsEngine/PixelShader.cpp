@@ -3,8 +3,6 @@
 
 #include "DebugLogger.h"
 
-//std::unordered_map<std::string, std::shared_ptr<PixelShader>> PixelShader::ourPixelShaderRegistry;
-
 void PixelShader::Bind() const
 {
 	DX11::Context->PSSetShader(myPixelShader.Get(), nullptr, 0);

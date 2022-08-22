@@ -25,7 +25,7 @@ void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, con
         myLog << " in " << path.filename().string() << ":" << aCodeLine;
     }
 
-    myLog << "] " << aMessage << "\n";
+    myLog << "] " << aMessage << std::endl;
 
 #ifdef _DEBUG
     std::cout << dye::grey(GetTimeStamp());

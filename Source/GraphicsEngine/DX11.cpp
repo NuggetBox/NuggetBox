@@ -89,7 +89,7 @@ void DX11::CreateDepthBuffer(RECT aClientRect)
 {
 	ComPtr<ID3D11Texture2D> depthBufferTexture;
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	depthBufferDesc = {0};
+	depthBufferDesc = { 0 };
 	depthBufferDesc.Width = aClientRect.right - aClientRect.left;
 	depthBufferDesc.Height = aClientRect.bottom - aClientRect.top;
 	depthBufferDesc.ArraySize = 1;
@@ -139,4 +139,23 @@ void DX11::CreateSamplerState()
 	AssertIfFailed(Device->CreateSamplerState(&samplerDesc, SampleStateDefault.GetAddressOf()));
 
 	DEBUGLOG("Created Sampler State");
+}
+
+std::string DX11::HResultToString(HRESULT aResult)
+{
+	switch (aResult)
+	{
+	case S_OK: return "Successful"; // Operation successful	0x00000000
+	case E_ABORT: return "Aborted"; // Operation aborted 0x80004004
+	case E_ACCESSDENIED: return "Access Denied"; // General access denied error	0x80070005
+	case E_FAIL: return "Unspecified Failure"; // Unspecified failure 0x80004005
+	case E_HANDLE: return "Non-valid Handle"; // Handle that is not valid 0x80070006
+	case E_INVALIDARG: return "Invalid Args"; // One or more arguments are not valid 0x80070057
+	case E_NOINTERFACE: return "Interface not Supported"; //  No such interface supported 0x80004002
+	case E_NOTIMPL: return "Not Implemented"; // Not implemented 0x80004001
+	case E_OUTOFMEMORY: return "Out of Memory"; //  Failed to allocate necessary memory	0x8007000E
+	case E_POINTER:return "Non-valid Pointer"; // Pointer that is not valid	0x80004003
+	case E_UNEXPECTED: return "Unexpected Failure"; // Unexpected failure 0x8000FFFF
+	default: return "Unknown Error Result";
+	}
 }
