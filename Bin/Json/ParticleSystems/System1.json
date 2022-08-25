@@ -3,6 +3,14 @@
 		{
 			"SettingsPath": "Json/ParticleSystems/Emitter1.json",
 			"Transform": 1.0
+		},
+		{	
+			"SettingsPath": "Json/ParticleSystems/Emitter2.json",
+			"Transform": 1.0
+		},
+		{	
+			"SettingsPath": "Json/ParticleSystems/Emitter3.json",
+			"Transform": 1.0
 		}
 	]
 }

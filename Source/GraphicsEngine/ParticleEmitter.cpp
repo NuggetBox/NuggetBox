@@ -79,6 +79,10 @@ void ParticleEmitter::Update()
 
 			particle.Color.w = 1;
 
+			/*float maxSpeed = 300;
+			Utility::Abs(particle.Velocity.y) > maxSpeed;
+			particle.Velocity.y = particle.Velocity.y > 0 ? maxSpeed : -maxSpeed;*/
+
 			particle.Velocity.y -= myEmitterSettings.GravityScale * Timer::GetDeltaTime();
 			//TODO: Air resistance/Limit to speed?
 
@@ -194,6 +198,7 @@ void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 	myParticles[aParticleIndex].Position.z = GetTransform().GetZPosition();
 	myParticles[aParticleIndex].Color = myEmitterSettings.StartColor;
 
+	//Temp cone emitter code
 	float x = (std::rand() % 200) - 100;
 	float y = (std::rand() % 200) - 100;
 
