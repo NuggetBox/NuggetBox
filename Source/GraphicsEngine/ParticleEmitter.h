@@ -34,7 +34,7 @@ public:
 	const EmitterSettings& GetEmitterSettings() const { return myEmitterSettings; }
 
 private:
-	void InitParticle(size_t aParticleIndex);
+	void InitParticle(size_t aParticleIndex, float aLifeTime = 0.0f);
 
 	inline static std::unordered_map<std::string, ParticleEmitterTemplate> ourEmitterTemplateRegistry;
 
@@ -57,6 +57,4 @@ private:
 	//ComPtr<ID3D11InputLayout> myInputLayout;
 
 	std::shared_ptr<Texture> myTexture;
-
-	float tempTimer = 0;
 };

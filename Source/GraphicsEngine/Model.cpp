@@ -222,6 +222,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			//size_t slash = path.rfind('/');
 			//size_t dot = path.rfind('.');
 			//const std::string baseFileName = path.substr(slash + 1, dot - slash - 1);
+
 			const std::string baseFileName = aPath.stem().string();
 			const std::string albedoFileName = "T_" + baseFileName + "_C.dds";
 			const std::string normalFileName = "T_" + baseFileName + "_N.dds";

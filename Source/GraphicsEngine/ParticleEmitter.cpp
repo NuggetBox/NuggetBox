@@ -4,6 +4,7 @@
 #include "DebugLogger.h"
 #include "json.hpp"
 #include "Timer.h"
+#include "UtilityFunctions.hpp"
 
 void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate)
 {
@@ -15,9 +16,10 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate)
 	const size_t maxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime));
 	myParticles.resize(maxParticles);
 
-	for (size_t i = 0; i < maxParticles; ++i)
+	for (int i = 0; i < maxParticles; ++i)
 	{
-		InitParticle(i);
+		//Give negative lifetime to those that should spawn later
+		InitParticle(i, -1 * i / myEmitterSettings.SpawnRate);
 	}
 
 	//Create empty Vertex Buffer?
@@ -55,40 +57,50 @@ void ParticleEmitter::LoadAndInitialize(const std::filesystem::path& aTemplatePa
 
 void ParticleEmitter::Update()
 {
-	tempTimer += Timer::GetDeltaTime();
-
-	if (tempTimer >= myEmitterSettings.SpawnRate)
-	{
-		tempTimer = 0;
-		InitParticle(0);
-	}
-
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];
 
 		particle.LifeTime += Timer::GetDeltaTime();
 
-		if (particle.LifeTime >= myEmitterSettings.LifeTime)
-		{
-			InitParticle(i);
-		}
-
+		//Scuffed?
+		//Dead Particles
 		if (particle.LifeTime <= 0)
 		{
 			particle.Color.w = 0;
 		}
+		//Alive particles
 		else
 		{
+			if (particle.LifeTime >= myEmitterSettings.LifeTime)
+			{
+				InitParticle(i);
+			}
+
 			particle.Color.w = 1;
+
+			particle.Velocity.y -= myEmitterSettings.GravityScale * Timer::GetDeltaTime();
+			//TODO: Air resistance/Limit to speed?
+
+			particle.Position.x += particle.Velocity.x * Timer::GetDeltaTime();
+			particle.Position.y += particle.Velocity.y * Timer::GetDeltaTime();
+			particle.Position.z += particle.Velocity.z * Timer::GetDeltaTime();
+
+			float lifePercentage = particle.LifeTime / myEmitterSettings.LifeTime;
+
+			/*particle.Velocity.x = Utility::Lerp(myEmitterSettings.StartVelocity.x, myEmitterSettings.EndVelocity.x, lifePercentage);
+			particle.Velocity.y = Utility::Lerp(myEmitterSettings.StartVelocity.y, myEmitterSettings.EndVelocity.y, lifePercentage);
+			particle.Velocity.z = Utility::Lerp(myEmitterSettings.StartVelocity.z, myEmitterSettings.EndVelocity.z, lifePercentage);*/
+
+			particle.Scale.x = Utility::Lerp(myEmitterSettings.StartScale.x, myEmitterSettings.EndScale.x, lifePercentage);
+			particle.Scale.y = Utility::Lerp(myEmitterSettings.StartScale.y, myEmitterSettings.EndScale.y, lifePercentage);
+			particle.Scale.z = Utility::Lerp(myEmitterSettings.StartScale.z, myEmitterSettings.EndScale.z, lifePercentage);
+
+			particle.Color.x = Utility::Lerp(myEmitterSettings.StartColor.x, myEmitterSettings.EndColor.x, lifePercentage);
+			particle.Color.y = Utility::Lerp(myEmitterSettings.StartColor.y, myEmitterSettings.EndColor.y, lifePercentage);
+			particle.Color.z = Utility::Lerp(myEmitterSettings.StartColor.z, myEmitterSettings.EndColor.z, lifePercentage);
+			particle.Color.w = Utility::Lerp(myEmitterSettings.StartColor.w, myEmitterSettings.EndColor.w, lifePercentage);
 		}
-
-		//TODO: gravity scale
-		//particle.Velocity.y -= 9.82f * Timer::GetDeltaTime();
-
-		particle.Position.x += particle.Velocity.x * Timer::GetDeltaTime();
-		particle.Position.y += particle.Velocity.y * Timer::GetDeltaTime();
-		particle.Position.z += particle.Velocity.z * Timer::GetDeltaTime();
 	}
 }
 
@@ -96,9 +108,7 @@ void ParticleEmitter::Bind() const
 {
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	//AssertIfFailed(DX11::Context->Map(myVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
-	HRESULT resu = DX11::Context->Map(myVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
-	assert(resu == S_OK);
+	AssertIfFailed(DX11::Context->Map(myVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
 	memcpy_s(bufferData.pData, sizeof(ParticleVertex) * myParticles.size(), &myParticles[0], sizeof(ParticleVertex) * myParticles.size());
 	DX11::Context->Unmap(myVertexBuffer.Get(), 0);
 
@@ -154,8 +164,12 @@ ParticleEmitterTemplate ParticleEmitter::Load(const std::filesystem::path& aTemp
 	loadedSettings.EndVelocity.y = data["EndVelocity"][1];
 	loadedSettings.EndVelocity.z = data["EndVelocity"][2];
 	loadedSettings.GravityScale = data["GravityScale"];
-	loadedSettings.StartSize = data["StartSize"];
-	loadedSettings.EndSize = data["EndSize"];
+	loadedSettings.StartScale.x = data["StartScale"][0];
+	loadedSettings.StartScale.y = data["StartScale"][1];
+	loadedSettings.StartScale.z = data["StartScale"][2];
+	loadedSettings.EndScale.x = data["EndScale"][0];
+	loadedSettings.EndScale.y = data["EndScale"][1];
+	loadedSettings.EndScale.z = data["EndScale"][2];
 	loadedSettings.StartColor.x = data["StartColor"][0];
 	loadedSettings.StartColor.y = data["StartColor"][1];
 	loadedSettings.StartColor.z = data["StartColor"][2];
@@ -173,13 +187,24 @@ ParticleEmitterTemplate ParticleEmitter::Load(const std::filesystem::path& aTemp
 	return loadedTemplate;
 }
 
-void ParticleEmitter::InitParticle(size_t aParticleIndex)
+void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 {
 	myParticles[aParticleIndex].Position.x = GetTransform().GetXPosition();
 	myParticles[aParticleIndex].Position.y = GetTransform().GetYPosition();
 	myParticles[aParticleIndex].Position.z = GetTransform().GetZPosition();
 	myParticles[aParticleIndex].Color = myEmitterSettings.StartColor;
-	myParticles[aParticleIndex].Velocity = myEmitterSettings.StartVelocity;
-	myParticles[aParticleIndex].Scale = Utility::Vector3f(myEmitterSettings.StartSize);
-	myParticles[aParticleIndex].LifeTime = 0;
+
+	float x = (std::rand() % 200) - 100;
+	float y = (std::rand() % 200) - 100;
+
+	float c = sqrt(x * x + y * y);
+	x /= c;
+	y /= c;
+
+	x *= 50;
+	y *= 50;
+
+	myParticles[aParticleIndex].Velocity = myEmitterSettings.StartVelocity + Utility::Vector3f(x, 0, y);
+	myParticles[aParticleIndex].Scale = myEmitterSettings.StartScale;
+	myParticles[aParticleIndex].LifeTime = aLifeTime;
 }

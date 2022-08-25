@@ -16,9 +16,14 @@ namespace Utility
 		static float GetDeltaTime();
 		static double GetTotalTime();
 
+		static void SetTimeScale(float aTimeScale);
+		static void ResetTimeScale();
+
 	private:
-		static std::chrono::time_point<std::chrono::high_resolution_clock> myStartTime;
-		static std::chrono::duration<double> myTotalTime;
-		static std::chrono::duration<float> myDeltaTime;
+		static std::chrono::time_point<std::chrono::high_resolution_clock> ourStartTime;
+		static std::chrono::duration<double> ourTotalTime;
+		static std::chrono::duration<float> ourDeltaTime;
+
+		static inline float ourTimeScale;
 	};
 }

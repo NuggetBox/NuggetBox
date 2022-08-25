@@ -2,31 +2,42 @@
 
 namespace Utility
 {
-	std::chrono::time_point<std::chrono::high_resolution_clock> Timer::myStartTime;
-	std::chrono::duration<double> Timer::myTotalTime;
-	std::chrono::duration<float> Timer::myDeltaTime;
+	std::chrono::time_point<std::chrono::high_resolution_clock> Timer::ourStartTime;
+	std::chrono::duration<double> Timer::ourTotalTime;
+	std::chrono::duration<float> Timer::ourDeltaTime;
 
 	void Timer::Start()
 	{
-		myStartTime = std::chrono::high_resolution_clock::now();
-		myTotalTime = std::chrono::seconds(0);
-		myDeltaTime = std::chrono::seconds(0);
+		ourStartTime = std::chrono::high_resolution_clock::now();
+		ourTotalTime = std::chrono::seconds(0);
+		ourDeltaTime = std::chrono::seconds(0);
+		ResetTimeScale();
 	}
 
 	void Timer::Update()
 	{
-		const std::chrono::duration<double> totalTimeLastFrame = myTotalTime;
-		myTotalTime = std::chrono::high_resolution_clock::now() - myStartTime;
-		myDeltaTime = myTotalTime - totalTimeLastFrame;
+		const std::chrono::duration<double> totalTimeLastFrame = ourTotalTime;
+		ourTotalTime = std::chrono::high_resolution_clock::now() - ourStartTime;
+		ourDeltaTime = ourTotalTime - totalTimeLastFrame;
 	}
 
 	float Timer::GetDeltaTime()
 	{
-		return myDeltaTime.count();
+		return ourDeltaTime.count() * ourTimeScale;
 	}
 
 	double Timer::GetTotalTime()
 	{
-		return myTotalTime.count();
+		return ourTotalTime.count();
+	}
+
+	void Timer::SetTimeScale(float aTimeScale)
+	{
+		ourTimeScale = aTimeScale;
+	}
+
+	void Timer::ResetTimeScale()
+	{
+		ourTimeScale = 1.0f;
 	}
 }

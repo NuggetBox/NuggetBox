@@ -27,11 +27,11 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.AddGameObject(cube);
 
 	auto pyramid = Model::Load("Pyramid");
-	pyramid->SetPosition(150, 0, 0);
+	pyramid->SetPosition(200, 0, 0);
 	myScene.AddGameObject(pyramid);
 
 	auto chest = Model::Load("Meshes/Particle_Chest.fbx");
-	chest->SetPosition(-150, -50, 0);
+	chest->SetPosition(-200, -50, 0);
 	chest->AddRotation(0, 180, 0);
 	myScene.AddGameObject(chest);
 
@@ -69,8 +69,8 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	camera->SetPosition(0, 0, -300);
 	myScene.SetCamera(camera);
 
-	//TODO: Create the particle system, make registry first, structure SceneObject maybe for the system&emitter
 	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
+	system->SetPosition(0, 120, 0);
 	system->LoadAndInitialize("Json/ParticleSystems/System1.json");
 	myScene.AddParticleSystem(system);
 	
@@ -79,6 +79,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	myForwardRenderer.Initialize();
 
+	Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
 	return true;
 }
