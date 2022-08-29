@@ -1,12 +1,13 @@
 #include "NuggetBox.pch.h"
 #include "ParticleEmitter.h"
 
+#include "InputHandler.h"
 #include "DebugLogger.h"
 #include "json.hpp"
 #include "Timer.h"
 #include "UtilityFunctions.hpp"
 
-void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate)
+void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool aStart)
 {
 	myEmitterSettings = aTemplate.EmitterSettings;
 	myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
@@ -16,11 +17,7 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate)
 	const size_t maxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime));
 	myParticles.resize(maxParticles);
 
-	for (int i = 0; i < maxParticles; ++i)
-	{
-		//Give negative lifetime to those that should spawn later
-		InitParticle(i, -1 * i / myEmitterSettings.SpawnRate);
-	}
+	InitializeEmission();
 
 	//Create empty Vertex Buffer?
 	D3D11_BUFFER_DESC vertexBufferDesc{};
@@ -41,43 +38,103 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate)
 
 	myTexture = Texture::Load(aTemplate.TexturePath);
 	//SetTransform(aTemplate.Transform);
+
+	myIsEmitting = aStart;
 }
 
-void ParticleEmitter::LoadAndInitialize(const std::filesystem::path& aTemplatePath)
+void ParticleEmitter::LoadAndInitialize(const std::filesystem::path& aTemplatePath, bool aStart)
 {
 	if (!ourEmitterTemplateRegistry.contains(aTemplatePath.string()))
 	{
-		Initialize(ourEmitterTemplateRegistry.at(aTemplatePath.string()));
+		Initialize(ourEmitterTemplateRegistry.at(aTemplatePath.string()), aStart);
 	}
 	else
 	{
-		Initialize(Load(aTemplatePath.string()));
+		Initialize(Load(aTemplatePath.string()), aStart);
+	}
+}
+
+void ParticleEmitter::InitializeEmission()
+{
+	for (int i = 0; i < myParticles.size(); ++i)
+	{
+		//Give negative lifetime to those that should spawn later
+		InitParticle(i, -1 * i / myEmitterSettings.SpawnRate);
+	}
+}
+
+void ParticleEmitter::Start()
+{
+	if (!myIsEmitting)
+	{
+		InitializeEmission();
+		myIsEmitting = true;
+	}
+}
+
+void ParticleEmitter::Pause()
+{
+	myIsEmitting = false;
+}
+
+void ParticleEmitter::ClearParticles()
+{
+	for (size_t i = 0; i < myParticles.size(); ++i)
+	{
+		myParticles[i].LifeTime = -D3D11_FLOAT32_MAX;
+		myParticles[i].Color.w = -1.0f;
+	}
+
+	if (myIsEmitting)
+	{
+		InitializeEmission();
 	}
 }
 
 void ParticleEmitter::Update()
 {
+	//TODO: Put somewhere reasonable
+	if (InputHandler::GetKeyDown('J'))
+	{
+		Start();
+	}
+	else if (InputHandler::GetKeyDown('K'))
+	{
+		Pause();
+	}
+	else if (InputHandler::GetKeyDown('L'))
+	{
+		ClearParticles();
+	}
+
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];
-
 		particle.LifeTime += Timer::GetDeltaTime();
 
 		//Scuffed?
 		//Dead Particles
-		if (particle.LifeTime <= 0)
+		if (particle.LifeTime <= 0.0f)
 		{
-			particle.Color.w = 0;
-		}
-		//Alive particles
-		else
-		{
-			if (particle.LifeTime >= myEmitterSettings.LifeTime)
+			if (!myIsEmitting)
 			{
-				InitParticle(i);
+				particle.LifeTime = -D3D10_FLOAT32_MAX;
+				//particle.Color.x = -1.0f;
 			}
 
-			particle.Color.w = 1;
+			particle.Color.w = -1.0f;
+		}
+		else
+		{
+			if (myIsEmitting)
+			{
+				if (particle.LifeTime >= myEmitterSettings.LifeTime/* && particle.Color.x >= 0.0f*/)
+				{
+					InitParticle(i);
+				}
+			}
+
+			//particle.Color.w = 1;
 
 			/*float maxSpeed = 300;
 			Utility::Abs(particle.Velocity.y) > maxSpeed;

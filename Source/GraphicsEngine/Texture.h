@@ -9,6 +9,10 @@ class Texture
 public:
 	//TODO: Separate into load and get for more management opportunity? Unload needed?
 	static std::shared_ptr<Texture> Load(const std::filesystem::path& aPath);
+	static std::shared_ptr<Texture> LoadDefaultAlbedo();
+	static std::shared_ptr<Texture> LoadDefaultNormal();
+	static std::shared_ptr<Texture> LoadDefaultSurface();
+
 	void SetAsResource(UINT aSlot);
 
 	virtual ~Texture();
@@ -29,5 +33,5 @@ private:
 
 	inline static const std::string myDefaultAlbedoPath = "Textures/Defaults/T_Default_C.dds";
 	inline static const std::string myDefaultNormalPath = "Textures/Defaults/T_Default_N.dds";
-	inline static const std::string myDefaultRoughnessPath = "Textures/Defaults/T_Default_M.dds";
+	inline static const std::string myDefaultSurfacePath = "Textures/Defaults/T_Default_M.dds";
 };

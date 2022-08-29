@@ -21,8 +21,13 @@ public:
 	//virtual ~ParticleEmitter() = default;
 	ParticleEmitter() = default;
 
-	void Initialize(const ParticleEmitterTemplate& aTemplate);
-	void LoadAndInitialize(const std::filesystem::path& aTemplatePath);
+	void Initialize(const ParticleEmitterTemplate& aTemplate, bool aStart = true);
+	void LoadAndInitialize(const std::filesystem::path& aTemplatePath, bool aStart = true);
+
+	void InitializeEmission();
+	void Start();
+	void Pause();
+	void ClearParticles();
 
 	void Update();
 	void Bind() const;
@@ -57,4 +62,6 @@ private:
 	//ComPtr<ID3D11InputLayout> myInputLayout;
 
 	std::shared_ptr<Texture> myTexture;
+
+	bool myIsEmitting;
 };

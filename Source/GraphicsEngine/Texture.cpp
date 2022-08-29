@@ -43,7 +43,7 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 			}
 			else if (ending == "_M")
 			{
-				defaultPath = myDefaultRoughnessPath;
+				defaultPath = myDefaultSurfacePath;
 			}
 
 			if (ourTextureRegistry.contains(defaultPath))
@@ -58,6 +58,21 @@ std::shared_ptr<Texture> Texture::Load(const std::filesystem::path& aPath)
 	}
 
 	return texture;
+}
+
+std::shared_ptr<Texture> Texture::LoadDefaultAlbedo()
+{
+	return Load(myDefaultAlbedoPath);
+}
+
+std::shared_ptr<Texture> Texture::LoadDefaultNormal()
+{
+	return Load(myDefaultNormalPath);
+}
+
+std::shared_ptr<Texture> Texture::LoadDefaultSurface()
+{
+	return Load(myDefaultSurfacePath);
 }
 
 void Texture::SetAsResource(UINT aSlot)

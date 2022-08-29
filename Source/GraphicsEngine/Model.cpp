@@ -103,9 +103,9 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 		//TODO: Fix default material load
 		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
-		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
-		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
-		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_M.dds"));
+		meshMaterial->SetAlbedoTexture(Texture::LoadDefaultAlbedo());
+		meshMaterial->SetNormalMap(Texture::LoadDefaultNormal());
+		meshMaterial->SetSurfaceTexture(Texture::LoadDefaultSurface());
 
 		cube.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(cube);
@@ -156,9 +156,9 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 		//TODO: Fix default material load
 		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
-		meshMaterial->SetAlbedoTexture(Texture::Load("Textures/Defaults/T_Default_C.dds"));
-		meshMaterial->SetNormalMap(Texture::Load("Textures/Defaults/T_Default_N.dds"));
-		meshMaterial->SetSurfaceTexture(Texture::Load("Textures/Defaults/T_Default_M.dds"));
+		meshMaterial->SetAlbedoTexture(Texture::LoadDefaultAlbedo());
+		meshMaterial->SetNormalMap(Texture::LoadDefaultNormal());
+		meshMaterial->SetSurfaceTexture(Texture::LoadDefaultSurface());
 
 		pyramid.SetMaterial(meshMaterial);
 		modelData.myMeshes.push_back(pyramid);
