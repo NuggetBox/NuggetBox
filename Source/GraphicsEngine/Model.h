@@ -16,11 +16,9 @@ using namespace Utility;
 //struct ID3D11VertexShader;
 //struct ID3D11PixelShader;
 
-//TODO: Fix registry to use this struct instead
 struct ModelData
 {
 	std::vector<Mesh> myMeshes;
-	//TODO: Make skeletondata just that, only data, animations should be stored per model!
 	std::shared_ptr<Skeleton> mySkeleton = nullptr;
 };
 
@@ -69,6 +67,7 @@ private:
 	//TODO: REFACTOR ANIMATIONS
 	Matrix4f myBoneTransforms[MAX_BONES] = { Matrix4f() };
 	void UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms);
+	void LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms, float aLerpFactor);
 	//TODO: Make unique timer for each animation
 	float myAnimationTimer = 0;
 	//TODO: better solution for current anim

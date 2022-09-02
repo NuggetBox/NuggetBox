@@ -29,13 +29,13 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	//
 
 	//Get toeye, speccolor, diffusecolor
-	const float3 toEye = normalize(FB_CamTranslation.xyz - input.myPosition.xyz);
+	const float3 toEye = normalize(FB_CamTranslation.xyz - worldPosition.xyz);
 	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
 	const float3 diffuseColor = lerp((float3)0.00f, albedo, 1 - metalness);
 	//calc ambient
 	const float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
 	//calc direct
-	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, vertexNormal, roughness, LB_Color, LB_Intensity, -LB_Direction, toEye);
+	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_Color, LB_Intensity, -LB_Direction, toEye);
 	//assemble light, lineartogamma
 	result.Color.rgb = LinearToGamma(ambientLighting + directionalLighting);
 	result.Color.a = 1.0f;

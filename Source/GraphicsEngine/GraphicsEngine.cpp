@@ -74,7 +74,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	system->LoadAndInitialize("Json/ParticleSystems/System1.json");
 	myScene.AddParticleSystem(system);
 	
-	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 2.0f, Vector3f(1, -1, 1)));
+	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(1, -1, 1)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	myForwardRenderer.Initialize();
