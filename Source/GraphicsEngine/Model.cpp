@@ -307,43 +307,27 @@ void Model::Update(bool aLerpAnimations)
 	{
 		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
 
-		//TODO: Refactor animation stepping code
 		myAnimationTimer += Timer::GetDeltaTime();
 
-		const float frameLength = 1.0f / currentAnim->GetFPS();
-
-		if (myAnimationTimer > frameLength)
+		if (myAnimationTimer > currentAnim->GetDuration())
 		{
-			myAnimationTimer = fmodf(myAnimationTimer, frameLength);
-
-			myFrame++;
-
-			if (myFrame >= currentAnim->GetFrames().size())
-			{
-				myFrame = 1;
-			}
+			myAnimationTimer = 0;
 		}
 
-		size_t nextFrame = -1;
+		float wholePart;
+		float decimalPart = modf(myAnimationTimer * currentAnim->GetFPS(), &wholePart);
 
-		if (myFrame >= currentAnim->GetFrames().size() - 1)
-		{
-			nextFrame = 1;
-		}
-		else
-		{
-			nextFrame = myFrame + 1;
-		}
-
-		float lerpFactor = myAnimationTimer / frameLength;
+		size_t currentFrame = static_cast<size_t>(wholePart);
+		size_t nextFrame = currentFrame == currentAnim->GetFrames().size() - 1 ? 1 : currentFrame + 1;
+		float lerpFactor = decimalPart;
 
 		if (aLerpAnimations)
 		{
-			LerpAnimationHierarchy(myFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0], lerpFactor);
+			LerpAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0], lerpFactor);
 		}
 		else
 		{
-			UpdateAnimationHierarchy(myFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
+			UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
 		}
 	}
 }
