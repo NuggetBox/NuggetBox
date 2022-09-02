@@ -1,4 +1,7 @@
 #pragma once
+#include "../UtilityFunctions.hpp"
+#include "Vector4.hpp"
+
 #include <cassert>
 #include <complex>
 
@@ -22,6 +25,8 @@ namespace Utility
 		//Creates a vector (aX, aY, aZ)
 		Vector3<T>(const T& aX, const T& aY, const T& aZ);
 
+		Vector3<T>(const Vector4<T>& aVector4);
+
 		//Copy constructor (compiler generated)
 		Vector3<T>(const Vector3<T>& aVector) = default;
 
@@ -39,6 +44,9 @@ namespace Utility
 
 		//Returns the length of the vector
 		T Length() const;
+
+		Vector3<T> Lerp(const Vector3<T>& aVector, float aFactor);
+		Vector3<T> NormalizedLerp(const Vector3<T>& aVector, float aFactor);
 
 		//Returns a normalized copy of this
 		Vector3<T> GetNormalized() const;
@@ -89,6 +97,14 @@ namespace Utility
 	}
 
 	template <class T>
+	Vector3<T>::Vector3(const Vector4<T>& aVector4)
+	{
+		x = aVector4.x;
+		y = aVector4.y;
+		z = aVector4.z;
+	}
+
+	template <class T>
 	T& Vector3<T>::operator[](const int& anIndex)
 	{
 		assert(anIndex < 3 && "Tried to access a Vector3 value outside of index range, 0 gives x, 1 gives y, 2 gives z");
@@ -130,6 +146,25 @@ namespace Utility
 	T Vector3<T>::Length() const
 	{
 		return std::sqrt(x * x + y * y + z * z);
+	}
+
+	template <class T>
+	Vector3<T> Vector3<T>::Lerp(const Vector3<T>& aVector, float aFactor)
+	{
+		return Vector3<T>(Utility::Lerp(x, aVector.x, aFactor), Utility::Lerp(y, aVector.y, aFactor), Utility::Lerp(z, aVector.z, aFactor));
+	}
+
+	template <class T>
+	Vector3<T> Vector3<T>::NormalizedLerp(const Vector3<T>& aVector, float aFactor)
+	{
+		Vector3<T> lerped = Lerp(aVector, aFactor);
+
+		if (lerped.LengthSqr() > 0)
+		{
+			lerped.Normalize();
+		}
+
+		return lerped;
 	}
 
 	template <class T>

@@ -41,6 +41,8 @@ namespace Utility
 		// Static function for creating a transpose of a matrix.
 		static Matrix4x4<T> Transpose(const Matrix4x4<T>& aMatrixToTranspose);
 
+		Matrix4x4<T> Lerp(const Matrix4x4<T>& aMatrix, float aFactor) const;
+
 		// Gets the transposed version of this matrix
 		Matrix4x4<T> GetTranspose() const;
 
@@ -336,6 +338,42 @@ namespace Utility
 		}
 
 		return temp;
+	}
+
+	template <class T>
+	Matrix4x4<T> Matrix4x4<T>::Lerp(const Matrix4x4<T>& aMatrix, float aFactor) const
+	{
+		Matrix4x4<T> result = *this;
+
+		Vector3<T> pos = GetRowVector(4);
+		Vector3<T> secondPos = aMatrix.GetRowVector(4);
+		Vector3<T> lerpedPos = pos.Lerp(secondPos, aFactor);
+
+		Vector3<T> rightVector = GetRowVector(1);
+		Vector3<T> upVector = GetRowVector(2);
+		Vector3<T> leftVector = GetRowVector(3);
+
+		rightVector = rightVector.NormalizedLerp(aMatrix.GetRowVector(1), aFactor);
+		upVector = upVector.NormalizedLerp(aMatrix.GetRowVector(2), aFactor);
+		leftVector = leftVector.NormalizedLerp(aMatrix.GetRowVector(3), aFactor);
+
+		result(1, 1) = rightVector.x;
+		result(1, 2) = rightVector.y;
+		result(1, 3) = rightVector.z;
+
+		result(2, 1) = upVector.x;
+		result(2, 2) = upVector.x;
+		result(2, 3) = upVector.x;
+
+		result(3, 1) = leftVector.x;
+		result(3, 2) = leftVector.x;
+		result(3, 3) = leftVector.x;
+
+		result(4, 1) = lerpedPos.x;
+		result(4, 2) = lerpedPos.y;
+		result(4, 3) = lerpedPos.z;
+
+		return result;
 	}
 
 	template <class T>

@@ -43,7 +43,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 	if (path == "Cube")
 	{
-		std::vector<VertexData> cubeVertices = 
+		std::vector<VertexData> cubeVertices =
 		{
 			//Front face
 			{ -50.0f, 50.0f, -50.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f },
@@ -315,9 +315,9 @@ void Model::Update()
 			myAnimationTimer -= currentAnim->GetDuration();
 		}
 
-		size_t currentFrame = myAnimationTimer * currentAnim->GetFPS();
+		const size_t currentFrame = myAnimationTimer * currentAnim->GetFPS();
+		const size_t nextFrame = currentFrame + 1 % currentAnim->GetFrames().size();
 
-		const size_t nextFrame = 0;
 		UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
 	}
 }
@@ -357,5 +357,26 @@ void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame
 	for (unsigned child : currentBone.Children)
 	{
 		UpdateAnimationHierarchy(aCurrentFrame, aNextFrame, child, currentBoneGlobalTransform, outBoneTransforms);
+	}
+}
+
+void Model::LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex,
+	const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms, float aLerpFactor)
+{
+	const BoneData& currentBone = myModelData.mySkeleton->GetBones()[aBoneIndex];
+	const Matrix4f currentBoneLocalTransform = myAnimations[myCurrentAnim]->GetFrames()[aCurrentFrame].LocalTransforms[aBoneIndex];
+	const Matrix4f currentBoneGlobalTransform = aParentTransform * currentBoneLocalTransform;
+
+	const Matrix4f currentBoneLocalTransformNextFrame = myAnimations[myCurrentAnim]->GetFrames()[aNextFrame].LocalTransforms[aBoneIndex];
+	const Matrix4f currentBoneGlobalTransformNextFrame = aParentTransform * currentBoneLocalTransformNextFrame;
+
+	Matrix4f finalBoneTransform;
+	finalBoneTransform *= currentBoneGlobalTransform.Lerp(currentBoneGlobalTransformNextFrame, aLerpFactor);
+	finalBoneTransform *= currentBone.BindPoseInverse;
+	outBoneTransforms[aBoneIndex] = finalBoneTransform;
+
+	for (unsigned child : currentBone.Children)
+	{
+		LerpAnimationHierarchy(aCurrentFrame, aNextFrame, child, currentBoneGlobalTransform, outBoneTransforms, aLerpFactor);
 	}
 }
