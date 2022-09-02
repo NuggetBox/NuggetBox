@@ -35,7 +35,7 @@ public:
 
 	void LoadAnimation(const std::filesystem::path& aPath, const std::string& aNewAnimationName);
 	void PlayAnimation(const std::string& anAnimationName);
-	void Update();
+	void Update(bool aLerpAnimations);
 
 	//TODO: Fix something
 	void SetSkeleton(const SkeletonData& aSkeleton);
@@ -70,6 +70,7 @@ private:
 	void LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms, float aLerpFactor);
 	//TODO: Make unique timer for each animation
 	float myAnimationTimer = 0;
+	size_t myFrame = 1;
 	//TODO: better solution for current anim
 	std::string myCurrentAnim;
 };

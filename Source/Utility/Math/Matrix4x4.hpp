@@ -345,33 +345,37 @@ namespace Utility
 	{
 		Matrix4x4<T> result = *this;
 
-		Vector3<T> pos = GetRowVector(4);
-		Vector3<T> secondPos = aMatrix.GetRowVector(4);
+		Vector3f firstRight = { result(1, 1), result(1, 2), result(1, 3) };
+		Vector3f secondRight = { aMatrix(1, 1), aMatrix(1, 2), aMatrix(1, 3) };
+		Vector3f finalRight = firstRight.NormalizedLerp(secondRight, aFactor);
+
+		result(1, 1) = finalRight.x;
+		result(1, 2) = finalRight.y;
+		result(1, 3) = finalRight.z;
+
+		Vector3f firstUp = { result(2, 1), result(2, 2), result(2, 3) };
+		Vector3f secondUp = { aMatrix(2, 1), aMatrix(2, 2), aMatrix(2, 3) };
+		Vector3f finalUp = firstUp.NormalizedLerp(secondUp, aFactor);
+
+		result(2, 1) = finalUp.x;
+		result(2, 2) = finalUp.y;
+		result(2, 3) = finalUp.z;
+
+		Vector3f firstFront = { result(3, 1), result(3, 2), result(3, 3) };
+		Vector3f secondFront = { aMatrix(3, 1), aMatrix(3, 2), aMatrix(3, 3) };
+		Vector3f finalFront = firstFront.NormalizedLerp(secondFront, aFactor);
+
+		result(3, 1) = finalFront.x;
+		result(3, 2) = finalFront.y;
+		result(3, 3) = finalFront.z;
+
+		Vector3<T> pos = { result(1, 4), result(2, 4), result(3, 4) };
+		Vector3<T> secondPos = { aMatrix(1, 4), aMatrix(2, 4), aMatrix(3, 4) };
 		Vector3<T> lerpedPos = pos.Lerp(secondPos, aFactor);
 
-		Vector3<T> rightVector = GetRowVector(1);
-		Vector3<T> upVector = GetRowVector(2);
-		Vector3<T> leftVector = GetRowVector(3);
-
-		rightVector = rightVector.NormalizedLerp(aMatrix.GetRowVector(1), aFactor);
-		upVector = upVector.NormalizedLerp(aMatrix.GetRowVector(2), aFactor);
-		leftVector = leftVector.NormalizedLerp(aMatrix.GetRowVector(3), aFactor);
-
-		result(1, 1) = rightVector.x;
-		result(1, 2) = rightVector.y;
-		result(1, 3) = rightVector.z;
-
-		result(2, 1) = upVector.x;
-		result(2, 2) = upVector.x;
-		result(2, 3) = upVector.x;
-
-		result(3, 1) = leftVector.x;
-		result(3, 2) = leftVector.x;
-		result(3, 3) = leftVector.x;
-
-		result(4, 1) = lerpedPos.x;
-		result(4, 2) = lerpedPos.y;
-		result(4, 3) = lerpedPos.z;
+		result(1, 4) = lerpedPos.x;
+		result(2, 4) = lerpedPos.y;
+		result(3, 4) = lerpedPos.z;
 
 		return result;
 	}

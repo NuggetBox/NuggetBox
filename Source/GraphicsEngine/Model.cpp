@@ -299,26 +299,52 @@ void Model::PlayAnimation(const std::string& anAnimationName)
 	myCurrentAnim = anAnimationName;
 }
 
-void Model::Update()
+void Model::Update(bool aLerpAnimations)
 {
 	//TODO: Animation state check == Playing
 
 	if (HasAnimations())
 	{
+		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
+
 		//TODO: Refactor animation stepping code
 		myAnimationTimer += Timer::GetDeltaTime();
 
-		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
+		const float frameLength = 1.0f / currentAnim->GetFPS();
 
-		while (myAnimationTimer > currentAnim->GetDuration())
+		if (myAnimationTimer > frameLength)
 		{
-			myAnimationTimer -= currentAnim->GetDuration();
+			myAnimationTimer = fmodf(myAnimationTimer, frameLength);
+
+			myFrame++;
+
+			if (myFrame >= currentAnim->GetFrames().size())
+			{
+				myFrame = 1;
+			}
 		}
 
-		const size_t currentFrame = myAnimationTimer * currentAnim->GetFPS();
-		const size_t nextFrame = currentFrame + 1 % currentAnim->GetFrames().size();
+		size_t nextFrame = -1;
 
-		UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
+		if (myFrame >= currentAnim->GetFrames().size() - 1)
+		{
+			nextFrame = 1;
+		}
+		else
+		{
+			nextFrame = myFrame + 1;
+		}
+
+		float lerpFactor = myAnimationTimer / frameLength;
+
+		if (aLerpAnimations)
+		{
+			LerpAnimationHierarchy(myFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0], lerpFactor);
+		}
+		else
+		{
+			UpdateAnimationHierarchy(myFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
+		}
 	}
 }
 
@@ -370,13 +396,13 @@ void Model::LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, 
 	const Matrix4f currentBoneLocalTransformNextFrame = myAnimations[myCurrentAnim]->GetFrames()[aNextFrame].LocalTransforms[aBoneIndex];
 	const Matrix4f currentBoneGlobalTransformNextFrame = aParentTransform * currentBoneLocalTransformNextFrame;
 
-	Matrix4f finalBoneTransform;
-	finalBoneTransform *= currentBoneGlobalTransform.Lerp(currentBoneGlobalTransformNextFrame, aLerpFactor);
-	finalBoneTransform *= currentBone.BindPoseInverse;
-	outBoneTransforms[aBoneIndex] = finalBoneTransform;
+	Matrix4f finalBoneTransform = currentBoneGlobalTransform.Lerp(currentBoneGlobalTransformNextFrame, aLerpFactor);
 
 	for (unsigned child : currentBone.Children)
 	{
-		LerpAnimationHierarchy(aCurrentFrame, aNextFrame, child, currentBoneGlobalTransform, outBoneTransforms, aLerpFactor);
+		LerpAnimationHierarchy(aCurrentFrame, aNextFrame, child, finalBoneTransform, outBoneTransforms, aLerpFactor);
 	}
+
+	finalBoneTransform *= currentBone.BindPoseInverse;
+	outBoneTransforms[aBoneIndex] = finalBoneTransform;
 }

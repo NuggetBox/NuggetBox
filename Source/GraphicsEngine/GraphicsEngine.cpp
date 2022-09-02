@@ -84,6 +84,9 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	GetClientRect(myWindowHandle, &clientRect);
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
+	myLerpAnimations = true;
+	myInputTimeScale = 1.0f;
+
 	Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
 	return true;
@@ -313,7 +316,11 @@ void GraphicsEngine::RenderFrame()
 #ifdef _DEBUG
 	ImGui::Begin("Yo window");
 	ImGui::Text("I am a text");
+	ImGui::Checkbox("Lerp Animations", &myLerpAnimations);
+	ImGui::SliderFloat("Time Scale", &myInputTimeScale, 0.01f, 10.0f);
 	ImGui::End();
+
+	Timer::SetTimeScale(myInputTimeScale);
 #endif
 
 	auto& camera = myScene.GetCamera();
@@ -360,12 +367,12 @@ void GraphicsEngine::RenderFrame()
 		camera->SetRotation(Vector3f(camera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, camera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
 	}
 
-	float rotationPerSec = 30.0f;
+	float rotationPerSec = 0.0f;
 
 	for (auto& model : models) 
 	{
 		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
-		model->Update();
+		model->Update(myLerpAnimations);
 	}
 
 	for (auto& particleSystem : particleSystems)

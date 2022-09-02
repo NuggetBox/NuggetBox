@@ -25,8 +25,6 @@ namespace Utility
 		//Creates a vector (aX, aY, aZ)
 		Vector3<T>(const T& aX, const T& aY, const T& aZ);
 
-		Vector3<T>(const Vector4<T>& aVector4);
-
 		//Copy constructor (compiler generated)
 		Vector3<T>(const Vector3<T>& aVector) = default;
 
@@ -94,14 +92,6 @@ namespace Utility
 		x = aX;
 		y = aY;
 		z = aZ;
-	}
-
-	template <class T>
-	Vector3<T>::Vector3(const Vector4<T>& aVector4)
-	{
-		x = aVector4.x;
-		y = aVector4.y;
-		z = aVector4.z;
 	}
 
 	template <class T>
