@@ -40,6 +40,38 @@ struct PixelOutput
 	float4 myColor : SV_TARGET;
 };
 
+//TODO: Put Deferred stuff somewhere else?
+struct GBufferOutput
+{
+	float4 myAlbedo : SV_TARGET0;
+	float4 myNormal : SV_TARGET1;
+	float4 myMaterial : SV_TARGET2;
+
+	//WS Normal Channels
+	float4 myVertexNormal : SV_TARGET3;
+
+	//WS Channel
+	float4 myWorldPosition : SV_TARGET4;
+
+	float myAmbientOcclusion : SV_TARGET5;
+};
+
+struct DeferredVertexInput
+{
+	unsigned int myIndex : SV_VertexID;
+};
+
+struct DeferredVertexToPixel
+{
+	float4 myPosition : SV_POSITION;
+	float2 myUV : UV0;
+};
+
+struct DeferredPixelOutput
+{
+	float4 Color : SV_TARGET;
+};
+
 cbuffer FrameBuffer : register(b0)
 {
 	float4x4 FB_ToView;
@@ -75,5 +107,10 @@ SamplerState defaultSampler : register(s0);
 Texture2D albedoTexture : register(t0);
 Texture2D normalTexture : register(t1);
 Texture2D surfaceTexture : register(t2);
+
+//TODO: clean mess
+Texture2D vertexNormalTexture : register(t3);
+Texture2D worldPositionTexture : register(t4);
+Texture2D ambientOcclusionTexture : register(t5);
 
 TextureCube environmentTexture : register(t10);

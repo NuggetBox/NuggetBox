@@ -25,22 +25,24 @@ void ForwardRenderer::Initialize()
     //Create frame buffer
     bufferDescription.ByteWidth = sizeof(FrameBufferData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myFrameBuffer.GetAddressOf()));
-    DEBUGLOG("Created Frame Buffer");
+    //DEBUGLOG("Created Frame Buffer");
 
     //Create object buffer
     bufferDescription.ByteWidth = sizeof(ObjectBufferData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myObjectBuffer.GetAddressOf()));
-    DEBUGLOG("Created Object Buffer");
+    //DEBUGLOG("Created Object Buffer");
 
     //Create material buffer, unused now?
     bufferDescription.ByteWidth = sizeof(MaterialData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myMaterialBuffer.GetAddressOf()));
-    DEBUGLOG("Created Material Buffer");
+    //DEBUGLOG("Created Material Buffer");
 
     //Create light buffer
     bufferDescription.ByteWidth = sizeof(LightBufferData);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myLightBuffer.GetAddressOf()));
-    DEBUGLOG("Created Light Buffer");
+    //DEBUGLOG("Created Light Buffer");
+
+    DEBUGLOG("Created Buffers for Forward Renderer");
 
     DEBUGLOG("Forward Renderer Initialized");
 }

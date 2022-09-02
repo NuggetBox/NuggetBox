@@ -2,13 +2,7 @@
 #include "SceneObject.h"
 #include "DX11.h"
 
-struct LightBufferData
-{
-	Vector3f Color;
-	float Intensity;
-	Vector3f Direction;
-	float padding;
-};
+#include "RenderStructs.h"
 
 class Light : SceneObject
 {

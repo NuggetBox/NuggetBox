@@ -5,12 +5,12 @@
 #include <d3d11.h>
 
 #include "AmbientLight.h"
-#include "Math/Matrix4x4.hpp"
 #include "Camera.h"
 #include "DirectionalLight.h"
 #include "Model.h"
 #include "Light.h"
 #include "ParticleSystem.h"
+#include "RenderStructs.h"
 
 using namespace Microsoft::WRL;
 using namespace Utility;
@@ -18,23 +18,6 @@ using namespace Utility;
 struct ID3D11Buffer;
 
 enum class RenderMode;
-
-struct FrameBufferData
-{
-	Matrix4x4<float> View;
-	Matrix4x4<float> Projection;
-	Vector3f CamTranslation;
-	UINT RenderMode;
-};
-
-struct ObjectBufferData
-{
-	Matrix4x4<float> World;
-	Matrix4x4<float> BoneData[MAX_BONES];
-	alignas(16) bool HasBones = false;
-	//bool HasBones = false;
-	//Vector3f padding;
-};
 
 class ForwardRenderer
 {
@@ -55,7 +38,7 @@ private:
 	FrameBufferData myFrameBufferData;
 	ObjectBufferData myObjectBufferData{};
 	MaterialData myMaterialBufferData;
-	LightBufferData myLightBufferData;
+	//LightBufferData myLightBufferData;
 
 	ComPtr<ID3D11Buffer> myFrameBuffer;
 	ComPtr<ID3D11Buffer> myObjectBuffer;

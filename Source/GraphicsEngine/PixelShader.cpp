@@ -10,6 +10,8 @@ void PixelShader::Bind() const
 
 std::shared_ptr<PixelShader> PixelShader::Load(const std::filesystem::path& aPath)
 {
+	//TODO: Add redundency for not inputting Shaders/ and _PS and .cso
+
 	if (ourPixelShaderRegistry.contains(aPath.string()))
 	{
 		DEBUGLOG("Loaded Pixel Shader " + aPath.filename().string() + " from registry successfully");

@@ -1,27 +1,9 @@
 #pragma once
 #include "ForwardRenderer.h"
+#include "DeferredRenderer.h"
 #include "Scene.h"
-
-enum class RenderMode
-{
-	Default,
-	UV,
-	VertexColor,
-	VertexNormal,
-	PixelNormal,
-	AlbedoMap,
-	NormalMap,
-	DiffuseLight,
-	DiffuseLightNoAlbedo,
-	AmbientLight,
-	AmbientLightNoAlbedo,
-	AmbientOcclusion,
-	Roughness,
-	Metalness,
-	Emissiveness,
-	Linear,
-	COUNT //Update RenderModeToString when adding new RenderModes
-};
+#include "RenderStructs.h"
+#include "GBuffer.h"
 
 enum class BlendState
 {
@@ -35,6 +17,7 @@ enum class DepthStencilState
 {
 	ReadWrite,
 	ReadOnly,
+	Off,
 	COUNT
 };
 
@@ -75,6 +58,10 @@ private:
 	HWND myWindowHandle{};
 
 	ForwardRenderer myForwardRenderer;
+
+	DeferredRenderer myDeferredRenderer;
+	std::unique_ptr<GBuffer> myGBuffer;
+
 	RenderMode myRenderMode = RenderMode::Default;
 
 	Scene myScene;

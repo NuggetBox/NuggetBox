@@ -78,6 +78,11 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	myForwardRenderer.Initialize();
+	myDeferredRenderer.Initialize();
+
+	RECT clientRect;
+	GetClientRect(myWindowHandle, &clientRect);
+	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
 	Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
@@ -259,6 +264,13 @@ void GraphicsEngine::SetupDepthStencilStates()
 	readOnlyDepthDesc.StencilEnable = false;
 	AssertIfFailed(DX11::Device->CreateDepthStencilState(&readOnlyDepthDesc, &myDepthStencilStates[static_cast<UINT>(DepthStencilState::ReadOnly)]));
 
+	D3D11_DEPTH_STENCIL_DESC depthOffDesc{};
+	depthOffDesc.DepthEnable = false;
+	depthOffDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthOffDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthOffDesc.StencilEnable = false;
+	AssertIfFailed(DX11::Device->CreateDepthStencilState(&depthOffDesc, &myDepthStencilStates[static_cast<UINT>(DepthStencilState::Off)]));
+
 	myDepthStencilStates[static_cast<UINT>(DepthStencilState::ReadWrite)] = nullptr;
 
 	DEBUGLOG("Depth Stencil States setup successfully");
@@ -314,7 +326,7 @@ void GraphicsEngine::RenderFrame()
 
 	if (InputHandler::GetKeyHeld(VK_SHIFT))
 	{
-		cameraSpeed *= 3;
+		cameraSpeed *= 4.5f;
 	}
 
 	//TODO: Atomisera camera movement
@@ -367,13 +379,33 @@ void GraphicsEngine::RenderFrame()
 	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
 	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);*/
 
-	SetBlendState(BlendState::None);
+	//Render everything with Forward Renderer
+	/*SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
 	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
 
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);*/
+	//
+
+	//Render Models with deferred but particles with forward
+	SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::ReadWrite);
+	myGBuffer->Clear();
+	myGBuffer->SetAsTarget();
+	myDeferredRenderer.GenerateGBuffer(camera, models, Timer::GetDeltaTime(), Timer::GetTotalTime());
+	myGBuffer->ClearTarget();
+
+	myGBuffer->SetAsResource(0);
+	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+	SetDepthStencilState(DepthStencilState::Off);
+	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), Timer::GetDeltaTime(), Timer::GetTotalTime(), myRenderMode);
+
+	SetBlendState(BlendState::Additive);
+	SetDepthStencilState(DepthStencilState::ReadOnly);
 	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	//
 
 	InputHandler::UpdatePreviousState();
 }

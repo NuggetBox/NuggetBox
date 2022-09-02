@@ -20,6 +20,8 @@ void VertexShader::Bind() const
 
 std::shared_ptr<VertexShader> VertexShader::Load(const std::filesystem::path& aPath, InputLayoutType anInputLayoutType)
 {
+	//TODO: Add redundency for not inputting Shaders/ and _VS and .cso
+
 	if (ourVertexShaderRegistry.contains(aPath.string()))
 	{
 		DEBUGLOG("Loaded Vertex Shader " + aPath.filename().string() + " from registry successfully");
