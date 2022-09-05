@@ -1,6 +1,8 @@
 #include "NuggetBox.pch.h"
 #include "GraphicsEngine.h"
 
+#include <json.hpp>
+
 #include "Camera.h"
 #include "DebugLogger.h"
 #include "Model.h"
@@ -80,12 +82,30 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
 
+	myLerpAnimations = true;
+	myInputTimeScale = 1.0f;
+
+	if (std::filesystem::exists("json/settings.json"))
+	{
+		std::fstream file;
+		file.open("json/settings.json");
+		nlohmann::json json = nlohmann::json::parse(file);
+
+		if (json.contains("ClearColor"))
+		{
+			myClearColor.x = json["ClearColor"]["r"];
+			myClearColor.y = json["ClearColor"]["g"];
+			myClearColor.z = json["ClearColor"]["b"];
+			myClearColor.w = json["ClearColor"]["a"];
+			myLerpAnimations = json["LerpAnimations"];
+			myInputTimeScale = json["TimeScale"];
+			Timer::SetTimeScale(myInputTimeScale);
+		}
+	}
+
 	RECT clientRect;
 	GetClientRect(myWindowHandle, &clientRect);
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
-
-	myLerpAnimations = true;
-	myInputTimeScale = 1.0f;
 
 	Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
@@ -279,6 +299,64 @@ void GraphicsEngine::SetupDepthStencilStates()
 	DEBUGLOG("Depth Stencil States setup successfully");
 }
 
+void GraphicsEngine::CameraControls(std::shared_ptr<Camera> aCamera)
+{
+	float cameraSpeed = myCameraSpeed;
+
+	if (InputHandler::GetKeyHeld(VK_SHIFT))
+	{
+		cameraSpeed *= 4.0f;
+	}
+
+	const float step = Timer::GetDeltaTime() * cameraSpeed;
+
+	if (InputHandler::GetKeyHeld('W'))
+	{
+		aCamera->AddPosition(aCamera->GetTransform().GetForward() * step);
+	}
+	if (InputHandler::GetKeyHeld('A'))
+	{
+		aCamera->AddPosition(aCamera->GetTransform().GetLeft() * step);
+	}
+	if (InputHandler::GetKeyHeld('S'))
+	{
+		aCamera->AddPosition(aCamera->GetTransform().GetBackward() * step);
+	}
+	if (InputHandler::GetKeyHeld('D'))
+	{
+		aCamera->AddPosition(aCamera->GetTransform().GetRight() * step);
+	}
+
+	if (InputHandler::GetKeyHeld(VK_CONTROL))
+	{
+		aCamera->AddPosition(Vector3f(0, -1, 0) * step);
+	}
+	if (InputHandler::GetKeyHeld(VK_SPACE))
+	{
+		aCamera->AddPosition(Vector3f(0, 1, 0) * step);
+	}
+
+	const int scrollDelta = InputHandler::GetScrollWheelDelta();
+
+	//Increase speed on scroll up
+	if (scrollDelta > 0)
+	{
+		myCameraSpeed += Timer::GetDeltaTime() * 1000;
+	}
+	//Decrease on scroll down
+	else if (scrollDelta < 0)
+	{
+		myCameraSpeed -= Timer::GetDeltaTime() * 1000;
+	}
+
+	if (InputHandler::GetRightClickHeld())
+	{
+		aCamera->SetRotation(Vector3f(
+			aCamera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, 
+			aCamera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
+	}
+}
+
 std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
 {
 	switch (aRenderMode)
@@ -308,64 +386,18 @@ void GraphicsEngine::BeginFrame()
 	Timer::Update();
 	// F1 - This is where we clear our buffers and start the DX frame.
 	// ex: myFramework.BeginFrame({1, 0.5f, 0, 1});
-	DX11::BeginFrame({0.6f, 0.2f, 0.4f, 1.0f});
+	DX11::BeginFrame(myClearColor);
 }
 
 void GraphicsEngine::RenderFrame()
 {
-#ifdef _DEBUG
-	ImGui::Begin("Yo window");
-	ImGui::Text("I am a text");
-	ImGui::Checkbox("Lerp Animations", &myLerpAnimations);
-	ImGui::SliderFloat("Time Scale", &myInputTimeScale, 0.01f, 10.0f);
-	ImGui::End();
-
-	Timer::SetTimeScale(myInputTimeScale);
-#endif
-
 	auto& camera = myScene.GetCamera();
 	auto& models = myScene.GetModels();
 	auto& particleSystems = myScene.GetParticleSystems();
 
 	InputRenderMode();
 
-	float cameraSpeed = 100.0f;
-
-	if (InputHandler::GetKeyHeld(VK_SHIFT))
-	{
-		cameraSpeed *= 4.5f;
-	}
-
-	//TODO: Atomisera camera movement
-	if (InputHandler::GetKeyHeld('W'))
-	{
-		camera->AddPosition(camera->GetTransform().GetForward() * Timer::GetDeltaTime() * cameraSpeed);
-	}
-	if (InputHandler::GetKeyHeld('A'))
-	{
-		camera->AddPosition(camera->GetTransform().GetLeft() * Timer::GetDeltaTime() * cameraSpeed);
-	}
-	if (InputHandler::GetKeyHeld('S'))
-	{
-		camera->AddPosition(camera->GetTransform().GetBackward() * Timer::GetDeltaTime() * cameraSpeed);
-	}
-	if (InputHandler::GetKeyHeld('D'))
-	{
-		camera->AddPosition(camera->GetTransform().GetRight() * Timer::GetDeltaTime() * cameraSpeed);
-	}
-	if (InputHandler::GetKeyHeld(VK_CONTROL))
-	{
-		camera->AddPosition(Vector3f(0, -1, 0) * Timer::GetDeltaTime() * cameraSpeed);
-	}
-	if (InputHandler::GetKeyHeld(VK_SPACE))
-	{
-		camera->AddPosition(Vector3f(0, 1, 0) * Timer::GetDeltaTime() * cameraSpeed);
-	}
-
-	if (InputHandler::GetRightClickHeld())
-	{
-		camera->SetRotation(Vector3f(camera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, camera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
-	}
+	CameraControls(camera);
 
 	float rotationPerSec = 0.0f;
 
@@ -379,6 +411,10 @@ void GraphicsEngine::RenderFrame()
 	{
 		particleSystem->Update();
 	}
+
+	//ImGui::ShowDemoWindow();
+
+	myEditor.UpdateEditorInterface(myClearColor, myInputTimeScale, myLerpAnimations);
 
 	//LEGENDARY TRANSPARENCY MODE
 	/*SetBlendState(BlendState::Additive);

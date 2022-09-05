@@ -2,6 +2,7 @@
 #include <array>
 #include <wrl.h>
 #include <cassert>
+#include <Math/Vector4.hpp>
 
 #include "DebugLogger.h"
 
@@ -23,7 +24,7 @@ public:
 	~DX11() = delete;
 
 	static void Initialize(HWND aWindowHandle, bool aEnableDeviceDebug);
-	static void BeginFrame(std::array<float, 4> aClearColor = { 0, 0, 0, 0 });
+	static void BeginFrame(Utility::Vector4<float> aClearColor = {0, 0, 0, 0});
 	static void EndFrame();
 
 	static void CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug);

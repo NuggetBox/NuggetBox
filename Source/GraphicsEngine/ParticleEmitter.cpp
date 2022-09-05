@@ -255,7 +255,7 @@ void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 	myParticles[aParticleIndex].Position.z = GetTransform().GetZPosition();
 	myParticles[aParticleIndex].Color = myEmitterSettings.StartColor;
 
-	//Temp cone emitter code
+	//TODO: Temp cone emitter code
 	float x = (std::rand() % 200) - 100;
 	float y = (std::rand() % 200) - 100;
 

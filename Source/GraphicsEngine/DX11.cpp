@@ -2,6 +2,9 @@
 #include <d3d11.h>
 
 #include "DX11.h"
+
+#include <Math/Vector4.hpp>
+
 #include "DebugLogger.h"
 
 ComPtr<ID3D11Device> DX11::Device;
@@ -38,7 +41,7 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 	srand(static_cast<unsigned>(time(0)));
 }
 
-void DX11::BeginFrame(std::array<float, 4> aClearColor)
+void DX11::BeginFrame(Utility::Vector4<float> aClearColor)
 {
 	Context->ClearRenderTargetView(BackBuffer.Get(), &aClearColor[0]);
 	Context->ClearDepthStencilView(DepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

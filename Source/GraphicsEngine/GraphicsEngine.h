@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "RenderStructs.h"
 #include "GBuffer.h"
+#include "Editor.h"
 
 enum class BlendState
 {
@@ -49,6 +50,9 @@ private:
 	void SetupBlendStates();
 	void SetupDepthStencilStates();
 
+	void CameraControls(std::shared_ptr<Camera> aCamera);
+	float myCameraSpeed = 100.0f;
+
 	std::string RenderModeToString(RenderMode aRenderMode);
 
 	std::array<ComPtr<ID3D11BlendState>, static_cast<unsigned int>(BlendState::COUNT)> myBlendStates;
@@ -57,6 +61,8 @@ private:
 	SIZE myWindowSize{0, 0};
 	HWND myWindowHandle{};
 
+	Editor myEditor;
+
 	Scene myScene;
 
 	RenderMode myRenderMode = RenderMode::Default;
@@ -64,6 +70,8 @@ private:
 	ForwardRenderer myForwardRenderer;
 	DeferredRenderer myDeferredRenderer;
 	std::unique_ptr<GBuffer> myGBuffer;
+
+	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 
 	bool myLerpAnimations;
 	float myInputTimeScale;
