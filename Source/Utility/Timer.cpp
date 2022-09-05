@@ -36,6 +36,11 @@ namespace Utility
 		ourTimeScale = aTimeScale;
 	}
 
+	float Timer::GetTimeScale()
+	{
+		return ourTimeScale;
+	}
+
 	void Timer::ResetTimeScale()
 	{
 		ourTimeScale = 1.0f;

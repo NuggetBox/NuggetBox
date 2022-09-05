@@ -83,25 +83,8 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myDeferredRenderer.Initialize();
 
 	myLerpAnimations = true;
-	myInputTimeScale = 1.0f;
 
-	if (std::filesystem::exists("json/settings.json"))
-	{
-		std::fstream file;
-		file.open("json/settings.json");
-		nlohmann::json json = nlohmann::json::parse(file);
-
-		if (json.contains("ClearColor"))
-		{
-			myClearColor.x = json["ClearColor"]["r"];
-			myClearColor.y = json["ClearColor"]["g"];
-			myClearColor.z = json["ClearColor"]["b"];
-			myClearColor.w = json["ClearColor"]["a"];
-			myLerpAnimations = json["LerpAnimations"];
-			myInputTimeScale = json["TimeScale"];
-			Timer::SetTimeScale(myInputTimeScale);
-		}
-	}
+	myEditor.Initialize(myClearColor, myLerpAnimations);
 
 	RECT clientRect;
 	GetClientRect(myWindowHandle, &clientRect);
@@ -414,7 +397,7 @@ void GraphicsEngine::RenderFrame()
 
 	//ImGui::ShowDemoWindow();
 
-	myEditor.UpdateEditorInterface(myClearColor, myInputTimeScale, myLerpAnimations);
+	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations);
 
 	//LEGENDARY TRANSPARENCY MODE
 	/*SetBlendState(BlendState::Additive);

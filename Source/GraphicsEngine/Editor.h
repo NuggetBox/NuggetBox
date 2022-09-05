@@ -4,8 +4,10 @@
 class Editor
 {
 public:
-	void UpdateEditorInterface(Utility::Vector4<float>& aClearColor, float& aTimeScale, bool& aLerpAnimations);
+	void Initialize(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations);
+	void UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations);
 
 private:
-
+	void LoadProperties(bool& aLerpAnimations);
+	void LoadSettings(Utility::Vector4<float>& aClearColor);
 };

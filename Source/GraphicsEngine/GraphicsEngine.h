@@ -74,7 +74,6 @@ private:
 	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 
 	bool myLerpAnimations;
-	float myInputTimeScale;
 
 	// Container window message pump.
 	static LRESULT CALLBACK WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);

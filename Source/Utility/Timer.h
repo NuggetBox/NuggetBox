@@ -17,6 +17,7 @@ namespace Utility
 		static double GetTotalTime();
 
 		static void SetTimeScale(float aTimeScale);
+		static float GetTimeScale();
 		static void ResetTimeScale();
 
 	private:
