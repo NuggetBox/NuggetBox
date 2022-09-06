@@ -9,5 +9,7 @@ public:
 
 private:
 	void LoadProperties(bool& aLerpAnimations);
-	void LoadSettings(Utility::Vector4<float>& aClearColor);
+	void LoadSettings(Utility::Vector4<float>& aClearColor, const std::filesystem::path& aPath);
+
+	std::string myInputBuffer;
 };
