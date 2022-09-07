@@ -1,6 +1,4 @@
 #pragma once
-#include <array>
-#include <vector>
 #include <cassert>
 
 namespace Utility
@@ -11,6 +9,8 @@ namespace Utility
 	public:
 		Queue(int aSize = 16);
 
+		void Initialize(int aSize);
+
 		int GetSize() const;
 		bool IsEmpty() const;
 
@@ -18,6 +18,8 @@ namespace Utility
 		T& GetFront();
 
 		void Enqueue(const T& aValue);
+		//Enqueue's element without checking if capacity is full
+		void EnqueueUnsafe(const T& aValue);
 		T Dequeue();
 
 	private:
@@ -32,6 +34,15 @@ namespace Utility
 
 	template<class T>
 	Queue<T>::Queue(int aSize)
+	{
+		myFirst = -1;
+		myLast = -1;
+
+		myQueue = new T[myCapacity = aSize];
+	}
+
+	template<class T>
+	void Queue<T>::Initialize(int aSize)
 	{
 		myFirst = -1;
 		myLast = -1;
@@ -106,6 +117,18 @@ namespace Utility
 			myLast = (myLast + 1) % myCapacity;
 			myQueue[myLast] = aValue;
 		}
+	}
+
+	template<class T>
+	void Queue<T>::EnqueueUnsafe(const T& aValue)
+	{
+		if (IsEmpty())
+		{
+			myFirst++;
+		}
+
+		myLast = (myLast + 1) % myCapacity;
+		myQueue[myLast] = aValue;
 	}
 
 	template<class T>

@@ -2,6 +2,7 @@
 #define FLT_EPSILON 1.192092896e-07f
 #define nMipOffset 3
 #define PI 3.14159265358979323846f
+
 #include "Common.hlsli"
 
 float2 polarToCartesian(float polar, float2 vec)
@@ -162,11 +163,9 @@ float3 EvaluateAmbience(TextureCube lysBurleyCube, float3 pixelNormal, float3 ve
     fFade *= EmpiricalSpecularAO(ao, perceptualRoughness);
     fFade *= ApproximateSpecularSelfOcclusion(vR, vertexNormal);
 
-    // Assemble.
     const float3 ambientDiffuse = ao * diffuseColor * diffRad;
     const float3 ambientSpecular = fFade * specCol * specRad;
 
-    // IBL BRDF product of Diffuse and Specular light. Slide 9 - 11.
 	return (ambientDiffuse + ambientSpecular);
 }
 
@@ -184,4 +183,68 @@ float3 EvaluateDirectionalLight(float3 albedoColor, float3 specularColor, float3
     const float3 cSpec = Specular(specularColor, h, viewDir, a, NdL, NdV, NdH);
 
     return saturate(lightColor * NdL * (cDiff * (1.0 - cSpec) + cSpec) * PI) * lightIntensity;
+}
+
+float3 EvaluatePointLight(float3 albedoColor, float3 specularColor, float3 normal, float roughness,
+    float3 lightColor, float lightIntensity, float lightRange, float3 lightPos, float3 viewDir, float3 pixelPos)
+{
+    // Compute som useful values
+    float3 lightDir = lightPos.xyz - pixelPos.xyz;
+    float lightDistance = length(lightDir);
+    lightDir = normalize(lightDir);
+	
+    float NdL = saturate(dot(normal, lightDir));
+    float lambert = NdL; // Angle attenuation
+    float NdV = saturate(dot(normal, viewDir));
+    float3 h = normalize(lightDir + viewDir);
+    float NdH = saturate(dot(normal, h));
+    float a = max(0.001f, roughness * roughness);
+
+    float3 cDiff = Diffuse(albedoColor);
+    float3 cSpec = Specular(specularColor, h, viewDir, a, NdL, NdV, NdH);
+
+    float linearAttenuation = lightDistance / lightRange;
+    linearAttenuation = 1.0f - linearAttenuation;
+    linearAttenuation = saturate(linearAttenuation);
+    float physicalAttenuation = saturate(1.0f / (lightDistance * lightDistance));
+    float ue4Attenuation = ((pow(saturate(1 - pow(lightDistance / lightRange, 4.0f)), 2.0f)) / (pow(lightDistance, 2.0f) + 1)); // Unreal Engine 4 attenuation
+    float attenuation = lambert * linearAttenuation * physicalAttenuation;
+    attenuation = ue4Attenuation * lambert;
+
+    return saturate(lightColor * lightIntensity * attenuation * ((cDiff * (1.0 - cSpec) + cSpec) * PI));
+}
+
+float3 EvaluateSpotLight(float3 albedoColor, float3 specularColor, float3 normal,
+    float roughness, float3 lightColor, float lightIntensity, float lightRange,
+    float3 lightPos, float3 lightDir, float outerAngle, float innerAngle, float3 viewDir, float3 pixelPos)
+{
+    float3 toLight = lightPos.xyz - pixelPos.xyz;
+    float lightDistance = length(toLight);
+    toLight = normalize(toLight);
+
+    float NdL = saturate(dot(normal, toLight));
+    float lambert = NdL; // Angle attenuation
+    float NdV = saturate(dot(normal, viewDir));
+    float3 h = normalize(toLight + viewDir);
+    float NdH = saturate(dot(normal, h));
+    float a = max(0.001f, roughness * roughness);
+
+    float3 cDiff = Diffuse(albedoColor);
+    float3 cSpec = Specular(specularColor, h, viewDir, a, NdL, NdV, NdH);
+
+    float cosOuterAngle = cos(outerAngle);
+    float cosInnerAngle = cos(innerAngle);
+    float3 lightDirection = lightDir;
+
+    // Determine if pixel is within cone.
+    float theta = dot(toLight, normalize(-lightDirection));
+	// And if we're in the inner or outer radius.
+    float epsilon = cosInnerAngle - cosOuterAngle;
+    float intensity = clamp((theta - cosOuterAngle) / epsilon, 0.0f, 1.0f);
+    intensity *= intensity;
+	
+    float ue4Attenuation = ((pow(saturate(1 - pow(lightDistance / lightRange, 4.0f)), 2.0f)) / (pow(lightDistance, 2.0f) + 1)); // Unreal Engine 4 attenuation
+	float finalAttenuation = lambert * intensity * ue4Attenuation;
+
+    return saturate(lightColor * lightIntensity * lambert * finalAttenuation * ((cDiff * (1.0 - cSpec) + cSpec) * PI));
 }

@@ -41,7 +41,7 @@ VertexToPixel main(VertexInput input)
 
 	// Move normals from local space to world space
 	const float3x3 worldNormalRotation = (float3x3)OB_ToWorld;
-	const float3x3 skinNormalRotation = (float4x4)skinningMatrix;
+	const float3x3 skinNormalRotation = (float3x3)skinningMatrix;
 	result.myNormal = mul(worldNormalRotation, mul(input.myNormal, skinNormalRotation));
 	result.myTangent = mul(worldNormalRotation, mul(input.myTangent, skinNormalRotation));
 	result.myBinormal = mul(worldNormalRotation, mul(input.myBinormal, skinNormalRotation));

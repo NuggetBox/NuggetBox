@@ -1,4 +1,6 @@
 #pragma once
+#include <Queue.hpp>
+
 #include "EmitterSettings.h"
 #include "ParticleVertex.h"
 #include "DX11.h"
@@ -46,6 +48,10 @@ private:
 	EmitterSettings myEmitterSettings;
 	std::vector<ParticleVertex> myParticles;
 
+	Utility::Queue<size_t> myAvailableParticles;
+	float mySpawnTimer;
+	bool myIsEmitting;
+
 	ComPtr<ID3D11Buffer> myVertexBuffer;
 
 	UINT myStride;
@@ -62,6 +68,4 @@ private:
 	//ComPtr<ID3D11InputLayout> myInputLayout;
 
 	std::shared_ptr<Texture> myTexture;
-
-	bool myIsEmitting;
 };

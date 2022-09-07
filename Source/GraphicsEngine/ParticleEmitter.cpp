@@ -17,6 +17,7 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool 
 	const size_t maxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime));
 	myParticles.resize(maxParticles);
 
+	myAvailableParticles.Initialize(maxParticles + 99999);
 	InitializeEmission();
 
 	//Create empty Vertex Buffer?
@@ -40,6 +41,7 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool 
 	//SetTransform(aTemplate.Transform);
 
 	myIsEmitting = aStart;
+	mySpawnTimer = 2;
 }
 
 void ParticleEmitter::LoadAndInitialize(const std::filesystem::path& aTemplatePath, bool aStart)
@@ -59,7 +61,10 @@ void ParticleEmitter::InitializeEmission()
 	for (int i = 0; i < myParticles.size(); ++i)
 	{
 		//Give negative lifetime to those that should spawn later
-		InitParticle(i, -1 * i / myEmitterSettings.SpawnRate);
+		//InitParticle(i, -1 * i / myEmitterSettings.SpawnRate);
+
+		//Experimenting with queue system
+		myAvailableParticles.EnqueueUnsafe(i);
 	}
 }
 
@@ -107,6 +112,20 @@ void ParticleEmitter::Update()
 		ClearParticles();
 	}
 
+
+	// New queue solution experimenting
+	if (myIsEmitting)
+	{
+		while (mySpawnTimer <= 0)
+		{
+			mySpawnTimer += 1 / myEmitterSettings.SpawnRate;
+
+			InitParticle(myAvailableParticles.Dequeue());
+		}
+	}
+
+	mySpawnTimer -= Timer::GetDeltaTime();
+
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];
@@ -130,7 +149,10 @@ void ParticleEmitter::Update()
 			{
 				if (particle.LifeTime >= myEmitterSettings.LifeTime/* && particle.Color.x >= 0.0f*/)
 				{
-					InitParticle(i);
+					//InitParticle(i);
+					myAvailableParticles.EnqueueUnsafe(i);
+					particle.LifeTime = -D3D10_FLOAT32_MAX;
+					particle.Color.w = -1.0f;
 				}
 			}
 

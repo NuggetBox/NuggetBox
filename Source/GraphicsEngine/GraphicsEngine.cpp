@@ -382,7 +382,7 @@ void GraphicsEngine::RenderFrame()
 
 	CameraControls(camera);
 
-	float rotationPerSec = 0.0f;
+	float rotationPerSec = 30.0f;
 
 	for (auto& model : models) 
 	{

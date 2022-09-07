@@ -112,8 +112,6 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera,
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
     myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
 
-    //Used for deferred rendering?
-    //myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
     ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
     AssertIfFailed(DX11::Context->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
     memcpy_s(bufferData.pData, sizeof(FrameBufferData), &myFrameBufferData, sizeof(FrameBufferData));
