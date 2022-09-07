@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <complex>
+#include <UtilityFunctions.hpp>
 
 namespace Utility
 {
@@ -40,6 +41,9 @@ namespace Utility
 
 		//Returns the length of the vector
 		T Length() const;
+
+		Vector4<T> Lerp(const Vector4<T>& aVector, float aFactor);
+		Vector4<T> NormalizedLerp(const Vector4<T>& aVector, float aFactor);
 
 		//Returns a normalized copy of this
 		Vector4<T> GetNormalized() const;
@@ -130,6 +134,25 @@ namespace Utility
 	T Vector4<T>::Length() const
 	{
 		return std::sqrt(LengthSqr());
+	}
+
+	template<class T>
+	Vector4<T> Vector4<T>::Lerp(const Vector4<T>& aVector, float aFactor)
+	{
+		return Vector4<T>(Utility::Lerp(x, aVector.x, aFactor), Utility::Lerp(y, aVector.y, aFactor), Utility::Lerp(z, aVector.z, aFactor), Utility::Lerp(w, aVector.w, aFactor));
+	}
+
+	template<class T>
+	Vector4<T> Vector4<T>::NormalizedLerp(const Vector4<T>& aVector, float aFactor)
+	{
+		Vector4<T> lerped = Lerp(aVector, aFactor);
+
+		if (lerped.LengthSqr() > 0)
+		{
+			lerped.Normalize();
+		}
+
+		return lerped;
 	}
 
 	template <class T>
