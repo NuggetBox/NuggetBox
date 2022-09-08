@@ -161,7 +161,7 @@ void GraphicsEngine::InputRenderMode()
 		}
 
 		SetRenderMode(static_cast<RenderMode>(currentRenderMode));
-		DebugLogger::Log("Render Mode set to: " + RenderModeToString(myRenderMode));
+		DebugLogger::Message("Render Mode set to: " + RenderModeToString(myRenderMode));
 	}
 	else if (Utility::InputHandler::GetKeyDown(VK_F7))
 	{
@@ -173,7 +173,7 @@ void GraphicsEngine::InputRenderMode()
 		}
 
 		SetRenderMode(static_cast<RenderMode>(currentRenderMode));
-		DebugLogger::Log("Render Mode set to: " + RenderModeToString(myRenderMode));
+		DebugLogger::Message("Render Mode set to: " + RenderModeToString(myRenderMode));
 	}
 #endif
 }

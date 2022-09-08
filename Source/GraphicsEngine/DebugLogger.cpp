@@ -31,7 +31,7 @@ void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, con
 
 #ifdef _DEBUG
     //Write to console
-    std::cout << dye::grey(GetTimeStamp());
+    std::cout << dye::grey(GetTimeStamp()) << " ";
     switch (aMessageType)
     {
         case MessageType::Message: std::cout << dye::light_green(aMessage); break;
@@ -43,7 +43,7 @@ void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, con
 #endif
 }
 
-void DebugLogger::Log(const std::string& aMessage, const std::string& aFilename, const std::string& aCodeLine)
+void DebugLogger::Message(const std::string& aMessage, const std::string& aFilename, const std::string& aCodeLine)
 {
     Log(aMessage, MessageType::Message, aFilename, aCodeLine);
 }
@@ -90,11 +90,13 @@ void DebugLogger::SignalHandler(int signal)
     WriteCrashLog();
 }
 
+//[yyyy.mm.dd HH:MM:SS.fff] 
 std::string DebugLogger::GetTimeStamp()
 {
-    return "[" + GetTimeStampRaw() + "] ";
+    return "[" + GetTimeStampRaw() + "]";
 }
 
+//yyyy.mm.dd HH:MM:SS.fff
 std::string DebugLogger::GetTimeStampRaw()
 {
     const std::chrono::time_point curTime = std::chrono::system_clock::now();
@@ -128,7 +130,6 @@ std::string DebugLogger::GetTimeStampRaw()
 
 std::string DebugLogger::GetDate()
 {
-    //yyyy.mm.dd HH:MM:SS.fff
     std::string timeStamp = GetTimeStampRaw();
     timeStamp.erase(10, 13);
     return timeStamp;

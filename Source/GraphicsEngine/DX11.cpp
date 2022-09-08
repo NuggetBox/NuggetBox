@@ -1,21 +1,8 @@
 #include "NuggetBox.pch.h"
 #include <d3d11.h>
-
 #include "DX11.h"
 
-#include <Math/Vector4.hpp>
-
 #include "DebugLogger.h"
-
-//ComPtr<ID3D11Device> DX11::Device;
-//ComPtr<ID3D11DeviceContext> DX11::Context;
-//ComPtr<IDXGISwapChain> DX11::SwapChain;
-//
-//ComPtr<ID3D11SamplerState> DX11::SampleStateDefault;
-//ComPtr<ID3D11SamplerState> DX11::SampleStateWrap;
-//
-//ComPtr<ID3D11RenderTargetView> DX11::BackBuffer;
-//ComPtr<ID3D11DepthStencilView> DX11::DepthBuffer;
 
 void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 {

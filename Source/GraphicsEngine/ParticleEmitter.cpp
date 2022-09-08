@@ -60,12 +60,8 @@ void ParticleEmitter::InitializeEmission()
 {
 	for (int i = 0; i < myParticles.size(); ++i)
 	{
-		//Give negative lifetime to those that should spawn later
-		//InitParticle(i, -1 * i / myEmitterSettings.SpawnRate);
-
-		//Experimenting with queue system
+		//Mark particles as available to spawn, set lifetime very negative to represent dead particle
 		myAvailableParticles.EnqueueUnsafe(i);
-
 		myParticles[i].LifeTime = -D3D10_FLOAT32_MAX;
 	}
 }
@@ -82,16 +78,7 @@ void ParticleEmitter::Pause()
 
 void ParticleEmitter::ClearParticles()
 {
-	/*for (size_t i = 0; i < myParticles.size(); ++i)
-	{
-		myParticles[i].LifeTime = -D3D11_FLOAT32_MAX;
-	}*/
-
-	/*if (myIsEmitting)
-	{
-		InitializeEmission();
-	}*/
-
+	//Make all particles available for spawn
 	myAvailableParticles.Initialize(myMaxParticles);
 	InitializeEmission();
 	mySpawnTimer = 0;
@@ -113,9 +100,9 @@ void ParticleEmitter::Update()
 		ClearParticles();
 	}
 
-	// New queue solution experimenting
 	if (myIsEmitting)
 	{
+		//Spawn new particle, multiple if 1 particle/frame is not enough
 		while (mySpawnTimer <= 0)
 		{
 			mySpawnTimer += 1 / myEmitterSettings.SpawnRate;
@@ -131,6 +118,7 @@ void ParticleEmitter::Update()
 		ParticleVertex& particle = myParticles[i];
 		particle.LifeTime += Timer::GetDeltaTime();
 
+		//Do not show dead particles
 		if (particle.LifeTime <= 0.0f)
 		{
 			particle.Color.w = 0.0f;
@@ -139,7 +127,7 @@ void ParticleEmitter::Update()
 		{
 			if (particle.LifeTime >= myEmitterSettings.LifeTime)
 			{
-				//InitParticle(i);
+				//Particle surpassed lifetime, make available for spawn
 				myAvailableParticles.EnqueueUnsafe(i);
 				particle.LifeTime = -D3D10_FLOAT32_MAX;
 			}
@@ -224,23 +212,30 @@ ParticleEmitterTemplate ParticleEmitter::Load(const std::filesystem::path& aTemp
 	loadedSettings.SpawnRate = data["SpawnRate"];
 	loadedSettings.SpawnAngle = data["SpawnAngle"];
 	loadedSettings.LifeTime = data["LifeTime"];
+
 	loadedSettings.StartVelocity.x = data["StartVelocity"][0];
 	loadedSettings.StartVelocity.y = data["StartVelocity"][1];
 	loadedSettings.StartVelocity.z = data["StartVelocity"][2];
+
 	loadedSettings.EndVelocity.x = data["EndVelocity"][0];
 	loadedSettings.EndVelocity.y = data["EndVelocity"][1];
 	loadedSettings.EndVelocity.z = data["EndVelocity"][2];
+
 	loadedSettings.GravityScale = data["GravityScale"];
+
 	loadedSettings.StartScale.x = data["StartScale"][0];
 	loadedSettings.StartScale.y = data["StartScale"][1];
 	loadedSettings.StartScale.z = data["StartScale"][2];
+
 	loadedSettings.EndScale.x = data["EndScale"][0];
 	loadedSettings.EndScale.y = data["EndScale"][1];
 	loadedSettings.EndScale.z = data["EndScale"][2];
+
 	loadedSettings.StartColor.x = data["StartColor"][0];
 	loadedSettings.StartColor.y = data["StartColor"][1];
 	loadedSettings.StartColor.z = data["StartColor"][2];
 	loadedSettings.StartColor.w = data["StartColor"][3];
+
 	loadedSettings.EndColor.x = data["EndColor"][0];
 	loadedSettings.EndColor.y = data["EndColor"][1];
 	loadedSettings.EndColor.z = data["EndColor"][2];
