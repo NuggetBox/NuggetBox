@@ -2,10 +2,10 @@
 #include "DebugLogger.h"
 
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <csignal>
 
-#include "Timer.h"
 #include "color.hpp"
 
 void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, const std::string& aFilename, const std::string& aCodeLine)
@@ -128,6 +128,7 @@ std::string DebugLogger::GetTimeStampRaw()
     return result;
 }
 
+//yyyy.mm.dd
 std::string DebugLogger::GetDate()
 {
     std::string timeStamp = GetTimeStampRaw();
@@ -135,6 +136,7 @@ std::string DebugLogger::GetDate()
     return timeStamp;
 }
 
+//HH:MM:SS.fff
 std::string DebugLogger::GetTime()
 {
     std::string timeStamp = GetTimeStampRaw();
