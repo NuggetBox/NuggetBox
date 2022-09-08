@@ -47,6 +47,7 @@ private:
 
 	EmitterSettings myEmitterSettings;
 	std::vector<ParticleVertex> myParticles;
+	size_t myMaxParticles;
 
 	Utility::Queue<size_t> myAvailableParticles;
 	float mySpawnTimer;

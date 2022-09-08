@@ -10,6 +10,7 @@
 
 void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, const std::string& aFilename, const std::string& aCodeLine)
 {
+    //Write to Log
     myLog << "[" << GetTime() << "] ";
 
     switch (aMessageType)
@@ -26,8 +27,10 @@ void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, con
     }
 
     myLog << "] " << aMessage << std::endl;
+    //
 
 #ifdef _DEBUG
+    //Write to console
     std::cout << dye::grey(GetTimeStamp());
     switch (aMessageType)
     {
@@ -36,6 +39,7 @@ void DebugLogger::Log(const std::string& aMessage, MessageType aMessageType, con
         case MessageType::Error: std::cout << dye::light_red(aMessage); break;
     }
     std::cout << std::endl;
+    //
 #endif
 }
 

@@ -44,6 +44,11 @@ namespace Utility
 	template<class T>
 	void Queue<T>::Initialize(int aSize)
 	{
+		if (myQueue != nullptr)
+		{
+			delete[] myQueue;
+		}
+
 		myFirst = -1;
 		myLast = -1;
 

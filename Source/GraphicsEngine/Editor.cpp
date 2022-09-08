@@ -18,6 +18,37 @@ void Editor::Initialize(Utility::Vector4<float>& aClearColor, bool& aLerpAnimati
 
 	myPresetInput1 = aClearColor;
 	myPresetInput2 = aClearColor;
+
+	if (std::filesystem::exists("Json/ClearColorSettings/Blends/Default.json"))
+	{
+		std::ifstream file("Json/ClearColorSettings/Blends/Default.json");
+		nlohmann::json json = nlohmann::json::parse(file);
+		if (json.contains("PreviousBlend"))
+		{
+			if (std::filesystem::exists(json["PreviousBlend"]))
+			{
+				std::ifstream defaultFile;
+				defaultFile.open(json["PreviousBlend"].get<std::string>());
+				nlohmann::json defaultJson = nlohmann::json::parse(defaultFile);
+
+				myUseBlend = true;
+
+				myPresetInput1.x = defaultJson["Preset1"]["x"];
+				myPresetInput1.y = defaultJson["Preset1"]["y"];
+				myPresetInput1.z = defaultJson["Preset1"]["z"];
+				myPresetInput1.w = defaultJson["Preset1"]["w"];
+
+				myPresetInput2.x = defaultJson["Preset2"]["x"];
+				myPresetInput2.y = defaultJson["Preset2"]["y"];
+				myPresetInput2.z = defaultJson["Preset2"]["z"];
+				myPresetInput2.w = defaultJson["Preset2"]["w"];
+
+				myBlendFactor = defaultJson["BlendFactor"];
+
+				aClearColor = myPresetInput1.Lerp(myPresetInput2, myBlendFactor);
+			}
+		}
+	}
 }
 
 void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations)
@@ -352,6 +383,13 @@ void Editor::SaveBlendPopup()
 		fileToWrite["BlendFactor"] = myBlendFactor;
 
 		std::ofstream file("Json/ClearColorSettings/Blends/" + myInputBuffer + ".json");
+		file << fileToWrite;
+
+		//Save previous saved blend
+		fileToWrite.clear();
+		file.close();
+		fileToWrite["PreviousBlend"] = "Json/ClearColorSettings/Blends/" + myInputBuffer + ".json";
+		file.open("Json/ClearColorSettings/Blends/Default.json");
 		file << fileToWrite;
 	}
 }

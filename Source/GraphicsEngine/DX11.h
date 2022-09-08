@@ -1,5 +1,4 @@
 #pragma once
-#include <array>
 #include <wrl.h>
 #include <cassert>
 #include <Math/Vector4.hpp>
@@ -34,13 +33,13 @@ public:
 
 	static std::string HResultToString(HRESULT aResult);
 
-	static ComPtr<ID3D11Device> Device;
-	static ComPtr<ID3D11DeviceContext> Context;
-	static ComPtr<IDXGISwapChain> SwapChain;
+	inline static ComPtr<ID3D11Device> Device;
+	inline static ComPtr<ID3D11DeviceContext> Context;
+	inline static ComPtr<IDXGISwapChain> SwapChain;
 
-	static ComPtr<ID3D11SamplerState> SampleStateDefault;
-	static ComPtr<ID3D11SamplerState> SampleStateWrap;
+	inline static ComPtr<ID3D11SamplerState> SampleStateDefault;
+	inline static ComPtr<ID3D11SamplerState> SampleStateWrap;
 
-	static ComPtr<ID3D11RenderTargetView> BackBuffer;
-	static ComPtr<ID3D11DepthStencilView> DepthBuffer;
+	inline static ComPtr<ID3D11RenderTargetView> BackBuffer;
+	inline static ComPtr<ID3D11DepthStencilView> DepthBuffer;
 };

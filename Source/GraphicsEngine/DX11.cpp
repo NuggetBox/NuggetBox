@@ -7,15 +7,15 @@
 
 #include "DebugLogger.h"
 
-ComPtr<ID3D11Device> DX11::Device;
-ComPtr<ID3D11DeviceContext> DX11::Context;
-ComPtr<IDXGISwapChain> DX11::SwapChain;
-
-ComPtr<ID3D11SamplerState> DX11::SampleStateDefault;
-ComPtr<ID3D11SamplerState> DX11::SampleStateWrap;
-
-ComPtr<ID3D11RenderTargetView> DX11::BackBuffer;
-ComPtr<ID3D11DepthStencilView> DX11::DepthBuffer;
+//ComPtr<ID3D11Device> DX11::Device;
+//ComPtr<ID3D11DeviceContext> DX11::Context;
+//ComPtr<IDXGISwapChain> DX11::SwapChain;
+//
+//ComPtr<ID3D11SamplerState> DX11::SampleStateDefault;
+//ComPtr<ID3D11SamplerState> DX11::SampleStateWrap;
+//
+//ComPtr<ID3D11RenderTargetView> DX11::BackBuffer;
+//ComPtr<ID3D11DepthStencilView> DX11::DepthBuffer;
 
 void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 {
@@ -152,12 +152,12 @@ std::string DX11::HResultToString(HRESULT aResult)
 	case E_ABORT: return "Aborted"; // Operation aborted 0x80004004
 	case E_ACCESSDENIED: return "Access Denied"; // General access denied error	0x80070005
 	case E_FAIL: return "Unspecified Failure"; // Unspecified failure 0x80004005
-	case E_HANDLE: return "Non-valid Handle"; // Handle that is not valid 0x80070006
+	case E_HANDLE: return "Invalid Handle"; // Handle that is not valid 0x80070006
 	case E_INVALIDARG: return "Invalid Args"; // One or more arguments are not valid 0x80070057
 	case E_NOINTERFACE: return "Interface not Supported"; //  No such interface supported 0x80004002
 	case E_NOTIMPL: return "Not Implemented"; // Not implemented 0x80004001
 	case E_OUTOFMEMORY: return "Out of Memory"; //  Failed to allocate necessary memory	0x8007000E
-	case E_POINTER:return "Non-valid Pointer"; // Pointer that is not valid	0x80004003
+	case E_POINTER:return "Invalid Pointer"; // Pointer that is not valid	0x80004003
 	case E_UNEXPECTED: return "Unexpected Failure"; // Unexpected failure 0x8000FFFF
 	default: return "Unknown Error Result";
 	}

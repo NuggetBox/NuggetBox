@@ -14,15 +14,18 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool 
 	myStride = sizeof(ParticleVertex);
 	myOffset = 0;
 
-	const size_t maxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime));
-	myParticles.resize(maxParticles);
+	myMaxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime) * 1.1f);
+	myParticles.resize(myMaxParticles);
 
-	myAvailableParticles.Initialize(maxParticles + 99999);
+	myAvailableParticles.Initialize(myMaxParticles);
 	InitializeEmission();
+
+	myIsEmitting = aStart;
+	mySpawnTimer = 0;
 
 	//Create empty Vertex Buffer?
 	D3D11_BUFFER_DESC vertexBufferDesc{};
-	vertexBufferDesc.ByteWidth = static_cast<UINT>(static_cast<UINT>(maxParticles) * sizeof(ParticleVertex));
+	vertexBufferDesc.ByteWidth = static_cast<UINT>(static_cast<UINT>(myMaxParticles) * sizeof(ParticleVertex));
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -39,9 +42,6 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool 
 
 	myTexture = Texture::Load(aTemplate.TexturePath);
 	//SetTransform(aTemplate.Transform);
-
-	myIsEmitting = aStart;
-	mySpawnTimer = 2;
 }
 
 void ParticleEmitter::LoadAndInitialize(const std::filesystem::path& aTemplatePath, bool aStart)
@@ -65,16 +65,14 @@ void ParticleEmitter::InitializeEmission()
 
 		//Experimenting with queue system
 		myAvailableParticles.EnqueueUnsafe(i);
+
+		myParticles[i].LifeTime = -D3D10_FLOAT32_MAX;
 	}
 }
 
 void ParticleEmitter::Start()
 {
-	if (!myIsEmitting)
-	{
-		InitializeEmission();
-		myIsEmitting = true;
-	}
+	myIsEmitting = true;
 }
 
 void ParticleEmitter::Pause()
@@ -84,16 +82,19 @@ void ParticleEmitter::Pause()
 
 void ParticleEmitter::ClearParticles()
 {
-	for (size_t i = 0; i < myParticles.size(); ++i)
+	/*for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		myParticles[i].LifeTime = -D3D11_FLOAT32_MAX;
-		myParticles[i].Color.w = -1.0f;
-	}
+	}*/
 
-	if (myIsEmitting)
+	/*if (myIsEmitting)
 	{
 		InitializeEmission();
-	}
+	}*/
+
+	myAvailableParticles.Initialize(myMaxParticles);
+	InitializeEmission();
+	mySpawnTimer = 0;
 }
 
 void ParticleEmitter::Update()
@@ -112,7 +113,6 @@ void ParticleEmitter::Update()
 		ClearParticles();
 	}
 
-
 	// New queue solution experimenting
 	if (myIsEmitting)
 	{
@@ -122,67 +122,51 @@ void ParticleEmitter::Update()
 
 			InitParticle(myAvailableParticles.Dequeue());
 		}
-	}
 
-	mySpawnTimer -= Timer::GetDeltaTime();
+		mySpawnTimer -= Timer::GetDeltaTime();
+	}
 
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];
 		particle.LifeTime += Timer::GetDeltaTime();
 
-		//Scuffed?
-		//Dead Particles
 		if (particle.LifeTime <= 0.0f)
 		{
-			if (!myIsEmitting)
-			{
-				particle.LifeTime = -D3D10_FLOAT32_MAX;
-				//particle.Color.x = -1.0f;
-			}
-
-			particle.Color.w = -1.0f;
+			particle.Color.w = 0.0f;
 		}
 		else
 		{
-			if (myIsEmitting)
+			if (particle.LifeTime >= myEmitterSettings.LifeTime)
 			{
-				if (particle.LifeTime >= myEmitterSettings.LifeTime/* && particle.Color.x >= 0.0f*/)
-				{
-					//InitParticle(i);
-					myAvailableParticles.EnqueueUnsafe(i);
-					particle.LifeTime = -D3D10_FLOAT32_MAX;
-					particle.Color.w = -1.0f;
-				}
+				//InitParticle(i);
+				myAvailableParticles.EnqueueUnsafe(i);
+				particle.LifeTime = -D3D10_FLOAT32_MAX;
 			}
+			else
+			{
+				particle.Velocity.y -= myEmitterSettings.GravityScale * Timer::GetDeltaTime();
+				//TODO: Air resistance/Limit to speed?
 
-			//particle.Color.w = 1;
+				particle.Position.x += particle.Velocity.x * Timer::GetDeltaTime();
+				particle.Position.y += particle.Velocity.y * Timer::GetDeltaTime();
+				particle.Position.z += particle.Velocity.z * Timer::GetDeltaTime();
 
-			/*float maxSpeed = 300;
-			Utility::Abs(particle.Velocity.y) > maxSpeed;
-			particle.Velocity.y = particle.Velocity.y > 0 ? maxSpeed : -maxSpeed;*/
+				float lifePercentage = particle.LifeTime / myEmitterSettings.LifeTime;
 
-			particle.Velocity.y -= myEmitterSettings.GravityScale * Timer::GetDeltaTime();
-			//TODO: Air resistance/Limit to speed?
+				/*particle.Velocity.x = Utility::Lerp(myEmitterSettings.StartVelocity.x, myEmitterSettings.EndVelocity.x, lifePercentage);
+				particle.Velocity.y = Utility::Lerp(myEmitterSettings.StartVelocity.y, myEmitterSettings.EndVelocity.y, lifePercentage);
+				particle.Velocity.z = Utility::Lerp(myEmitterSettings.StartVelocity.z, myEmitterSettings.EndVelocity.z, lifePercentage);*/
 
-			particle.Position.x += particle.Velocity.x * Timer::GetDeltaTime();
-			particle.Position.y += particle.Velocity.y * Timer::GetDeltaTime();
-			particle.Position.z += particle.Velocity.z * Timer::GetDeltaTime();
+				particle.Scale.x = Utility::Lerp(myEmitterSettings.StartScale.x, myEmitterSettings.EndScale.x, lifePercentage);
+				particle.Scale.y = Utility::Lerp(myEmitterSettings.StartScale.y, myEmitterSettings.EndScale.y, lifePercentage);
+				particle.Scale.z = Utility::Lerp(myEmitterSettings.StartScale.z, myEmitterSettings.EndScale.z, lifePercentage);
 
-			float lifePercentage = particle.LifeTime / myEmitterSettings.LifeTime;
-
-			/*particle.Velocity.x = Utility::Lerp(myEmitterSettings.StartVelocity.x, myEmitterSettings.EndVelocity.x, lifePercentage);
-			particle.Velocity.y = Utility::Lerp(myEmitterSettings.StartVelocity.y, myEmitterSettings.EndVelocity.y, lifePercentage);
-			particle.Velocity.z = Utility::Lerp(myEmitterSettings.StartVelocity.z, myEmitterSettings.EndVelocity.z, lifePercentage);*/
-
-			particle.Scale.x = Utility::Lerp(myEmitterSettings.StartScale.x, myEmitterSettings.EndScale.x, lifePercentage);
-			particle.Scale.y = Utility::Lerp(myEmitterSettings.StartScale.y, myEmitterSettings.EndScale.y, lifePercentage);
-			particle.Scale.z = Utility::Lerp(myEmitterSettings.StartScale.z, myEmitterSettings.EndScale.z, lifePercentage);
-
-			particle.Color.x = Utility::Lerp(myEmitterSettings.StartColor.x, myEmitterSettings.EndColor.x, lifePercentage);
-			particle.Color.y = Utility::Lerp(myEmitterSettings.StartColor.y, myEmitterSettings.EndColor.y, lifePercentage);
-			particle.Color.z = Utility::Lerp(myEmitterSettings.StartColor.z, myEmitterSettings.EndColor.z, lifePercentage);
-			particle.Color.w = Utility::Lerp(myEmitterSettings.StartColor.w, myEmitterSettings.EndColor.w, lifePercentage);
+				particle.Color.x = Utility::Lerp(myEmitterSettings.StartColor.x, myEmitterSettings.EndColor.x, lifePercentage);
+				particle.Color.y = Utility::Lerp(myEmitterSettings.StartColor.y, myEmitterSettings.EndColor.y, lifePercentage);
+				particle.Color.z = Utility::Lerp(myEmitterSettings.StartColor.z, myEmitterSettings.EndColor.z, lifePercentage);
+				particle.Color.w = Utility::Lerp(myEmitterSettings.StartColor.w, myEmitterSettings.EndColor.w, lifePercentage);
+			}
 		}
 	}
 }
