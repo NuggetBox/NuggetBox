@@ -20,8 +20,8 @@ struct ParticleEmitterTemplate
 class ParticleEmitter : public SceneObject
 {
 public:
-	//virtual ~ParticleEmitter() = default;
 	ParticleEmitter() = default;
+	//virtual ~ParticleEmitter() = default;
 
 	void Initialize(const ParticleEmitterTemplate& aTemplate, bool aStart = true);
 	void LoadAndInitialize(const std::filesystem::path& aTemplatePath, bool aStart = true);

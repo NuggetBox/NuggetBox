@@ -8,8 +8,13 @@ namespace Utility
 	{
 	public:
 		Queue(int aSize = 16);
+		~Queue();
+
+		Queue(const Queue& aQueue);
 
 		void Initialize(int aSize);
+
+		void Clear();
 
 		int GetSize() const;
 		bool IsEmpty() const;
@@ -37,8 +42,33 @@ namespace Utility
 	{
 		myFirst = -1;
 		myLast = -1;
-
 		myQueue = new T[myCapacity = aSize];
+	}
+
+	template<class T>
+	Queue<T>::~Queue()
+	{
+		if (myQueue != nullptr)
+		{
+			delete[] myQueue;
+		}
+	}
+
+	template<class T>
+	Queue<T>::Queue(const Queue& aQueue)
+	{
+		myCapacity = aQueue.myCapacity;
+		myFirst = aQueue.myFirst;
+		myLast = aQueue.myLast;
+
+		T* newQueue = new T[myCapacity];
+
+		for (int i = 0; i < myCapacity; ++i)
+		{
+			newQueue[i] = aQueue.myQueue[i];
+		}
+
+		myQueue = newQueue;
 	}
 
 	template<class T>
@@ -49,10 +79,14 @@ namespace Utility
 			delete[] myQueue;
 		}
 
+		myQueue = new T[myCapacity = aSize];
+	}
+
+	template<class T>
+	void Queue<T>::Clear()
+	{
 		myFirst = -1;
 		myLast = -1;
-
-		myQueue = new T[myCapacity = aSize];
 	}
 
 	template<class T>

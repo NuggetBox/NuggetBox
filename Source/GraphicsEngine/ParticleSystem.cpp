@@ -10,10 +10,9 @@ void ParticleSystem::Initialize(const ParticleSystemTemplate& aTemplate)
 {
 	for (auto& emitterInfo : aTemplate.EmitterInfos)
 	{
-		ParticleEmitter emitter;
+		ParticleEmitter& emitter = myEmitters.emplace_back();
 		emitter.SetTransform(emitterInfo.Transform);
 		emitter.LoadAndInitialize(emitterInfo.SettingsPath);
-		myEmitters.push_back(emitter);
 	}
 }
 
