@@ -53,6 +53,8 @@ void Editor::Initialize(Utility::Vector4<float>& aClearColor, bool& aLerpAnimati
 
 void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations)
 {
+	ImGui::ShowDemoWindow();
+
 	ImGui::BeginMainMenuBar();
 	
 	if (ImGui::BeginMenu("File"))
