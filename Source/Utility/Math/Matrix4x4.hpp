@@ -41,7 +41,7 @@ namespace Utility
 		// Static function for creating a transpose of a matrix.
 		static Matrix4x4<T> Transpose(const Matrix4x4<T>& aMatrixToTranspose);
 
-		Matrix4x4<T> Lerp(const Matrix4x4<T>& aMatrix, float aFactor) const;
+		static Matrix4x4<T> Lerp(const Matrix4x4<T>& aFirstMatrix, const Matrix4x4<T>& aSecondMatrix, float aFactor);
 
 		// Gets the transposed version of this matrix
 		Matrix4x4<T> GetTranspose() const;
@@ -340,38 +340,38 @@ namespace Utility
 		return temp;
 	}
 
-	template <class T>
-	Matrix4x4<T> Matrix4x4<T>::Lerp(const Matrix4x4<T>& aMatrix, float aFactor) const
+	template<class T>
+	Matrix4x4<T> Matrix4x4<T>::Lerp(const Matrix4x4<T>& aFirstMatrix, const Matrix4x4<T>& aSecondMatrix, float aFactor)
 	{
-		Matrix4x4<T> result = *this;
+		Matrix4x4<T> result = aFirstMatrix;
 
-		Vector3f firstRight = { result(1, 1), result(1, 2), result(1, 3) };
-		Vector3f secondRight = { aMatrix(1, 1), aMatrix(1, 2), aMatrix(1, 3) };
-		Vector3f finalRight = firstRight.NormalizedLerp(secondRight, aFactor);
+		Vector3f firstRight = { aFirstMatrix(1, 1), aFirstMatrix(1, 2), aFirstMatrix(1, 3) };
+		Vector3f secondRight = { aSecondMatrix(1, 1), aSecondMatrix(1, 2), aSecondMatrix(1, 3) };
+		Vector3f finalRight = Vector3<T>::NormalizedLerp(firstRight, secondRight, aFactor);
 
 		result(1, 1) = finalRight.x;
 		result(1, 2) = finalRight.y;
 		result(1, 3) = finalRight.z;
 
-		Vector3f firstUp = { result(2, 1), result(2, 2), result(2, 3) };
-		Vector3f secondUp = { aMatrix(2, 1), aMatrix(2, 2), aMatrix(2, 3) };
-		Vector3f finalUp = firstUp.NormalizedLerp(secondUp, aFactor);
+		Vector3f firstUp = { aFirstMatrix(2, 1), aFirstMatrix(2, 2), aFirstMatrix(2, 3) };
+		Vector3f secondUp = { aSecondMatrix(2, 1), aSecondMatrix(2, 2), aSecondMatrix(2, 3) };
+		Vector3f finalUp = Vector3<T>::NormalizedLerp(firstUp, secondUp, aFactor);
 
 		result(2, 1) = finalUp.x;
 		result(2, 2) = finalUp.y;
 		result(2, 3) = finalUp.z;
 
-		Vector3f firstFront = { result(3, 1), result(3, 2), result(3, 3) };
-		Vector3f secondFront = { aMatrix(3, 1), aMatrix(3, 2), aMatrix(3, 3) };
-		Vector3f finalFront = firstFront.NormalizedLerp(secondFront, aFactor);
+		Vector3f firstFront = { aFirstMatrix(3, 1), aFirstMatrix(3, 2), aFirstMatrix(3, 3) };
+		Vector3f secondFront = { aSecondMatrix(3, 1), aSecondMatrix(3, 2), aSecondMatrix(3, 3) };
+		Vector3f finalFront = Vector3<T>::NormalizedLerp(firstFront, secondFront, aFactor);
 
 		result(3, 1) = finalFront.x;
 		result(3, 2) = finalFront.y;
 		result(3, 3) = finalFront.z;
 
-		Vector3<T> pos = { result(1, 4), result(2, 4), result(3, 4) };
-		Vector3<T> secondPos = { aMatrix(1, 4), aMatrix(2, 4), aMatrix(3, 4) };
-		Vector3<T> lerpedPos = pos.Lerp(secondPos, aFactor);
+		Vector3<T> pos = { aFirstMatrix(1, 4), aFirstMatrix(2, 4), aFirstMatrix(3, 4) };
+		Vector3<T> secondPos = { aSecondMatrix(1, 4), aSecondMatrix(2, 4), aSecondMatrix(3, 4) };
+		Vector3<T> lerpedPos = Vector3<T>::Lerp(pos, secondPos, aFactor);
 
 		result(1, 4) = lerpedPos.x;
 		result(2, 4) = lerpedPos.y;

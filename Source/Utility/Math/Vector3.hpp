@@ -43,8 +43,8 @@ namespace Utility
 		//Returns the length of the vector
 		T Length() const;
 
-		Vector3<T> Lerp(const Vector3<T>& aVector, float aFactor);
-		Vector3<T> NormalizedLerp(const Vector3<T>& aVector, float aFactor);
+		static Vector3<T> Lerp(const Vector3<T>& aFirstVector, const Vector3<T>& aSecondVector, float aFactor);
+		static Vector3<T> NormalizedLerp(const Vector3<T>& aFirstVector, const Vector3<T>& aSecondVector, float aFactor);
 
 		//Returns a normalized copy of this
 		Vector3<T> GetNormalized() const;
@@ -138,16 +138,19 @@ namespace Utility
 		return std::sqrt(x * x + y * y + z * z);
 	}
 
-	template <class T>
-	Vector3<T> Vector3<T>::Lerp(const Vector3<T>& aVector, float aFactor)
+	template<class T>
+	Vector3<T> Vector3<T>::Lerp(const Vector3<T>& aFirstVector, const Vector3<T>& aSecondVector, float aFactor)
 	{
-		return Vector3<T>(Utility::Lerp(x, aVector.x, aFactor), Utility::Lerp(y, aVector.y, aFactor), Utility::Lerp(z, aVector.z, aFactor));
+		return Vector3<T>(
+			Utility::Lerp(aFirstVector.x, aSecondVector.x, aFactor), 
+			Utility::Lerp(aFirstVector.y, aSecondVector.y, aFactor), 
+			Utility::Lerp(aFirstVector.z, aSecondVector.z, aFactor));
 	}
 
-	template <class T>
-	Vector3<T> Vector3<T>::NormalizedLerp(const Vector3<T>& aVector, float aFactor)
+	template<class T>
+	Vector3<T> Vector3<T>::NormalizedLerp(const Vector3<T>& aFirstVector, const Vector3<T>& aSecondVector, float aFactor)
 	{
-		Vector3<T> lerped = Lerp(aVector, aFactor);
+		Vector3<T> lerped = Lerp(aFirstVector, aSecondVector, aFactor);
 
 		if (lerped.LengthSqr() > 0)
 		{

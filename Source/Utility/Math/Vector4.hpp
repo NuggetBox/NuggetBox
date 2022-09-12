@@ -30,8 +30,8 @@ namespace Utility
 		//Assignment operator (compiler generated)
 		Vector4<T>& operator=(const Vector4<T>& aVector4) = default;
 
-		T& operator[](const size_t anIndex);
-		const T& operator[](const size_t anIndex) const;
+		T& operator[](const unsigned anIndex);
+		const T& operator[](const unsigned anIndex) const;
 
 		//Destructor (compiler generated)
 		~Vector4<T>() = default;
@@ -42,8 +42,8 @@ namespace Utility
 		//Returns the length of the vector
 		T Length() const;
 
-		Vector4<T> Lerp(const Vector4<T>& aVector, float aFactor);
-		Vector4<T> NormalizedLerp(const Vector4<T>& aVector, float aFactor);
+		static Vector4<T> Lerp(const Vector4<T>& aFirstVector, const Vector4<T>& aSecondVector, float aFactor);
+		static Vector4<T> NormalizedLerp(const Vector4<T>& aFirstVector, const Vector4<T>& aSecondVector, float aFactor);
 
 		//Returns a normalized copy of this
 		Vector4<T> GetNormalized() const;
@@ -85,7 +85,7 @@ namespace Utility
 	}
 
 	template <class T>
-	T& Vector4<T>::operator[](const size_t anIndex)
+	T& Vector4<T>::operator[](const unsigned anIndex)
 	{
 		assert(anIndex >= 0 && anIndex < 4 && "Tried to access a Vector4 value outside of index range, 0 gives x, 1 gives y, 2 gives z, 3 gives w");
 
@@ -105,7 +105,7 @@ namespace Utility
 	}
 
 	template <class T>
-	const T& Vector4<T>::operator[](const size_t anIndex) const
+	const T& Vector4<T>::operator[](const unsigned anIndex) const
 	{
 		assert(anIndex >= 0 && anIndex < 4 && "Tried to access a Vector4 value outside of index range, 0 gives x, 1 gives y, 2 gives z, 3 gives w");
 
@@ -137,15 +137,19 @@ namespace Utility
 	}
 
 	template<class T>
-	Vector4<T> Vector4<T>::Lerp(const Vector4<T>& aVector, float aFactor)
+	Vector4<T> Vector4<T>::Lerp(const Vector4<T>& aFirstVector, const Vector4<T>& aSecondVector, float aFactor)
 	{
-		return Vector4<T>(Utility::Lerp(x, aVector.x, aFactor), Utility::Lerp(y, aVector.y, aFactor), Utility::Lerp(z, aVector.z, aFactor), Utility::Lerp(w, aVector.w, aFactor));
+		return Vector4<T>(
+			Utility::Lerp(aFirstVector.x, aSecondVector.x, aFactor),
+			Utility::Lerp(aFirstVector.y, aSecondVector.y, aFactor),
+			Utility::Lerp(aFirstVector.z, aSecondVector.z, aFactor),
+			Utility::Lerp(aFirstVector.w, aSecondVector.w, aFactor));
 	}
 
 	template<class T>
-	Vector4<T> Vector4<T>::NormalizedLerp(const Vector4<T>& aVector, float aFactor)
+	Vector4<T> Vector4<T>::NormalizedLerp(const Vector4<T>& aFirstVector, const Vector4<T>& aSecondVector, float aFactor)
 	{
-		Vector4<T> lerped = Lerp(aVector, aFactor);
+		Vector4<T> lerped = Lerp(aFirstVector, aSecondVector, aFactor);
 
 		if (lerped.LengthSqr() > 0)
 		{

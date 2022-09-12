@@ -13,7 +13,8 @@ project "GraphicsEngine"
 
 	includedirs{
 		"../Utility/",
-		"../../External/"
+		"../../External/",
+		"."
 	}
 
 	libdirs{

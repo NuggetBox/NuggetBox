@@ -3,7 +3,7 @@
 #include "Windows.h"
 
 #include "Modelviewer.h"
-#include "../GraphicsEngine/GraphicsEngine.h"
+#include "Rendering/GraphicsEngine.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
