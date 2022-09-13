@@ -1,3 +1,4 @@
+#include "CBuffers.hlsli"
 #include "ShaderStructs.hlsli"
 #include "ParticleStructs.hlsli"
 

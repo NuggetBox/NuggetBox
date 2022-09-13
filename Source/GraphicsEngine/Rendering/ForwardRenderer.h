@@ -8,7 +8,6 @@
 #include "Camera.h"
 #include "Lights/DirectionalLight.h"
 #include "Model/Model.h"
-#include "Lights/Light.h"
 #include "ParticleSystem/ParticleSystem.h"
 #include "RenderStructs.h"
 
@@ -27,13 +26,22 @@ public:
 	void Initialize();
 
 	void RenderModels(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, const std::shared_ptr<
-				DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, RenderMode aRenderMode);
+					  DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, const std::vector<std::
+					  shared_ptr<Light>>& someLights, RenderMode aRenderMode);
 	void RenderParticles(const std::shared_ptr<Camera>& aCamera, 
 						 const std::vector<std::shared_ptr<ParticleSystem>>& aParticleSystemList, 
 						 RenderMode aRenderMode);
 
 private:
 	//ComPtr<ID3D11RasterizerState> myRasterizerSate;
+	struct SceneLightBuffer
+	{
+		LightBufferData DirectionalLight;
+		LightBufferData Lights[MAX_FORWARD_LIGHTS];
+
+		unsigned NumLights;
+		Vector3f Padding;
+	} mySceneLightBufferData;
 
 	FrameBufferData myFrameBufferData;
 	ObjectBufferData myObjectBufferData{};

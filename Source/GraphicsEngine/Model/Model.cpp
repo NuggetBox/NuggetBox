@@ -164,6 +164,35 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		modelData.myMeshes.push_back(pyramid);
 		DEBUGLOG("Created Primitive Pyramid Mesh");
 	}
+	else if (path == "Plane")
+	{
+		std::vector<VertexData> quadVertices =
+		{
+			//Top face
+			{-50.0f, 0.0f, 50.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f },
+			{50.0f, 0.0f, 50.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f },
+			{-50.0f, 0.0f, -50.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f },
+			{50.0f, 0.0f, -50.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f }
+		};
+
+		std::vector<unsigned int> quadIndices =
+		{
+			0, 1, 2,
+			1, 3, 2
+		};
+
+		Mesh plane(quadVertices, quadIndices);
+
+		//TODO: Fix default material load
+		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
+		meshMaterial->SetAlbedoTexture(Texture::LoadDefaultAlbedo());
+		meshMaterial->SetNormalMap(Texture::LoadDefaultNormal());
+		meshMaterial->SetSurfaceTexture(Texture::LoadDefaultSurface());
+
+		plane.SetMaterial(meshMaterial);
+		modelData.myMeshes.push_back(plane);
+		DEBUGLOG("Created Primitive Plane Mesh");
+	}
 	else
 	{
 		TGA::FBXModel tgaModel;

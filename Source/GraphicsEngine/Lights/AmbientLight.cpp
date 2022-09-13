@@ -7,6 +7,7 @@ std::shared_ptr<AmbientLight> AmbientLight::Create(const std::filesystem::path& 
 {
 	AmbientLight ambientLight;
 	ambientLight.myTexture = Texture::Load(aTexturePath);
+	ambientLight.myLightBufferData.LightType = static_cast<unsigned>(LightType::AmbientLight);
 	DEBUGLOG("Created Ambient Light");
 
 	return std::make_shared<AmbientLight>(ambientLight);

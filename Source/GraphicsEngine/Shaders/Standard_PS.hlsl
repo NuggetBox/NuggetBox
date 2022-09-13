@@ -1,5 +1,9 @@
+#include "CBuffers.hlsli"
 #include "PBRFunctions.hlsli"
 #include "ShaderStructs.hlsli"
+
+#define MAX_LIGHTS 8
+#include "LightBuffer.hlsli"
 
 PixelOutput main(VertexToPixel input)
 {
@@ -23,6 +27,7 @@ PixelOutput main(VertexToPixel input)
 	const float roughness = surface.g;
 	const float emissive = surface.b;
 	const float emissiveStrength = surface.a;
+	//
 
 	const float3 toEye = normalize(FB_CamTranslation.xyz - input.myVertexPosition.xyz);
 
@@ -33,6 +38,7 @@ PixelOutput main(VertexToPixel input)
 		normalize(input.myBinormal),
 		normalize(input.myNormal)
 	);
+	//
 
 	//Extract pixelnormal from Normal Map
 	float3 pixelNormal = normalMap;
@@ -41,27 +47,69 @@ PixelOutput main(VertexToPixel input)
 	pixelNormal.z = sqrt(1 - saturate(pixelNormal.x + pixelNormal.x + pixelNormal.y + pixelNormal.y));
 	pixelNormal = normalize(pixelNormal);
 	pixelNormal = normalize(mul(pixelNormal, TangentSpaceMatrix));
+	//
 
 	//Lambertian reflection
 	//Ip=L•NCI
 	// Color of lighted pixel = Direction towards light DOT Pixel normal * Light color * Light intensity
-	const float3 L = -1 * normalize(LB_Direction);
+	const float3 L = -1 * normalize(LB_DirectionalLight.Direction);
 	const float3 N = pixelNormal;
 	const float LdotN = saturate(dot(L, N));
-	const float3 C = LB_Color;
-	const float I = LB_Intensity;
+	const float3 C = LB_DirectionalLight.Color;
+	const float I = LB_DirectionalLight.Intensity;
 	const float3 finalPixelColor = LdotN * C * I;
 	float3 diffuse = albedo * finalPixelColor;
+	//
 
 	//IBL: Image based lightning
 	const float3 environment = environmentTexture.SampleLevel(defaultSampler, input.myNormal, 5).rgb;
 	float3 ambient = albedo * environment;
+	//
 
 	//PBR
 	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
 	const float3 diffuseColor = lerp((float3)0.00f, albedo, 1 - metalness);
 	const float3 ambientLighting = EvaluateAmbience(environmentTexture, pixelNormal, input.myNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
-	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, pixelNormal, roughness, LB_Color, LB_Intensity, -LB_Direction, toEye);
+	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, pixelNormal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
+	//
+
+	float3 pointLight = 0;
+	float3 spotLight = 0;
+
+	//Calculate Point- & Spotlights
+	for (unsigned int l = 0; l < LB_NumLights; ++l)
+	{
+		const LightData light = LB_Lights[l];
+
+		switch (light.LightType)
+		{
+			//Directional Light
+			case 0:
+				break;
+			//Ambient light
+			case 1:
+				break;
+			//Point Light
+			case 2:
+			{
+				pointLight += EvaluatePointLight(diffuseColor, specularColor, pixelNormal, roughness, light.Color, light.Intensity, light.Range, 
+					light.Position, toEye, input.myVertexPosition.xyz);
+				break;
+			}
+			//Spot Light
+			case 3:
+			{
+				spotLight += EvaluateSpotLight(diffuseColor, specularColor, pixelNormal, roughness, light.Color, light.Intensity, light.Range, 
+					light.Position, light.Direction, light.SpotOuterRadius, light.SpotInnerRadius, toEye, input.myVertexPosition.xyz);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+	//
 
 	//PBR replace IBL temp
 	ambient = ambientLighting;
@@ -72,7 +120,7 @@ PixelOutput main(VertexToPixel input)
 	{
 		case 0: //Default
 			//result.myColor.rgb = saturate(ambient + diffuse);
-			result.myColor.rgb = LinearToGamma(ambient + diffuse);
+			result.myColor.rgb = LinearToGamma(ambient + diffuse + pointLight + spotLight + emissive * emissiveStrength * albedo);
 			result.myColor.a = 1;
 			break;
 		case 1: //UV

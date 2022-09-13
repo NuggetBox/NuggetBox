@@ -75,6 +75,11 @@ private:
 
 	bool myLerpAnimations;
 
+	bool myDragAccept;
+	void AcceptFiles(HWND aHwnd);
+
+	void HandleDroppedFile(std::filesystem::path& aPath);
+
 	// Container window message pump.
 	static LRESULT CALLBACK WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 };

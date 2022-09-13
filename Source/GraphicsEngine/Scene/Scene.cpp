@@ -1,7 +1,7 @@
 #include "NuggetBox.pch.h"
 #include "Scene.h"
 
-void Scene::AddGameObject(std::shared_ptr<Model> aModel)
+void Scene::AddModel(std::shared_ptr<Model> aModel)
 {
 	myModels.push_back(std::move(aModel));
 }
@@ -24,4 +24,14 @@ void Scene::SetDirectionalLight(std::shared_ptr<DirectionalLight> aDirectionalLi
 void Scene::SetAmbientLight(std::shared_ptr<AmbientLight> anAmbientLight)
 {
 	myAmbientLight = anAmbientLight;
+}
+
+void Scene::AddPointLight(std::shared_ptr<PointLight> aPointLight)
+{
+	myLights.push_back(aPointLight);
+}
+
+void Scene::AddSpotLight(std::shared_ptr<SpotLight> aSpotLight)
+{
+	myLights.push_back(aSpotLight);
 }

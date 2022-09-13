@@ -1,3 +1,4 @@
+#include "CBuffers.hlsli"
 #include "ShaderStructs.hlsli"
 
 VertexToPixel main(VertexInput input)

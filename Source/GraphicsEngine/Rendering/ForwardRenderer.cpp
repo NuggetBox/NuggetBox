@@ -38,17 +38,17 @@ void ForwardRenderer::Initialize()
     //DEBUGLOG("Created Material Buffer");
 
     //Create light buffer
-    bufferDescription.ByteWidth = sizeof(LightBufferData);
+    bufferDescription.ByteWidth = sizeof(SceneLightBuffer);
     AssertIfFailed(DX11::Device->CreateBuffer(&bufferDescription, nullptr, myLightBuffer.GetAddressOf()));
     //DEBUGLOG("Created Light Buffer");
 
-    DEBUGLOG("Created Buffers for Forward Renderer");
+    DEBUGLOG("Created CBuffers for Forward Renderer");
 
     DEBUGLOG("Forward Renderer Initialized");
 }
 
 void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList,
-    const std::shared_ptr<DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, RenderMode aRenderMode)
+    const std::shared_ptr<DirectionalLight> aDirectionalLight, const std::shared_ptr<AmbientLight> anAmbientLight, const std::vector<std::shared_ptr<Light>>& someLights, RenderMode aRenderMode)
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
@@ -113,12 +113,30 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
             //Set lights as resources
             if (aDirectionalLight)
             {
-                aDirectionalLight->SetAsResource(myLightBuffer);
+                //aDirectionalLight->SetAsResource(myLightBuffer);
+                mySceneLightBufferData.DirectionalLight = aDirectionalLight->GetLightBuffer();
             }
             if (anAmbientLight)
             {
                 anAmbientLight->SetAsResource(nullptr);
             }
+
+            //Fill scenelightbuffer with point&spotlights from scene and map-unmap lightbuffer
+            mySceneLightBufferData.NumLights = 0;
+            ZeroMemory(mySceneLightBufferData.Lights, sizeof(LightBufferData) * MAX_FORWARD_LIGHTS);
+
+            for (int l = 0; l < someLights.size() && l < MAX_FORWARD_LIGHTS; ++l)
+            {
+                mySceneLightBufferData.Lights[l] = someLights[l]->GetLightBuffer();
+                mySceneLightBufferData.NumLights++;
+            }
+            ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+            AssertIfFailed(DX11::Context->Map(myLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
+            memcpy_s(bufferData.pData, sizeof(SceneLightBuffer), &mySceneLightBufferData, sizeof(SceneLightBuffer));
+            DX11::Context->Unmap(myLightBuffer.Get(), 0);
+
+             DX11::Context->PSSetConstantBuffers(3, 1, myLightBuffer.GetAddressOf());
+            //
 
             DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
             DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

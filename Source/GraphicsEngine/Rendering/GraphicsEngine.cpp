@@ -2,6 +2,7 @@
 #include "GraphicsEngine.h"
 
 #include <json.hpp>
+#include <shellapi.h>
 
 #include "Camera.h"
 #include "Core/DebugLogger.h"
@@ -16,73 +17,85 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	InitializeWindow(someX, someY, someWidth, someHeight);
 
-	// F1 -- This is where we should init our Framework
-	// ex: myFramework.Initialize(myWindowHandle, false);
 	DX11::Initialize(myWindowHandle, enableDeviceDebug);
 	SetupBlendStates();
 	SetupDepthStencilStates();
 
 	Utility::Timer::Start();
 
+	auto plane = Model::Load("Plane");
+	plane->SetScale({ 100, 100, 100 });
+	myScene.AddModel(plane);
+
 	auto cube = Model::Load("Cube");
-	cube->SetPosition(0, 0, 150);
-	myScene.AddGameObject(cube);
+	cube->SetPosition(0, 50, 150);
+	myScene.AddModel(cube);
 
 	auto pyramid = Model::Load("Pyramid");
-	pyramid->SetPosition(200, 0, 0);
-	myScene.AddGameObject(pyramid);
+	pyramid->SetPosition(200, 50, 0);
+	myScene.AddModel(pyramid);
 
 	auto chest = Model::Load("Meshes/Particle_Chest.fbx");
-	chest->SetPosition(-200, -50, 0);
+	chest->SetPosition(-200, 0, 0);
 	chest->AddRotation(0, 180, 0);
-	myScene.AddGameObject(chest);
+	myScene.AddModel(chest);
 
 	auto gremlin = Model::Load("Meshes/gremlin.fbx");
-	gremlin->AddPosition(-20, -50, 0);
+	gremlin->AddPosition(-20, 0, 0);
 	gremlin->AddRotation(0, 180, 0);
 	gremlin->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
 	gremlin->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
 	gremlin->PlayAnimation("Walk");
-	myScene.AddGameObject(gremlin);
+	myScene.AddModel(gremlin);
 
 	auto gremlin2 = Model::Load("Meshes/gremlin.fbx");
-	gremlin2->AddPosition(40, -50, 0);
+	gremlin2->AddPosition(40, 0, 0);
 	gremlin2->AddRotation(0, 180, 0);
 	gremlin2->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
 	gremlin2->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
 	gremlin2->PlayAnimation("Run");
-	myScene.AddGameObject(gremlin2);
+	myScene.AddModel(gremlin2);
 
 	auto spiderCat = Model::Load("meshes/SpiderCat.fbx");
-	spiderCat->AddPosition(0, 100, 0);
+	spiderCat->AddPosition(0, 150, 0);
 	spiderCat->AddRotation(0, 180, 0);
-	myScene.AddGameObject(spiderCat);
+	myScene.AddModel(spiderCat);
 
 	auto sphere = Model::Load("meshes/sphere.fbx");
-	sphere->AddPosition(0, -150, 0);
-	sphere->SetScale(Vector3f(75, 75, 75));
-	myScene.AddGameObject(sphere);
+	sphere->AddPosition(500, 50, 0);
+	sphere->SetScale(Vector3f(50, 50, 50));
+	myScene.AddModel(sphere);
 
 	/*auto skybox = Model::Load("meshes/Sphere.fbx");
 	skybox->SetScale(Vector3f(9000, 9000, 9000));
 	myScene.AddGameObject(skybox);*/
 
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->SetPosition(0, 0, -700);
+	camera->SetPosition(0, 100, -500);
 	myScene.SetCamera(camera);
 
 	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
-	system->SetPosition(0, 120, 0);
+	system->SetPosition(0, 170, 0);
 	system->LoadAndInitialize("Json/ParticleSystems/System1.json");
 	myScene.AddParticleSystem(system);
 	
 	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(1, -1, 1)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
+	// Add some random pointlights
+	for (int i = 0; i < MAX_FORWARD_LIGHTS; ++i)
+	{
+		auto pointLight = PointLight::Create({ 
+			(std::rand() % 100) / 100.0f,  (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f }, 
+			5000, { 0.0f, 50.0f, static_cast<float>(i) * 100.0f }, 500);
+		myScene.AddPointLight(pointLight);
+	}
+
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
 
 	myLerpAnimations = true;
+	myDragAccept = false;
 
 	myEditor.Initialize(myClearColor, myLerpAnimations);
 
@@ -178,10 +191,27 @@ void GraphicsEngine::InputRenderMode()
 #endif
 }
 
+void GraphicsEngine::AcceptFiles(HWND aHwnd)
+{
+	if (!myDragAccept)
+	{
+		myDragAccept = true;
+		DragAcceptFiles(aHwnd, true);
+	}
+}
+
+void GraphicsEngine::HandleDroppedFile(std::filesystem::path& aPath)
+{
+	//TODO: Handle dropped file
+}
+
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
 	// We want to be able to access the Graphics Engine instance from inside this function.
-	static GraphicsEngine* graphicsEnginePtr = nullptr;
+	static GraphicsEngine* engine = nullptr;
+
+	if (engine != nullptr)
+		engine->AcceptFiles(hWnd);
 
 	if (InputHandler::UpdateEvents(uMsg, wParam, lParam))
 	{
@@ -195,12 +225,21 @@ LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WP
 	else if (uMsg == WM_CREATE)
 	{
 		const CREATESTRUCT* createdStruct = reinterpret_cast<CREATESTRUCT*>(lParam);
-		graphicsEnginePtr = static_cast<GraphicsEngine*>(createdStruct->lpCreateParams);
+		engine = static_cast<GraphicsEngine*>(createdStruct->lpCreateParams);
 	}
 	else if (uMsg == WM_SIZE)
 	{
 		//ResizeWindow(hWnd, LOWORD(lParam), HIWORD(lParam));
 		//return true;
+	}
+	else if (uMsg == WM_DROPFILES)
+	{
+		HDROP hDrop = (HDROP)wParam;
+		TCHAR pathChars[MAX_PATH];
+		DragQueryFile(hDrop, 0, pathChars, MAX_PATH);
+		std::filesystem::path path(pathChars);
+		engine->HandleDroppedFile(path);
+		DragFinish(hDrop);
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -386,7 +425,7 @@ void GraphicsEngine::RenderFrame()
 
 	for (auto& model : models) 
 	{
-		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
 		model->Update(myLerpAnimations);
 	}
 
@@ -406,31 +445,31 @@ void GraphicsEngine::RenderFrame()
 	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);*/
 
 	//Render everything with Forward Renderer
-	/*SetBlendState(BlendState::None);
+	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
-	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
+	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
 
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
-	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);*/
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
 	//
 
 	//Render Models with deferred but particles with forward
-	SetBlendState(BlendState::None);
+	/*SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
 	myGBuffer->Clear();
 	myGBuffer->SetAsTarget();
-	myDeferredRenderer.GenerateGBuffer(camera, models, Timer::GetDeltaTime(), Timer::GetTotalTime());
+	myDeferredRenderer.GenerateGBuffer(camera, models);
 	myGBuffer->ClearTarget();
 
 	myGBuffer->SetAsResource(0);
 	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 	SetDepthStencilState(DepthStencilState::Off);
-	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), Timer::GetDeltaTime(), Timer::GetTotalTime(), myRenderMode);
+	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
 
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
-	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);*/
 	//
 
 	InputHandler::UpdatePreviousState();

@@ -38,7 +38,7 @@ void DeferredRenderer::Initialize()
 }
 
 void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera,
-                                       const std::vector<std::shared_ptr<Model>>& aModelList, float aDeltaTime, float aTotalTime)
+                                       const std::vector<std::shared_ptr<Model>>& aModelList)
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
@@ -102,8 +102,7 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera,
 }
 
 void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera,
-	const std::shared_ptr<DirectionalLight>& aDirectionalLight, const std::shared_ptr<AmbientLight>& anAmbientLight,
-	float aDeltaTime, float aTotalTime, RenderMode aRenderMode)
+	const std::shared_ptr<DirectionalLight>& aDirectionalLight, const std::shared_ptr<AmbientLight>& anAmbientLight, RenderMode aRenderMode)
 {
     //Frame Buffer
     D3D11_MAPPED_SUBRESOURCE bufferData;

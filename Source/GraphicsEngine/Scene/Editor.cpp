@@ -228,7 +228,7 @@ void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& a
 	ImGui::EndMainMenuBar();
 }
 
-void Editor::LoadClearColor(Utility::Vector4<float>& aColorToLoad, const std::filesystem::path& aPath)
+void Editor::LoadClearColor(Utility::Vector4<float>& aClearColor, const std::filesystem::path& aPath)
 {
 	if (std::filesystem::exists(aPath))
 	{
@@ -238,10 +238,10 @@ void Editor::LoadClearColor(Utility::Vector4<float>& aColorToLoad, const std::fi
 
 		if (json.contains("ClearColor"))
 		{
-			aColorToLoad.x = json["ClearColor"]["r"];
-			aColorToLoad.y = json["ClearColor"]["g"];
-			aColorToLoad.z = json["ClearColor"]["b"];
-			aColorToLoad.w = json["ClearColor"]["a"];
+			aClearColor.x = json["ClearColor"]["r"];
+			aClearColor.y = json["ClearColor"]["g"];
+			aClearColor.z = json["ClearColor"]["b"];
+			aClearColor.w = json["ClearColor"]["a"];
 		}
 	}
 }

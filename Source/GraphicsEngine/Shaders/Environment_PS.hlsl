@@ -1,5 +1,9 @@
+#include "CBuffers.hlsli"
 #include "PBRFunctions.hlsli"
 #include "ShaderStructs.hlsli"
+
+#define MAX_LIGHTS 256
+#include "LightBuffer.hlsli"
 
 DeferredPixelOutput main(DeferredVertexToPixel input)
 {
@@ -35,7 +39,7 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	//calc ambient
 	const float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
 	//calc direct
-	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_Color, LB_Intensity, -LB_Direction, toEye);
+	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
 	//assemble light, lineartogamma
 	result.Color.rgb = LinearToGamma(ambientLighting + directionalLighting);
 	result.Color.a = 1.0f;
