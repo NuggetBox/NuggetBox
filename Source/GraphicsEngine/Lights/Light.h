@@ -1,8 +1,8 @@
 #pragma once
 #include "Scene/SceneObject.h"
 #include "Rendering/DX11.h"
-
 #include "Rendering/RenderStructs.h"
+#include "Rendering/DepthStencil.h"
 
 enum class LightType
 {
@@ -29,4 +29,5 @@ public:
 
 protected:
 	LightBufferData myLightBufferData;
+	std::shared_ptr<DepthStencil> myShadowMap;
 };

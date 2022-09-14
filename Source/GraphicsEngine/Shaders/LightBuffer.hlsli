@@ -1,5 +1,8 @@
 struct LightData
 {
+	float4x4 ViewMatrix;
+	float4x4 ProjectionMatrix;
+
 	float3 Color;
 	float Intensity;
 
@@ -12,7 +15,11 @@ struct LightData
 	float SpotInnerRadius;
 	float SpotOuterRadius;
 	uint LightType;
-	float Padding;
+	bool CastShadows;
+
+	float NearPlane;
+	float FarPlane;
+	float2 Padding;
 };
 
 //Remember to define MAX_LIGHTS before including this

@@ -4,7 +4,7 @@
 class DirectionalLight : public Light
 {
 public:
-	static std::shared_ptr<DirectionalLight> Create(Vector3f aColor, float anIntensity, Vector3f aDirection);
+	static std::shared_ptr<DirectionalLight> Create(Vector3f aColor, float anIntensity, Vector3f aRotation);
 
 	void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) override;
 };

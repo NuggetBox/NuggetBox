@@ -4,7 +4,7 @@
 #include <cassert>
 #include <filesystem>
 
-#include "DebugLogger.h"
+#include "Core/DebugLogger.h"
 #include "TGAFBXImporter/include/FBXImporter.h"
 #include "Skeleton.h"
 

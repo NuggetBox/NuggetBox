@@ -10,7 +10,7 @@
 void ForwardRenderer::Initialize()
 {
     // Rasterizer that disables backface culling
-    /*D3D11_RASTERIZER_DESC cmDesc = {};
+   /* D3D11_RASTERIZER_DESC cmDesc = {};
     cmDesc.FillMode = D3D11_FILL_SOLID;
     cmDesc.CullMode = D3D11_CULL_NONE;
     cmDesc.FrontCounterClockwise = false;
@@ -135,7 +135,7 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
             memcpy_s(bufferData.pData, sizeof(SceneLightBuffer), &mySceneLightBufferData, sizeof(SceneLightBuffer));
             DX11::Context->Unmap(myLightBuffer.Get(), 0);
 
-             DX11::Context->PSSetConstantBuffers(3, 1, myLightBuffer.GetAddressOf());
+            DX11::Context->PSSetConstantBuffers(3, 1, myLightBuffer.GetAddressOf());
             //
 
             DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);

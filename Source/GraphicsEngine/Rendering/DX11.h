@@ -1,8 +1,8 @@
 #pragma once
 #include <wrl.h>
 #include <cassert>
-#include <Math/Vector4.hpp>
 
+#include "Math/Vector4.hpp"
 #include "Core/DebugLogger.h"
 
 using namespace Microsoft::WRL;

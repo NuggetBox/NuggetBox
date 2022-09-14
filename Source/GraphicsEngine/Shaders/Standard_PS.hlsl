@@ -62,7 +62,7 @@ PixelOutput main(VertexToPixel input)
 	//
 
 	//IBL: Image based lightning
-	const float3 environment = environmentTexture.SampleLevel(defaultSampler, input.myNormal, 5).rgb;
+	const float3 environment = environmentTexture.SampleLevel(defaultSampler, input.myNormal, 0).rgb;
 	float3 ambient = albedo * environment;
 	//
 
@@ -120,7 +120,7 @@ PixelOutput main(VertexToPixel input)
 	{
 		case 0: //Default
 			//result.myColor.rgb = saturate(ambient + diffuse);
-			result.myColor.rgb = LinearToGamma(ambient + diffuse + pointLight + spotLight + emissive * emissiveStrength * albedo);
+			result.myColor.rgb = LinearToGamma(ambient + diffuse + emissive * emissiveStrength * albedo + pointLight + spotLight);
 			result.myColor.a = 1;
 			break;
 		case 1: //UV

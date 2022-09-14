@@ -1,6 +1,5 @@
 #pragma once
 #include "../UtilityFunctions.hpp"
-#include "Vector4.hpp"
 
 #include <cassert>
 #include <complex>

@@ -28,7 +28,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.AddModel(plane);
 
 	auto cube = Model::Load("Cube");
-	cube->SetPosition(0, 50, 150);
+	cube->SetPosition(350, 50, 0);
 	myScene.AddModel(cube);
 
 	auto pyramid = Model::Load("Pyramid");
@@ -68,7 +68,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	/*auto skybox = Model::Load("meshes/Sphere.fbx");
 	skybox->SetScale(Vector3f(9000, 9000, 9000));
-	myScene.AddGameObject(skybox);*/
+	myScene.AddModel(skybox);*/
 
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	camera->SetPosition(0, 100, -500);
@@ -78,18 +78,27 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	system->SetPosition(0, 170, 0);
 	system->LoadAndInitialize("Json/ParticleSystems/System1.json");
 	myScene.AddParticleSystem(system);
-	
-	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(1, -1, 1)));
+
+	std::shared_ptr<ParticleSystem> fire = std::make_shared<ParticleSystem>();
+	fire->SetPosition(200, 97, 0);
+	fire->LoadAndInitialize("Json/ParticleSystems/System2.json");
+	myScene.AddParticleSystem(fire);
+
+	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 0.5f, Vector3f(45, -45, 0)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	// Add some random pointlights
-	for (int i = 0; i < MAX_FORWARD_LIGHTS; ++i)
+	for (int i = 0; i < 32 - 1; ++i)
 	{
 		auto pointLight = PointLight::Create({ 
 			(std::rand() % 100) / 100.0f,  (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f }, 
-			5000, { 0.0f, 50.0f, static_cast<float>(i) * 100.0f }, 500);
+			5000, { (static_cast<float>(i) - 32 / 2 + 1.5f) * 100.0f, 50.0f, -80.0f }, 200);
 		myScene.AddPointLight(pointLight);
 	}
+	//
+
+	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 300, 0 }, 350, { 0, -1, 0 }, 50, 200);
+	myScene.AddSpotLight(spotLight);
 
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
@@ -419,6 +428,9 @@ void GraphicsEngine::RenderFrame()
 
 	InputRenderMode();
 
+	//Update position of Directional light to help with shadow map resolution
+	myScene.GetDirectionalLight()->SetPosition(camera->GetTransform().GetPosition());
+
 	CameraControls(camera);
 
 	float rotationPerSec = 30.0f;
@@ -445,17 +457,17 @@ void GraphicsEngine::RenderFrame()
 	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);*/
 
 	//Render everything with Forward Renderer
-	SetBlendState(BlendState::None);
+	/*SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
 	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
 
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
-	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);*/
 	//
 
 	//Render Models with deferred but particles with forward
-	/*SetBlendState(BlendState::None);
+	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
 	myGBuffer->Clear();
 	myGBuffer->SetAsTarget();
@@ -465,11 +477,11 @@ void GraphicsEngine::RenderFrame()
 	myGBuffer->SetAsResource(0);
 	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 	SetDepthStencilState(DepthStencilState::Off);
-	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);
+	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
 
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
-	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);*/
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
 	//
 
 	InputHandler::UpdatePreviousState();

@@ -12,7 +12,6 @@
 #include "RenderStructs.h"
 
 using namespace Microsoft::WRL;
-using namespace Utility;
 
 struct ID3D11Buffer;
 

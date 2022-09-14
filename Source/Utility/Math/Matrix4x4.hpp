@@ -38,6 +38,11 @@ namespace Utility
 
 		static Matrix4x4<T> CreateRotationMatrix(Vector3<T> aRotationVector);
 
+		static Matrix4x4<T> CreateProjectionMatrixPerspective(float aResolutionX, float aResolutionY, float aNearPlane, float aFarPlane, float someFovDegrees);
+		static Matrix4x4<T> CreateProjectionMatrixOrthographic(float aResolutionX, float aResolutionY, float aNearPlane, float aFarPlane);
+
+		static void Decompose(const Matrix4x4<T>& aMatrix, Vector3<T>& aOutPosition, Vector3<T>& aOutRotation, Vector3<T>& aOutScale);
+
 		// Static function for creating a transpose of a matrix.
 		static Matrix4x4<T> Transpose(const Matrix4x4<T>& aMatrixToTranspose);
 
@@ -322,6 +327,81 @@ namespace Utility
 		rotationMatrix *= CreateRotationAroundZ(DEGTORAD(aRotationVector.z));
 
 		return rotationMatrix;
+	}
+
+	template<class T>
+	Matrix4x4<T> Matrix4x4<T>::CreateProjectionMatrixPerspective(float aResolutionX, float aResolutionY, float aNearPlane, float aFarPlane, float someFovDegrees)
+	{
+		Matrix4x4<T> projectionMatrix;
+
+		const float hFoVRad = DEGTORAD(someFovDegrees);
+		const float hFovCalc = std::tanf(hFoVRad * 0.5f);
+		const float vFoVRad = 2 * std::atan(hFovCalc * (aResolutionY / aResolutionX));
+
+		const float xScale = 1.0f / hFovCalc;
+		const float yScale = 1.0f / std::tanf(vFoVRad * 0.5f);
+
+		const float Q = aFarPlane / (aFarPlane - aNearPlane);
+
+		projectionMatrix(1, 1) = xScale;
+		projectionMatrix(2, 2) = yScale;
+		projectionMatrix(3, 3) = Q;
+		projectionMatrix(4, 3) = -Q * aNearPlane;
+		projectionMatrix(3, 4) = 1.0f / Q;
+		projectionMatrix(4, 4) = 0;
+
+		return projectionMatrix;
+	}
+
+	template<class T>
+	Matrix4x4<T> Matrix4x4<T>::CreateProjectionMatrixOrthographic(float aResolutionX, float aResolutionY, float aNearPlane, float aFarPlane)
+	{
+		Matrix4x4<T> orthographicProjection;
+
+		orthographicProjection(1, 1) = 2.0f / aResolutionX;
+		orthographicProjection(2, 2) = 2.0f / aResolutionY;
+		orthographicProjection(3, 3) = 1.0f / (aFarPlane - aNearPlane);
+		orthographicProjection(4, 3) = aNearPlane / (aNearPlane - aFarPlane);
+		//orthographicProjection(4, 4) = 1.0f;
+
+		return orthographicProjection;
+	}
+
+	template<class T>
+	void Matrix4x4<T>::Decompose(const Matrix4x4<T>& aMatrix, Vector3<T>& aOutPosition, Vector3<T>& aOutRotation, Vector3<T>& aOutScale)
+	{
+		aOutPosition = Vector3<T>(aMatrix(4, 1), aMatrix(4, 2), aMatrix(4, 3));
+
+		aOutScale.x = Vector3<T>(aMatrix(1, 1), aMatrix(1, 2), aMatrix(1, 3)).Length();
+		aOutScale.y = Vector3<T>(aMatrix(2, 1), aMatrix(2, 2), aMatrix(2, 3)).Length();
+		aOutScale.z = Vector3<T>(aMatrix(3, 1), aMatrix(3, 2), aMatrix(3, 3)).Length();
+
+		if (aOutScale.x == 0 || aOutScale.y == 0 || aOutScale.z == 0)
+		{
+			//TODO: Fix Scale <= 0
+			assert(L"Fix decompose if needed to support 0-scale or negative scale");
+		}
+
+		Matrix4x4<T> rotationMatrix;
+		rotationMatrix(1, 1) = aMatrix(1, 1) / aOutScale.x;
+		rotationMatrix(1, 2) = aMatrix(1, 2) / aOutScale.x;
+		rotationMatrix(1, 3) = aMatrix(1, 3) / aOutScale.x;
+		rotationMatrix(2, 1) = aMatrix(2, 1) / aOutScale.y;
+		rotationMatrix(2, 2) = aMatrix(2, 2) / aOutScale.y;
+		rotationMatrix(2, 3) = aMatrix(2, 3) / aOutScale.y;
+		rotationMatrix(3, 1) = aMatrix(3, 1) / aOutScale.z;
+		rotationMatrix(3, 2) = aMatrix(3, 2) / aOutScale.z;
+		rotationMatrix(3, 3) = aMatrix(3, 3) / aOutScale.z;
+
+		rotationMatrix = Transpose(rotationMatrix);
+
+		float eulerX = atan2(rotationMatrix(3, 2), rotationMatrix(3, 3));
+		float eulerY = atan2(-rotationMatrix(3, 1), sqrt(rotationMatrix(3, 2) * rotationMatrix(3, 2) + rotationMatrix(3, 3) * rotationMatrix(3, 3)));
+		float eulerZ = atan2(rotationMatrix(2, 1), rotationMatrix(1, 1));
+
+		aOutRotation.x = RADTODEG(eulerX);
+		aOutRotation.y = RADTODEG(eulerY);
+		aOutRotation.z = RADTODEG(eulerZ);
 	}
 
 	template <class T>

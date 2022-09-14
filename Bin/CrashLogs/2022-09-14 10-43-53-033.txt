@@ -1,0 +1,618 @@
+[10:43:40.616] [MESSAGE] Initialized Window
+[10:43:40.706] [MESSAGE] Created Swap Chain
+[10:43:40.706] [MESSAGE] Created Depth Buffer
+[10:43:40.706] [MESSAGE] Viewport set
+[10:43:40.706] [MESSAGE] Created Sampler State
+[10:43:40.706] [MESSAGE] Blend States setup successfully
+[10:43:40.706] [MESSAGE] Depth Stencil States setup successfully
+[10:43:40.708] [MESSAGE] Loaded Vertex Shader Standard_VS.cso
+[10:43:40.708] [MESSAGE] Created Input Layout for Vertex Shader Standard_VS.cso
+[10:43:40.708] [MESSAGE] Loaded Pixel Shader Standard_PS.cso
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_C.dds
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_N.dds
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_M.dds
+[10:43:40.711] [MESSAGE] Created Primitive Plane Mesh
+[10:43:40.711] [MESSAGE] Loaded Model Plane
+[10:43:40.711] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_C.dds from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_N.dds from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_M.dds from registry successfully
+[10:43:40.711] [MESSAGE] Created Primitive Cube Mesh
+[10:43:40.711] [MESSAGE] Loaded Model Cube
+[10:43:40.711] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_C.dds from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_N.dds from registry successfully
+[10:43:40.711] [MESSAGE] Loaded Texture T_Default_M.dds from registry successfully
+[10:43:40.711] [MESSAGE] Created Primitive Pyramid Mesh
+[10:43:40.711] [MESSAGE] Loaded Model Pyramid
+[10:43:40.740] [MESSAGE] Loaded Texture T_Particle_Chest_C.dds
+[10:43:40.743] [MESSAGE] Loaded Texture T_Particle_Chest_N.dds
+[10:43:40.745] [MESSAGE] Loaded Texture T_Particle_Chest_M.dds
+[10:43:40.746] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Texture T_Particle_Chest_C.dds from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Texture T_Particle_Chest_N.dds from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Texture T_Particle_Chest_M.dds from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.746] [MESSAGE] Loaded Model Particle_Chest.fbx
+[10:43:40.837] [MESSAGE] Loaded Texture T_gremlin_C.dds
+[10:43:40.840] [MESSAGE] Loaded Texture T_gremlin_N.dds
+[10:43:40.842] [MESSAGE] Loaded Texture T_gremlin_M.dds
+[10:43:40.843] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.843] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.843] [MESSAGE] Loaded Skeleton
+[10:43:40.843] [MESSAGE] Loaded Model gremlin.fbx
+[10:43:40.887] [MESSAGE] Loaded Animation gremlin@walk.fbx
+[10:43:40.925] [MESSAGE] Loaded Animation gremlin@run.fbx
+[10:43:40.926] [MESSAGE] Loaded Model gremlin.fbx from registry successfully
+[10:43:40.926] [MESSAGE] Loaded Animation gremlin@walk.fbx from registry successfully
+[10:43:40.926] [MESSAGE] Loaded Animation gremlin@run.fbx from registry successfully
+[10:43:40.948] [MESSAGE] Loaded Texture T_SpiderCat_C.dds
+[10:43:40.949] [MESSAGE] Loaded Texture T_SpiderCat_N.dds
+[10:43:40.949] [MESSAGE] Loaded Texture T_SpiderCat_M.dds
+[10:43:40.949] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Texture T_SpiderCat_C.dds from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Texture T_SpiderCat_N.dds from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Texture T_SpiderCat_M.dds from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.949] [MESSAGE] Loaded Model SpiderCat.fbx
+[10:43:40.962] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[10:43:40.962] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[10:43:40.962] [MESSAGE] Loaded Model sphere.fbx
+[10:43:40.963] [MESSAGE] Loaded Particle Emitter Emitter1.json successfully
+[10:43:40.963] [MESSAGE] Loaded Particle Emitter Emitter2.json successfully
+[10:43:40.963] [MESSAGE] Loaded Particle Emitter Emitter3.json successfully
+[10:43:40.963] [MESSAGE] Loaded Particle System System1.json successfully
+[10:43:40.963] [MESSAGE] Loaded Particle Emitter Emitter1.json from registry successfully
+[10:43:40.963] [MESSAGE] Loaded Vertex Shader Particle_VS.cso
+[10:43:40.963] [MESSAGE] Created Input Layout for Vertex Shader Particle_VS.cso
+[10:43:40.963] [MESSAGE] Loaded Pixel Shader Particle_PS.cso
+[10:43:40.963] [MESSAGE] Loaded Geometry Shader Particle_GS.cso
+[10:43:40.964] [MESSAGE] Loaded Texture ParticleStar.dds
+[10:43:40.964] [MESSAGE] Loaded Particle Emitter Emitter2.json from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Vertex Shader Particle_VS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Pixel Shader Particle_PS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Geometry Shader Particle_GS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Texture ParticleStar.dds from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Particle Emitter Emitter3.json from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Vertex Shader Particle_VS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Pixel Shader Particle_PS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Geometry Shader Particle_GS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Texture ParticleStar.dds from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Particle Emitter fire.json successfully
+[10:43:40.964] [MESSAGE] Loaded Particle System System2.json successfully
+[10:43:40.964] [MESSAGE] Loaded Particle Emitter fire.json from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Vertex Shader Particle_VS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Pixel Shader Particle_PS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Geometry Shader Particle_GS.cso from registry successfully
+[10:43:40.964] [MESSAGE] Loaded Texture Ball.dds
+[10:43:40.964] [MESSAGE] Created Directional Light
+[10:43:40.984] [MESSAGE] Loaded Texture skansen_cubemap.dds
+[10:43:40.984] [MESSAGE] Created Ambient Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.984] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Point Light
+[10:43:40.985] [MESSAGE] Created a Spot Light
+[10:43:40.985] [MESSAGE] Created CBuffers for Forward Renderer
+[10:43:40.985] [MESSAGE] Forward Renderer Initialized
+[10:43:40.986] [MESSAGE] Created Buffers for Deferred Renderer
+[10:43:40.986] [MESSAGE] Loaded Pixel Shader Deferred_PS.cso
+[10:43:40.986] [MESSAGE] Loaded Vertex Shader Fullscreen_VS.cso
+[10:43:40.986] [MESSAGE] Created Input Layout for Vertex Shader Fullscreen_VS.cso
+[10:43:40.988] [MESSAGE] Loaded Pixel Shader Environment_PS.cso
+[10:43:40.988] [MESSAGE] Deferred Renderer Initialized
+[10:43:40.989] [MESSAGE] Graphics Engine Initialized
+[10:43:53.033] [MESSAGE] Crash signal detected, writing crash log file

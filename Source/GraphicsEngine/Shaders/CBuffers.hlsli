@@ -1,11 +1,15 @@
-#include "../Core/EngineDefines.h"
-
 cbuffer FrameBuffer : register(b0)
 {
 	float4x4 FB_ToView;
 	float4x4 FB_ToProjection;
+
 	float3 FB_CamTranslation;
 	unsigned int FB_RenderMode;
+
+	float FB_NearPlane;
+	float FB_FarPlane;
+	float FB_DeltaTime;
+	float FB_TotalTime;
 }
 
 cbuffer ObjectBuffer : register(b1)

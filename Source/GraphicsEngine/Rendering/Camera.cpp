@@ -4,7 +4,7 @@
 Camera::Camera()
 {
 	myFov = 90.0f;
-	myNearPlane = 0.1f;
+	myNearPlane = 1.0f;
 	myFarPlane = 10000.f;
 }
 
@@ -46,7 +46,8 @@ void Camera::SetFov(float someDegrees)
 
 Matrix4x4<float> Camera::GetProjectionMatrix()
 {
-	Matrix4x4<float> projectionMatrix;
+	return Matrix4f::CreateProjectionMatrixPerspective(1600, 900, myNearPlane, myFarPlane, myFov);
+	/*Matrix4x4<float> projectionMatrix;
 
 	const float fovCalc = 1 / tanf(GetFov() * 0.5f);
 
@@ -57,5 +58,5 @@ Matrix4x4<float> Camera::GetProjectionMatrix()
 	projectionMatrix(4, 3) = (-myNearPlane * myFarPlane) / (myFarPlane - myNearPlane);
 	projectionMatrix(4, 4) = 0.0f;
 
-	return projectionMatrix;
+	return projectionMatrix;*/
 }

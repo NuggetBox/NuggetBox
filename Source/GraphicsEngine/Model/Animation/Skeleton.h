@@ -1,5 +1,5 @@
 #pragma once
-#include "FBXStructs.h"
+#include "Model/FBXStructs.h"
 
 class Skeleton
 {

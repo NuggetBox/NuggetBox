@@ -2,7 +2,7 @@
 #include "PBRFunctions.hlsli"
 #include "ShaderStructs.hlsli"
 
-#define MAX_LIGHTS 256
+#define MAX_LIGHTS 64
 #include "LightBuffer.hlsli"
 
 DeferredPixelOutput main(DeferredVertexToPixel input)
@@ -40,8 +40,47 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	const float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
 	//calc direct
 	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
+
+	float3 pointLight = 0;
+	float3 spotLight = 0;
+
+	//Calculate Point- & Spotlights
+	for (unsigned int l = 0; l < LB_NumLights; ++l)
+	{
+		const LightData light = LB_Lights[l];
+
+		switch (light.LightType)
+		{
+			//Directional Light
+			case 0:
+				break;
+			//Ambient light
+			case 1:
+				break;
+			//Point Light
+			case 2:
+			{
+				pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
+					light.Position, toEye, worldPosition.xyz);
+				break;
+			}
+			//Spot Light
+			case 3:
+			{
+				spotLight += EvaluateSpotLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
+					light.Position, light.Direction, light.SpotOuterRadius, light.SpotInnerRadius, toEye, worldPosition.xyz);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+	//
+
 	//assemble light, lineartogamma
-	result.Color.rgb = LinearToGamma(ambientLighting + directionalLighting);
+	result.Color.rgb = LinearToGamma(ambientLighting + directionalLighting + emissive * emissiveStrength * albedo + pointLight + spotLight);
 	result.Color.a = 1.0f;
 
 	//TODO: Rendermodes for deferred rendering

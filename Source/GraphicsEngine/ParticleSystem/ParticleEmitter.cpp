@@ -150,7 +150,7 @@ void ParticleEmitter::Update()
 		}
 	}
 
-	if (myIsEmitting && Timer::GetDeltaTime() < myEmitterSettings.LifeTime)
+	if (myIsEmitting && Timer::GetDeltaTime() < myEmitterSettings.LifeTime && mySpawnTimer > -myEmitterSettings.LifeTime)
 	{
 		//Spawn new particle, multiple if 1 particle/frame is not enough
 		while (mySpawnTimer <= 0)

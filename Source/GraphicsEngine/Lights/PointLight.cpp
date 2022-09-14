@@ -13,7 +13,6 @@ std::shared_ptr<PointLight> PointLight::Create(Vector3f aColor, float anIntensit
 	pointLight.SetPosition(aPosition);
 
 	DEBUGLOG("Created a Point Light");
-
 	return std::make_shared<PointLight>(pointLight);
 }
 

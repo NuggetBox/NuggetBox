@@ -1,13 +1,20 @@
 #pragma once
 #include "Core/EngineDefines.h"
 #include "Math/Matrix4x4.hpp"
+#include "Math/Vector.h"
 
 struct FrameBufferData
 {
 	Utility::Matrix4x4<float> View;
 	Utility::Matrix4x4<float> Projection;
+
 	Utility::Vector3f CamTranslation;
 	UINT RenderMode;
+
+	float NearPlane;
+	float FarPlane;
+	float DeltaTime;
+	float TotalTime;
 };
 
 struct ObjectBufferData
@@ -21,19 +28,26 @@ struct ObjectBufferData
 
 struct LightBufferData
 {
-	Vector3f Color;
+	Utility::Matrix4x4<float> ViewMatrix;
+	Utility::Matrix4x4<float> ProjectionMatrix;
+
+	Utility::Vector3f Color;
 	float Intensity;
 
-	Vector3f Direction;
+	Utility::Vector3f Direction;
 	float Range;
 
-	Vector3f Position;
+	Utility::Vector3f Position;
 	float Attenuation;
 
 	float SpotInnerRadius;
 	float SpotOuterRadius;
 	unsigned LightType;
-	float Padding;
+	bool CastShadows;
+
+	float NearPlane;
+	float FarPlane;
+	Utility::Vector2f Padding;
 };
 
 enum class RenderMode
