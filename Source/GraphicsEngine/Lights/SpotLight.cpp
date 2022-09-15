@@ -19,7 +19,7 @@ std::shared_ptr<SpotLight> SpotLight::Create(Vector3f aColor, float anIntensity,
 	spotLight.myLightBufferData.LightType = static_cast<unsigned>(LightType::SpotLight);
 
 	//TODO: Tweak values to make for good shadow rendering, spotlight
-	/*constexpr float nearPlane = 1.0f;
+	constexpr float nearPlane = 1.0f;
 	constexpr float farPlane = 15000.0f;
 	constexpr POINT shadowResolution = { 2048, 2048 };
 	constexpr POINT projectionSize = { 2048, 2048 };
@@ -31,7 +31,7 @@ std::shared_ptr<SpotLight> SpotLight::Create(Vector3f aColor, float anIntensity,
 	spotLight.myLightBufferData.FarPlane = farPlane;
 	spotLight.myLightBufferData.NearPlane = nearPlane;
 
-	spotLight.myShadowMap = DepthStencil::Create("ShadowMap", shadowResolution.x, shadowResolution.y);*/
+	spotLight.myShadowMap = DepthStencil::Create("ShadowMap", shadowResolution.x, shadowResolution.y);
 
 	DEBUGLOG("Created a Spot Light");
 	return std::make_shared<SpotLight>(spotLight);

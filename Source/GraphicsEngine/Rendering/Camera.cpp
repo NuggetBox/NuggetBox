@@ -5,7 +5,7 @@ Camera::Camera()
 {
 	myFov = 90.0f;
 	myNearPlane = 1.0f;
-	myFarPlane = 10000.f;
+	myFarPlane = 100000.f;
 }
 
 Camera::Camera(float anFov, float aNearPlane, float aFarPlane)

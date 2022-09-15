@@ -10,7 +10,7 @@
 void ForwardRenderer::Initialize()
 {
     // Rasterizer that disables backface culling
-   /* D3D11_RASTERIZER_DESC cmDesc = {};
+    /*D3D11_RASTERIZER_DESC cmDesc = {};
     cmDesc.FillMode = D3D11_FILL_SOLID;
     cmDesc.CullMode = D3D11_CULL_NONE;
     cmDesc.FrontCounterClockwise = false;

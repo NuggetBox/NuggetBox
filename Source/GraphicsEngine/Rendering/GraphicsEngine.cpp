@@ -527,21 +527,34 @@ void GraphicsEngine::RenderFrame()
 	myShadowRenderer.RenderShadowPassPerLight(myScene.GetDirectionalLight(), models);
 	ResetViewport();
 
-	//for (auto& light : myScene.GetLights())
-	//{
-	//	if (light->CastShadows())
-	//	{
-	//		light->ClearShadowMap();
-	//		light->SetShadowMapAsTarget();
-	//		//light->BindShadowMapAsResource(21);
-	//		myShadowRenderer.RenderShadowPassPerLight(light, models);
-	//		ResetViewport();
-	//	}
-	//}
+	for (auto& light : myScene.GetLights())
+	{
+		if (light->CastShadows())
+		{
+			light->ClearShadowMap();
+			light->SetShadowMapAsTarget();
+			myShadowRenderer.RenderShadowPassPerLight(light, models);
+			ResetViewport();
+		}
+	}
 
 	myGBuffer->Clear();
 	myGBuffer->SetAsTarget();
+
 	myScene.GetDirectionalLight()->BindShadowMapAsResource(20);
+
+	for (auto& light : myScene.GetLights())
+	{
+		if (light->GetLightType() == LightType::SpotLight)
+		{
+			light->BindShadowMapAsResource(21);
+		}
+		else if (light->GetLightType() == LightType::PointLight)
+		{
+			
+		}
+	}
+
 	myDeferredRenderer.GenerateGBuffer(camera, models);
 	myGBuffer->ClearTarget();
 

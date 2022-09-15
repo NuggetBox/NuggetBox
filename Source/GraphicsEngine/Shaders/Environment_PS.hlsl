@@ -101,6 +101,34 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 			//Spot Light
 			case 3:
 			{
+				if (light.CastShadows)
+				{
+					const float4 worldToLightView = mul(light.ViewMatrix, worldPosition);
+					const float4 lightViewToLightProj = mul(light.ProjectionMatrix, worldToLightView);
+
+					float2 projectedTexCoord; //Shadow map UVS
+					projectedTexCoord.x = lightViewToLightProj.x / lightViewToLightProj.w / 2.0f + 0.5f;
+					projectedTexCoord.y = -lightViewToLightProj.y / lightViewToLightProj.w / 2.0f + 0.5f;
+
+					if (saturate(projectedTexCoord.x) == projectedTexCoord.x && saturate(projectedTexCoord.y) == projectedTexCoord.y)
+					{
+						//Peter panning, tune if it appears
+						const float shadowBias = 0.0005f;
+
+						//Rough estimate of view depth from light to point
+						const float viewDepth = lightViewToLightProj.z / lightViewToLightProj.w - shadowBias;
+
+						//Shadow map value rendered from light camera
+						const float lightDepth = spotLightShadowMap.Sample(pointClampSampler, projectedTexCoord).r;
+
+						//P < D, if depth is lower than dist to point
+						if (lightDepth < viewDepth)
+						{
+							break;
+						}
+					}
+				}
+
 				spotLight += EvaluateSpotLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
 					light.Position, light.Direction, light.SpotOuterRadius, light.SpotInnerRadius, toEye, worldPosition.xyz);
 				break;
@@ -110,37 +138,6 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 				break;
 			}
 		}
-
-		//if (light.CastShadows)
-		//{
-		//	const float4 worldToLightView = mul(light.ViewMatrix, worldPosition);
-		//	const float4 lightViewToLightProj = mul(light.ProjectionMatrix, worldToLightView);
-
-		//	float2 projectedTexCoord; //Shadow map UVS
-		//	projectedTexCoord.x = lightViewToLightProj.x / lightViewToLightProj.w / 2.0f + 0.5f;
-		//	projectedTexCoord.y = -lightViewToLightProj.y / lightViewToLightProj.w / 2.0f + 0.5f;
-
-		//	if (saturate(projectedTexCoord.x) == projectedTexCoord.x && saturate(projectedTexCoord.y) == projectedTexCoord.y)
-		//	{
-		//		//Peter panning, tune if it appears
-		//		const float shadowBias = 0.0005f;
-
-		//		//Tune if shadows should be brighter
-		//		const float shadowMult = 0.0f;
-
-		//		//Rough estimate of view depth from light to point
-		//		const float viewDepth = lightViewToLightProj.z / lightViewToLightProj.w - shadowBias;
-
-		//		//Shadow map value rendered from light camera
-		//		const float lightDepth = spotLightShadowMap.Sample(pointClampSampler, projectedTexCoord).r;
-
-		//		//P < D, if depth is lower than dist to point
-		//		if (lightDepth < viewDepth)
-		//		{
-		//			spotLight *= shadowMult;
-		//		}
-		//	}
-		//}
 	}
 	//
 

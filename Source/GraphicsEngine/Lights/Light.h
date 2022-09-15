@@ -30,6 +30,7 @@ public:
 	float GetIntensity() const { return myLightBufferData.Intensity; }
 	Vector3f GetDirection() const { return myLightBufferData.Direction; }
 	bool CastShadows() const { return myLightBufferData.CastShadows; }
+	LightType GetLightType() const { return static_cast<LightType>(myLightBufferData.LightType); }
 
 protected:
 	LightBufferData myLightBufferData;
