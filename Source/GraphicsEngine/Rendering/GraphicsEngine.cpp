@@ -102,6 +102,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
+	myShadowRenderer.Initialize();
 
 	myLerpAnimations = true;
 	myDragAccept = false;
@@ -330,6 +331,13 @@ void GraphicsEngine::SetupDepthStencilStates()
 	DEBUGLOG("Depth Stencil States setup successfully");
 }
 
+void GraphicsEngine::ResetViewport()
+{
+	RECT clientRect;
+	GetClientRect(myWindowHandle, &clientRect);
+	DX11::SetViewport(clientRect);
+}
+
 void GraphicsEngine::CameraControls(std::shared_ptr<Camera> aCamera)
 {
 	float cameraSpeed = myCameraSpeed;
@@ -415,8 +423,6 @@ std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
 void GraphicsEngine::BeginFrame()
 {
 	Timer::Update();
-	// F1 - This is where we clear our buffers and start the DX frame.
-	// ex: myFramework.BeginFrame({1, 0.5f, 0, 1});
 	DX11::BeginFrame(myClearColor);
 }
 
@@ -429,7 +435,7 @@ void GraphicsEngine::RenderFrame()
 	InputRenderMode();
 
 	//Update position of Directional light to help with shadow map resolution
-	myScene.GetDirectionalLight()->SetPosition(camera->GetTransform().GetPosition());
+	myScene.GetDirectionalLight()->Update(camera->GetTransform().GetPosition());
 
 	CameraControls(camera);
 
@@ -469,6 +475,14 @@ void GraphicsEngine::RenderFrame()
 	//Render Models with deferred but particles with forward
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
+	//myScene.GetDirectionalLight()->SetLightViewport();
+	myScene.GetDirectionalLight()->ClearShadowMap();
+	myScene.GetDirectionalLight()->BindShadowMap();
+	myShadowRenderer.RenderShadowPassPerLight(myScene.GetDirectionalLight(), models);
+	//ResetViewport();
+
+	SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::ReadWrite);
 	myGBuffer->Clear();
 	myGBuffer->SetAsTarget();
 	myDeferredRenderer.GenerateGBuffer(camera, models);
@@ -489,8 +503,5 @@ void GraphicsEngine::RenderFrame()
 
 void GraphicsEngine::EndFrame()
 {
-	// F1 - This is where we finish our rendering and tell the framework
-	// to present our result to the screen.
-	// ex: myFramework.EndFrame();
 	DX11::EndFrame();
 }

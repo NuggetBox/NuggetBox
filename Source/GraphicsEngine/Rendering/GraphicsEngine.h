@@ -4,6 +4,7 @@
 #include "Scene/Scene.h"
 #include "RenderStructs.h"
 #include "GBuffer.h"
+#include "ShadowRenderer.h"
 #include "Scene/Editor.h"
 
 enum class BlendState
@@ -50,6 +51,8 @@ private:
 	void SetupBlendStates();
 	void SetupDepthStencilStates();
 
+	void ResetViewport();
+
 	void CameraControls(std::shared_ptr<Camera> aCamera);
 	float myCameraSpeed = 100.0f;
 
@@ -70,6 +73,7 @@ private:
 	ForwardRenderer myForwardRenderer;
 	DeferredRenderer myDeferredRenderer;
 	std::unique_ptr<GBuffer> myGBuffer;
+	ShadowRenderer myShadowRenderer;
 
 	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 

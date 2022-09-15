@@ -78,8 +78,7 @@ void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
 void DX11::CreateDepthBuffer(RECT aClientRect)
 {
 	ComPtr<ID3D11Texture2D> depthBufferTexture;
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	depthBufferDesc = { 0 };
+	D3D11_TEXTURE2D_DESC depthBufferDesc{};
 	depthBufferDesc.Width = aClientRect.right - aClientRect.left;
 	depthBufferDesc.Height = aClientRect.bottom - aClientRect.top;
 	depthBufferDesc.ArraySize = 1;
@@ -105,8 +104,6 @@ void DX11::SetViewport(RECT aClientRect)
 	viewport.MaxDepth = 1.0f;
 
 	Context->RSSetViewports(1, &viewport);
-
-	DEBUGLOG("Viewport set");
 }
 
 void DX11::CreateSamplerState()

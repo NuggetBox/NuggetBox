@@ -1,0 +1,140 @@
+[23:09:57.263] [MESSAGE] Initialized Window
+[23:09:57.472] [MESSAGE] Created Swap Chain
+[23:09:57.474] [MESSAGE] Created Depth Buffer
+[23:09:57.474] [MESSAGE] Viewport set
+[23:09:57.474] [MESSAGE] Created Sampler State
+[23:09:57.474] [MESSAGE] Blend States setup successfully
+[23:09:57.475] [MESSAGE] Depth Stencil States setup successfully
+[23:09:57.483] [MESSAGE] Loaded Vertex Shader Standard_VS.cso
+[23:09:57.483] [MESSAGE] Created Input Layout for Vertex Shader Standard_VS.cso
+[23:09:57.497] [MESSAGE] Loaded Pixel Shader Standard_PS.cso
+[23:09:57.502] [MESSAGE] Loaded Texture T_Default_C.dds
+[23:09:57.503] [MESSAGE] Loaded Texture T_Default_N.dds
+[23:09:57.503] [MESSAGE] Loaded Texture T_Default_M.dds
+[23:09:57.503] [MESSAGE] Created Primitive Plane Mesh
+[23:09:57.504] [MESSAGE] Loaded Model Plane
+[23:09:57.504] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:57.504] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:57.505] [MESSAGE] Loaded Texture T_Default_C.dds from registry successfully
+[23:09:57.505] [MESSAGE] Loaded Texture T_Default_N.dds from registry successfully
+[23:09:57.505] [MESSAGE] Loaded Texture T_Default_M.dds from registry successfully
+[23:09:57.506] [MESSAGE] Created Primitive Cube Mesh
+[23:09:57.506] [MESSAGE] Loaded Model Cube
+[23:09:57.506] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:57.507] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:57.507] [MESSAGE] Loaded Texture T_Default_C.dds from registry successfully
+[23:09:57.507] [MESSAGE] Loaded Texture T_Default_N.dds from registry successfully
+[23:09:57.508] [MESSAGE] Loaded Texture T_Default_M.dds from registry successfully
+[23:09:57.508] [MESSAGE] Created Primitive Pyramid Mesh
+[23:09:57.508] [MESSAGE] Loaded Model Pyramid
+[23:09:57.573] [MESSAGE] Loaded Texture T_Particle_Chest_C.dds
+[23:09:57.577] [MESSAGE] Loaded Texture T_Particle_Chest_N.dds
+[23:09:57.581] [MESSAGE] Loaded Texture T_Particle_Chest_M.dds
+[23:09:57.583] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:57.583] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:57.586] [MESSAGE] Loaded Texture T_Particle_Chest_C.dds from registry successfully
+[23:09:57.586] [MESSAGE] Loaded Texture T_Particle_Chest_N.dds from registry successfully
+[23:09:57.588] [MESSAGE] Loaded Texture T_Particle_Chest_M.dds from registry successfully
+[23:09:57.590] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:57.591] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:57.593] [MESSAGE] Loaded Model Particle_Chest.fbx
+[23:09:57.814] [MESSAGE] Loaded Texture T_gremlin_C.dds
+[23:09:57.817] [MESSAGE] Loaded Texture T_gremlin_N.dds
+[23:09:57.820] [MESSAGE] Loaded Texture T_gremlin_M.dds
+[23:09:57.821] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:57.822] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:57.823] [MESSAGE] Loaded Skeleton
+[23:09:57.824] [MESSAGE] Loaded Model gremlin.fbx
+[23:09:57.903] [MESSAGE] Loaded Animation gremlin@walk.fbx
+[23:09:57.952] [MESSAGE] Loaded Animation gremlin@run.fbx
+[23:09:57.954] [MESSAGE] Loaded Model gremlin.fbx from registry successfully
+[23:09:57.954] [MESSAGE] Loaded Animation gremlin@walk.fbx from registry successfully
+[23:09:57.955] [MESSAGE] Loaded Animation gremlin@run.fbx from registry successfully
+[23:09:58.007] [MESSAGE] Loaded Texture T_SpiderCat_C.dds
+[23:09:58.008] [MESSAGE] Loaded Texture T_SpiderCat_N.dds
+[23:09:58.009] [MESSAGE] Loaded Texture T_SpiderCat_M.dds
+[23:09:58.010] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:58.011] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:58.013] [MESSAGE] Loaded Texture T_SpiderCat_C.dds from registry successfully
+[23:09:58.014] [MESSAGE] Loaded Texture T_SpiderCat_N.dds from registry successfully
+[23:09:58.015] [MESSAGE] Loaded Texture T_SpiderCat_M.dds from registry successfully
+[23:09:58.016] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:58.017] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:58.018] [MESSAGE] Loaded Model SpiderCat.fbx
+[23:09:58.044] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[23:09:58.045] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[23:09:58.046] [MESSAGE] Loaded Model sphere.fbx
+[23:09:58.048] [MESSAGE] Loaded Particle Emitter Emitter1.json successfully
+[23:09:58.049] [MESSAGE] Loaded Particle Emitter Emitter2.json successfully
+[23:09:58.050] [MESSAGE] Loaded Particle Emitter Emitter3.json successfully
+[23:09:58.051] [MESSAGE] Loaded Particle System System1.json successfully
+[23:09:58.052] [MESSAGE] Loaded Particle Emitter Emitter1.json from registry successfully
+[23:09:58.056] [MESSAGE] Loaded Vertex Shader Particle_VS.cso
+[23:09:58.056] [MESSAGE] Created Input Layout for Vertex Shader Particle_VS.cso
+[23:09:58.059] [MESSAGE] Loaded Pixel Shader Particle_PS.cso
+[23:09:58.062] [MESSAGE] Loaded Geometry Shader Particle_GS.cso
+[23:09:58.062] [MESSAGE] Loaded Texture ParticleStar.dds
+[23:09:58.063] [MESSAGE] Loaded Particle Emitter Emitter2.json from registry successfully
+[23:09:58.064] [MESSAGE] Loaded Vertex Shader Particle_VS.cso from registry successfully
+[23:09:58.065] [MESSAGE] Loaded Pixel Shader Particle_PS.cso from registry successfully
+[23:09:58.066] [MESSAGE] Loaded Geometry Shader Particle_GS.cso from registry successfully
+[23:09:58.067] [MESSAGE] Loaded Texture ParticleStar.dds from registry successfully
+[23:09:58.069] [MESSAGE] Loaded Particle Emitter Emitter3.json from registry successfully
+[23:09:58.071] [MESSAGE] Loaded Vertex Shader Particle_VS.cso from registry successfully
+[23:09:58.072] [MESSAGE] Loaded Pixel Shader Particle_PS.cso from registry successfully
+[23:09:58.073] [MESSAGE] Loaded Geometry Shader Particle_GS.cso from registry successfully
+[23:09:58.074] [MESSAGE] Loaded Texture ParticleStar.dds from registry successfully
+[23:09:58.078] [MESSAGE] Loaded Particle Emitter fire.json successfully
+[23:09:58.078] [MESSAGE] Loaded Particle System System2.json successfully
+[23:09:58.079] [MESSAGE] Loaded Particle Emitter fire.json from registry successfully
+[23:09:58.082] [MESSAGE] Loaded Vertex Shader Particle_VS.cso from registry successfully
+[23:09:58.083] [MESSAGE] Loaded Pixel Shader Particle_PS.cso from registry successfully
+[23:09:58.084] [MESSAGE] Loaded Geometry Shader Particle_GS.cso from registry successfully
+[23:09:58.085] [MESSAGE] Loaded Texture Ball.dds
+[23:09:58.087] [MESSAGE] Created Directional Light
+[23:09:58.117] [MESSAGE] Loaded Texture skansen_cubemap.dds
+[23:09:58.118] [MESSAGE] Created Ambient Light
+[23:09:58.119] [MESSAGE] Created a Point Light
+[23:09:58.121] [MESSAGE] Created a Point Light
+[23:09:58.122] [MESSAGE] Created a Point Light
+[23:09:58.123] [MESSAGE] Created a Point Light
+[23:09:58.124] [MESSAGE] Created a Point Light
+[23:09:58.125] [MESSAGE] Created a Point Light
+[23:09:58.127] [MESSAGE] Created a Point Light
+[23:09:58.128] [MESSAGE] Created a Point Light
+[23:09:58.129] [MESSAGE] Created a Point Light
+[23:09:58.130] [MESSAGE] Created a Point Light
+[23:09:58.133] [MESSAGE] Created a Point Light
+[23:09:58.134] [MESSAGE] Created a Point Light
+[23:09:58.135] [MESSAGE] Created a Point Light
+[23:09:58.136] [MESSAGE] Created a Point Light
+[23:09:58.137] [MESSAGE] Created a Point Light
+[23:09:58.138] [MESSAGE] Created a Point Light
+[23:09:58.139] [MESSAGE] Created a Point Light
+[23:09:58.141] [MESSAGE] Created a Point Light
+[23:09:58.142] [MESSAGE] Created a Point Light
+[23:09:58.143] [MESSAGE] Created a Point Light
+[23:09:58.145] [MESSAGE] Created a Point Light
+[23:09:58.146] [MESSAGE] Created a Point Light
+[23:09:58.148] [MESSAGE] Created a Point Light
+[23:09:58.149] [MESSAGE] Created a Point Light
+[23:09:58.150] [MESSAGE] Created a Point Light
+[23:09:58.151] [MESSAGE] Created a Point Light
+[23:09:58.152] [MESSAGE] Created a Point Light
+[23:09:58.153] [MESSAGE] Created a Point Light
+[23:09:58.154] [MESSAGE] Created a Point Light
+[23:09:58.155] [MESSAGE] Created a Point Light
+[23:09:58.156] [MESSAGE] Created a Point Light
+[23:09:58.157] [MESSAGE] Created a Spot Light
+[23:09:58.159] [MESSAGE] Created CBuffers for Forward Renderer
+[23:09:58.159] [MESSAGE] Forward Renderer Initialized
+[23:09:58.163] [MESSAGE] Created CBuffers for Deferred Renderer
+[23:09:58.166] [MESSAGE] Loaded Pixel Shader Deferred_PS.cso
+[23:09:58.168] [MESSAGE] Loaded Vertex Shader Fullscreen_VS.cso
+[23:09:58.168] [MESSAGE] Created Input Layout for Vertex Shader Fullscreen_VS.cso
+[23:09:58.183] [MESSAGE] Loaded Pixel Shader Environment_PS.cso
+[23:09:58.183] [MESSAGE] Deferred Renderer Initialized
+[23:09:58.184] [MESSAGE] Created CBuffers for Shadow Renderer
+[23:09:58.186] [MESSAGE] Shadow Renderer Initialized
+[23:09:58.189] [MESSAGE] Graphics Engine Initialized
+[23:10:01.767] [MESSAGE] Crash signal detected, writing crash log file

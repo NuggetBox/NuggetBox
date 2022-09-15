@@ -14,7 +14,7 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Vector3f aColor, floa
 	directionalLight.myLightBufferData.LightType = static_cast<unsigned>(LightType::DirectionalLight);
 
 	constexpr float nearPlane = 1.0f;
-	constexpr float farPlane = 25000.0f;
+	constexpr float farPlane = 10000.0f;
 	constexpr POINT resolution = { 2048, 2048 };
 
 	//TODO: IS THIS RIGHT? Update every frame, move with camera/player
@@ -43,4 +43,10 @@ void DirectionalLight::SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer)
 	memcpy_s(bufferData.pData, sizeof(LightBufferData), &myLightBufferData, sizeof(LightBufferData));
 	DX11::Context->Unmap(aLightBuffer.Get(), 0);
 	DX11::Context->PSSetConstantBuffers(3, 1, aLightBuffer.GetAddressOf());*/
+}
+
+void DirectionalLight::Update(const Vector3f& aCameraPosition)
+{
+	myTransform.SetPosition(aCameraPosition);
+	myLightBufferData.ViewMatrix = Matrix4f::GetFastInverse(myTransform.GetMatrix());
 }

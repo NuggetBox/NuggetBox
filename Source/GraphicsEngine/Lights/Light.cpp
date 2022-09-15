@@ -6,3 +6,18 @@
 //	myLightBufferData.Color = aColor;
 //	myLightBufferData.Intensity = anIntensity;
 //}
+
+void Light::SetLightViewport()
+{
+	myShadowMap->SetViewport();
+}
+
+void Light::ClearShadowMap()
+{
+	myShadowMap->Clear();
+}
+
+void Light::BindShadowMap()
+{
+	myShadowMap->Bind();
+}

@@ -20,6 +20,9 @@ public:
 	//virtual void Initialize(Vector3f aColor, float anIntensity);
 
 	virtual void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) = 0;
+	void SetLightViewport();
+	void ClearShadowMap();
+	void BindShadowMap();
 
 	const LightBufferData& GetLightBuffer() const { return myLightBufferData; }
 

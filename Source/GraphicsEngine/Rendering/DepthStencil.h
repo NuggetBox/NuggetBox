@@ -6,6 +6,9 @@ class DepthStencil
 public:
 	DepthStencil() = default;
 	static std::shared_ptr<DepthStencil> Create(const std::string& aName, int aWidth, int aHeight);
+	void SetViewport();
+	void Clear();
+	void Bind();
 
 private:
 	std::string myName;
