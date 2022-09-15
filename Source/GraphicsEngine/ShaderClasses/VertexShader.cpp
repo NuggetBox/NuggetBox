@@ -3,7 +3,7 @@
 
 #include "Core/DebugLogger.h"
 
-void VertexShader::Bind() const
+void VertexShader::SetRenderTarget() const
 {
 	if (myInputLayout != nullptr)
 	{

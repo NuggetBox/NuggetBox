@@ -10,7 +10,7 @@ class GeometryShader
 public:
 	GeometryShader() = default;
 
-	void Bind() const;
+	void SetRenderTarget() const;
 	static std::shared_ptr<GeometryShader> Load(const std::filesystem::path& aPath);
 
 private:

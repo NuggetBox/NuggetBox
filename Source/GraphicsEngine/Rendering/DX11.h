@@ -29,7 +29,6 @@ public:
 	static void CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug);
 	static void CreateDepthBuffer(RECT aClientRect);
 	static void SetViewport(RECT aClientRect);
-	static void CreateSamplerState();
 
 	static std::string HResultToString(HRESULT aResult);
 
@@ -37,8 +36,8 @@ public:
 	inline static ComPtr<ID3D11DeviceContext> Context;
 	inline static ComPtr<IDXGISwapChain> SwapChain;
 
-	inline static ComPtr<ID3D11SamplerState> SampleStateDefault;
-	inline static ComPtr<ID3D11SamplerState> SampleStateWrap;
+	//inline static ComPtr<ID3D11SamplerState> SampleStateDefault;
+	//inline static ComPtr<ID3D11SamplerState> SampleStateWrap;
 
 	inline static ComPtr<ID3D11RenderTargetView> BackBuffer;
 	inline static ComPtr<ID3D11DepthStencilView> DepthBuffer;

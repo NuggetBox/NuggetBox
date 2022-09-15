@@ -20,15 +20,16 @@ public:
 	//virtual void Initialize(Vector3f aColor, float anIntensity);
 
 	virtual void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) = 0;
-	void SetLightViewport();
 	void ClearShadowMap();
-	void BindShadowMap();
+	void SetShadowMapAsTarget();
+	void BindShadowMapAsResource(unsigned aSlot);
 
 	const LightBufferData& GetLightBuffer() const { return myLightBufferData; }
 
 	Vector3f GetColor() const { return myLightBufferData.Color; }
 	float GetIntensity() const { return myLightBufferData.Intensity; }
 	Vector3f GetDirection() const { return myLightBufferData.Direction; }
+	bool CastShadows() const { return myLightBufferData.CastShadows; }
 
 protected:
 	LightBufferData myLightBufferData;

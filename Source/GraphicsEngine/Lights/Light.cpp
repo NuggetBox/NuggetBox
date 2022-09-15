@@ -7,17 +7,26 @@
 //	myLightBufferData.Intensity = anIntensity;
 //}
 
-void Light::SetLightViewport()
-{
-	myShadowMap->SetViewport();
-}
-
 void Light::ClearShadowMap()
 {
-	myShadowMap->Clear();
+	if (myShadowMap)
+	{
+		myShadowMap->Clear();
+	}
 }
 
-void Light::BindShadowMap()
+void Light::SetShadowMapAsTarget()
 {
-	myShadowMap->Bind();
+	if (myShadowMap)
+	{
+		myShadowMap->SetRenderTarget();
+	}
+}
+
+void Light::BindShadowMapAsResource(unsigned aSlot)
+{
+	if (myShadowMap)
+	{
+		myShadowMap->BindShadowResource(aSlot);
+	}
 }

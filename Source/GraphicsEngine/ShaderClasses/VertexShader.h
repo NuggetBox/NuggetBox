@@ -16,7 +16,7 @@ class VertexShader
 public:
 	VertexShader() = default;
 
-	void Bind() const;
+	void SetRenderTarget() const;
 	static std::shared_ptr<VertexShader> Load(const std::filesystem::path& aPath, InputLayoutType anInputLayoutType = InputLayoutType::MeshVertex);
 
 	void CreateInputLayout(const std::string& someVertexShaderData, InputLayoutType anInputLayoutType = InputLayoutType::MeshVertex);

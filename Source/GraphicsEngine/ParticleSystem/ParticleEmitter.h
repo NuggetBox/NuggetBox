@@ -34,7 +34,7 @@ public:
 	void ClearParticles();
 
 	void Update();
-	void Bind() const;
+	void SetRenderTarget() const;
 
 	void Draw() const;
 

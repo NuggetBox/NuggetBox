@@ -23,6 +23,13 @@ enum class DepthStencilState
 	COUNT
 };
 
+enum class SamplerState
+{
+	Default,
+	PointClamp,
+	COUNT
+};
+
 class GraphicsEngine
 {
 public:
@@ -43,6 +50,7 @@ public:
 
 	void SetBlendState(BlendState aBlendState);
 	void SetDepthStencilState(DepthStencilState aDepthStencilState);
+	void SetSamplerState(SamplerState aSamplerState, unsigned aSlot);
 
 	void SetRenderMode(RenderMode aRenderMode);
 	RenderMode GetRenderMode() const;
@@ -50,7 +58,9 @@ public:
 private:
 	void SetupBlendStates();
 	void SetupDepthStencilStates();
+	void SetupSamplerStates();
 
+	void ResetStates();
 	void ResetViewport();
 
 	void CameraControls(std::shared_ptr<Camera> aCamera);
@@ -60,6 +70,7 @@ private:
 
 	std::array<ComPtr<ID3D11BlendState>, static_cast<unsigned int>(BlendState::COUNT)> myBlendStates;
 	std::array<ComPtr<ID3D11DepthStencilState>, static_cast<unsigned int>(DepthStencilState::COUNT)> myDepthStencilStates;
+	std::array<ComPtr<ID3D11SamplerState>, static_cast<unsigned int>(SamplerState::COUNT)> mySamplerStates;
 
 	SIZE myWindowSize{0, 0};
 	HWND myWindowHandle{};

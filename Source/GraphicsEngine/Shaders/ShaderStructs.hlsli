@@ -73,6 +73,7 @@ struct DeferredPixelOutput
 };
 
 SamplerState defaultSampler : register(s0);
+SamplerState pointClampSampler : register(s1);
 
 Texture2D albedoTexture : register(t0);
 Texture2D normalTexture : register(t1);

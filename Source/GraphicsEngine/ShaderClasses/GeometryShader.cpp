@@ -3,7 +3,7 @@
 
 #include "Core/DebugLogger.h"
 
-void GeometryShader::Bind() const
+void GeometryShader::SetRenderTarget() const
 {
 	if (myGeometryShader != nullptr)
 	{

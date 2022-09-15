@@ -165,7 +165,7 @@ void ParticleEmitter::Update()
 	}
 }
 
-void ParticleEmitter::Bind() const
+void ParticleEmitter::SetRenderTarget() const
 {
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -176,9 +176,9 @@ void ParticleEmitter::Bind() const
 	DX11::Context->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(myPrimitiveTopology));
 	DX11::Context->IASetVertexBuffers(0, 1, myVertexBuffer.GetAddressOf(), &myStride, &myOffset);
 
-	myVertexShader->Bind();
-	myPixelShader->Bind();
-	myGeometryShader->Bind();
+	myVertexShader->SetRenderTarget();
+	myPixelShader->SetRenderTarget();
+	myGeometryShader->SetRenderTarget();
 
 	if (myTexture)
 	{

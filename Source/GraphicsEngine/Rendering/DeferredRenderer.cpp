@@ -87,8 +87,8 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, c
 
             DX11::Context->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
 
-            meshData.myVertexShader->Bind();
-            myPixelShader->Bind();
+            meshData.myVertexShader->SetRenderTarget();
+            myPixelShader->SetRenderTarget();
 
             //TODO: Turn off geo shader somewhere else //Turn off Geometry Shader so that models work
             DX11::Context->GSSetShader(nullptr, nullptr, 0);
@@ -148,8 +148,8 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std:
 
     DX11::Context->GSSetShader(nullptr, nullptr, 0);
 
-    myFullscreenShader->Bind();
-    myEnvironmentShader->Bind();
+    myFullscreenShader->SetRenderTarget();
+    myEnvironmentShader->SetRenderTarget();
 
     DX11::Context->Draw(3, 0);
 }

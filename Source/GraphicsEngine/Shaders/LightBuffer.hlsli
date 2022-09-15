@@ -35,3 +35,7 @@ cbuffer LightBuffer : register(b3)
 	float3 LB_Direction;
 	float LB_padding;*/
 }
+
+Texture2D dirLightShadowMap : register(t20);
+Texture2D spotLightShadowMap : register(t21);
+Texture2D pointLightShadowMaps[6] : register(t22); //22-27

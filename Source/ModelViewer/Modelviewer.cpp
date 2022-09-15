@@ -43,7 +43,7 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		(GetSystemMetrics(SM_CYSCREEN) - windowSize.cy) / 2,
 		windowSize.cx,
 		windowSize.cy,
-		false);
+		true);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

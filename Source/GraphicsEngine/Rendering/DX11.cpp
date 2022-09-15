@@ -22,8 +22,6 @@ void DX11::Initialize(HWND aWindowHandle, bool aEnableDeviceDebug)
 
 	SetViewport(clientRect);
 
-	CreateSamplerState();
-
 	//Seed random
 	srand(static_cast<unsigned>(time(0)));
 }
@@ -104,28 +102,6 @@ void DX11::SetViewport(RECT aClientRect)
 	viewport.MaxDepth = 1.0f;
 
 	Context->RSSetViewports(1, &viewport);
-}
-
-void DX11::CreateSamplerState()
-{
-	D3D11_SAMPLER_DESC samplerDesc;
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.BorderColor[0] = 1.0f;
-	samplerDesc.BorderColor[1] = 1.0f;
-	samplerDesc.BorderColor[2] = 1.0f;
-	samplerDesc.BorderColor[3] = 1.0f;
-	samplerDesc.MinLOD = -D3D11_FLOAT32_MAX;
-	samplerDesc.MaxLOD = -D3D11_FLOAT32_MAX;
-
-	AssertIfFailed(Device->CreateSamplerState(&samplerDesc, SampleStateDefault.GetAddressOf()));
-
-	DEBUGLOG("Created Sampler State");
 }
 
 std::string DX11::HResultToString(HRESULT aResult)

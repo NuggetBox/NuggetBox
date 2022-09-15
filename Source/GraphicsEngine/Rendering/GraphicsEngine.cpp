@@ -20,6 +20,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	DX11::Initialize(myWindowHandle, enableDeviceDebug);
 	SetupBlendStates();
 	SetupDepthStencilStates();
+	SetupSamplerStates();
 
 	Utility::Timer::Start();
 
@@ -62,7 +63,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.AddModel(spiderCat);
 
 	auto sphere = Model::Load("meshes/sphere.fbx");
-	sphere->AddPosition(500, 50, 0);
+	sphere->AddPosition(500, 250, 0);
 	sphere->SetScale(Vector3f(50, 50, 50));
 	myScene.AddModel(sphere);
 
@@ -97,7 +98,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	}
 	//
 
-	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 300, 0 }, 350, { 0, -1, 0 }, 50, 200);
+	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 50, 100);
 	myScene.AddSpotLight(spotLight);
 
 	myForwardRenderer.Initialize();
@@ -265,6 +266,11 @@ void GraphicsEngine::SetDepthStencilState(DepthStencilState aDepthStencilState)
 	DX11::Context->OMSetDepthStencilState(myDepthStencilStates[static_cast<UINT>(aDepthStencilState)].Get(), 0);
 }
 
+void GraphicsEngine::SetSamplerState(SamplerState aSamplerState, unsigned aSlot)
+{
+	DX11::Context->VSSetSamplers(aSlot, 1, mySamplerStates[static_cast<UINT>(aSamplerState)].GetAddressOf());
+}
+
 void GraphicsEngine::SetRenderMode(RenderMode aRenderMode)
 {
 	myRenderMode = aRenderMode;
@@ -329,6 +335,47 @@ void GraphicsEngine::SetupDepthStencilStates()
 	myDepthStencilStates[static_cast<UINT>(DepthStencilState::ReadWrite)] = nullptr;
 
 	DEBUGLOG("Depth Stencil States setup successfully");
+}
+
+void GraphicsEngine::SetupSamplerStates()
+{
+	D3D11_SAMPLER_DESC defaultSampleDesc{};
+	defaultSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	defaultSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	defaultSampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	defaultSampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	defaultSampleDesc.MipLODBias = 0.0f;
+	defaultSampleDesc.MaxAnisotropy = 1;
+	defaultSampleDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	defaultSampleDesc.BorderColor[0] = 1.0f;
+	defaultSampleDesc.BorderColor[1] = 1.0f;
+	defaultSampleDesc.BorderColor[2] = 1.0f;
+	defaultSampleDesc.BorderColor[3] = 1.0f;
+	defaultSampleDesc.MinLOD = -D3D11_FLOAT32_MAX;
+	defaultSampleDesc.MaxLOD = -D3D11_FLOAT32_MAX;
+	AssertIfFailed(DX11::Device->CreateSamplerState(&defaultSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::Default)]));
+
+	D3D11_SAMPLER_DESC pointSampleDesc{};
+	pointSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	pointSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pointSampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pointSampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pointSampleDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	pointSampleDesc.MinLOD = -FLT_MAX;
+	pointSampleDesc.MaxLOD = FLT_MAX;
+	AssertIfFailed(DX11::Device->CreateSamplerState(&pointSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::PointClamp)]));
+
+	//Wrap
+
+	DEBUGLOG("Sampler States Setup Successfully");
+}
+
+void GraphicsEngine::ResetStates()
+{
+	SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::ReadWrite);
+	SetSamplerState(SamplerState::Default, 0);
+	SetSamplerState(SamplerState::PointClamp, 1);
 }
 
 void GraphicsEngine::ResetViewport()
@@ -439,11 +486,11 @@ void GraphicsEngine::RenderFrame()
 
 	CameraControls(camera);
 
-	float rotationPerSec = 30.0f;
+	float rotationPerSec = 0.0f;
 
 	for (auto& model : models) 
 	{
-		//model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
 		model->Update(myLerpAnimations);
 	}
 
@@ -473,18 +520,28 @@ void GraphicsEngine::RenderFrame()
 	//
 
 	//Render Models with deferred but particles with forward
-	SetBlendState(BlendState::None);
-	SetDepthStencilState(DepthStencilState::ReadWrite);
-	//myScene.GetDirectionalLight()->SetLightViewport();
-	myScene.GetDirectionalLight()->ClearShadowMap();
-	myScene.GetDirectionalLight()->BindShadowMap();
-	myShadowRenderer.RenderShadowPassPerLight(myScene.GetDirectionalLight(), models);
-	//ResetViewport();
+	ResetStates();
 
-	SetBlendState(BlendState::None);
-	SetDepthStencilState(DepthStencilState::ReadWrite);
+	myScene.GetDirectionalLight()->ClearShadowMap();
+	myScene.GetDirectionalLight()->SetShadowMapAsTarget();
+	myShadowRenderer.RenderShadowPassPerLight(myScene.GetDirectionalLight(), models);
+	ResetViewport();
+
+	//for (auto& light : myScene.GetLights())
+	//{
+	//	if (light->CastShadows())
+	//	{
+	//		light->ClearShadowMap();
+	//		light->SetShadowMapAsTarget();
+	//		//light->BindShadowMapAsResource(21);
+	//		myShadowRenderer.RenderShadowPassPerLight(light, models);
+	//		ResetViewport();
+	//	}
+	//}
+
 	myGBuffer->Clear();
 	myGBuffer->SetAsTarget();
+	myScene.GetDirectionalLight()->BindShadowMapAsResource(20);
 	myDeferredRenderer.GenerateGBuffer(camera, models);
 	myGBuffer->ClearTarget();
 

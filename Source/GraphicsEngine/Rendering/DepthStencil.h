@@ -6,9 +6,9 @@ class DepthStencil
 public:
 	DepthStencil() = default;
 	static std::shared_ptr<DepthStencil> Create(const std::string& aName, int aWidth, int aHeight);
-	void SetViewport();
 	void Clear();
-	void Bind();
+	void SetRenderTarget();
+	void BindShadowResource(unsigned aSlot);
 
 private:
 	std::string myName;
