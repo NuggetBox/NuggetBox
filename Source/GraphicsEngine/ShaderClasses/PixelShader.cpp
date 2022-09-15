@@ -3,7 +3,7 @@
 
 #include "Core/DebugLogger.h"
 
-void PixelShader::SetRenderTarget() const
+void PixelShader::Bind() const
 {
 	DX11::Context->PSSetShader(myPixelShader.Get(), nullptr, 0);
 }

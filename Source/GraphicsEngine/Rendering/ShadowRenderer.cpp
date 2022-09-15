@@ -80,7 +80,7 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
             DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
             DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
             DX11::Context->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(meshData.myPrimitiveTopology));
-            meshData.myVertexShader->SetRenderTarget();
+            meshData.myVertexShader->Bind();
             //
 
             DX11::Context->DrawIndexed(meshData.myNumberOfIndices, 0, 0);

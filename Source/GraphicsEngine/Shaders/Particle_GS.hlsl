@@ -1,5 +1,4 @@
 #include "CBuffers.hlsli"
-#include "ShaderStructs.hlsli"
 #include "ParticleStructs.hlsli"
 
 [maxvertexcount(4)]

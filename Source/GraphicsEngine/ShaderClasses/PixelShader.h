@@ -10,7 +10,7 @@ class PixelShader
 public:
 	PixelShader() = default;
 
-	void SetRenderTarget() const;
+	void Bind() const;
 	static std::shared_ptr<PixelShader> Load(const std::filesystem::path& aPath);
 
 private:

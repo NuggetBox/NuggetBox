@@ -146,8 +146,8 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
 
             //DX11::Context->VSSetShader(meshData.myVertexShader.Get(), nullptr, 0);
             //DX11::Context->PSSetShader(meshData.myPixelShader.Get(), nullptr, 0);
-            meshData.myVertexShader->SetRenderTarget();
-            meshData.myPixelShader->SetRenderTarget();
+            meshData.myVertexShader->Bind();
+            meshData.myPixelShader->Bind();
 
             DX11::Context->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
             DX11::Context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
@@ -202,7 +202,7 @@ void ForwardRenderer::RenderParticles(const std::shared_ptr<Camera>& aCamera,
 
         for (auto& emitter : particleSystem->GetEmitters())
         {
-            emitter.SetRenderTarget();
+            emitter.Bind();
             emitter.Draw();
         }
     }

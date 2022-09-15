@@ -10,8 +10,6 @@
 #include "ShaderClasses/GeometryShader.h"
 #include "Scene/SceneObject.h"
 
-#include <queue>
-
 struct ParticleEmitterTemplate
 {
 	std::filesystem::path TexturePath;
@@ -34,7 +32,7 @@ public:
 	void ClearParticles();
 
 	void Update();
-	void SetRenderTarget() const;
+	void Bind() const;
 
 	void Draw() const;
 
