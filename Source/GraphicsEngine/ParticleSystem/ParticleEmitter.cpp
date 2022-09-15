@@ -100,11 +100,6 @@ void ParticleEmitter::Update()
 		ClearParticles();
 	}
 
-	if (Timer::GetDeltaTime() > 0.1f)
-	{
-		int a = 0;
-	}
-
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];
@@ -150,15 +145,18 @@ void ParticleEmitter::Update()
 		}
 	}
 
-	if (myIsEmitting && Timer::GetDeltaTime() < myEmitterSettings.LifeTime && mySpawnTimer > -myEmitterSettings.LifeTime)
+	if (myIsEmitting)
 	{
 		//Spawn new particle, multiple if 1 particle/frame is not enough
 		while (mySpawnTimer <= 0)
 		{
 			mySpawnTimer += 1 / myEmitterSettings.SpawnRate;
 
-			size_t particleToSpawn = myAvailableParticles.Dequeue();
-			InitParticle(particleToSpawn, -mySpawnTimer);
+			if (!myAvailableParticles.IsEmpty())
+			{
+				size_t particleToSpawn = myAvailableParticles.Dequeue();
+				InitParticle(particleToSpawn, -mySpawnTimer);
+			}
 		}
 
 		mySpawnTimer -= Timer::GetDeltaTime();

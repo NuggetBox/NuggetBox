@@ -42,6 +42,9 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
 	//
 
+	//Peter panning, tune if it appears
+	const float shadowBias = 0.0005f;
+
 	//Calc DirLight Shadows
 	if (LB_DirectionalLight.CastShadows)
 	{
@@ -54,9 +57,6 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 
 		if (saturate(projectedTexCoord.x) == projectedTexCoord.x && saturate(projectedTexCoord.y) == projectedTexCoord.y)
 		{
-			//Peter panning, tune if it appears
-			const float shadowBias = 0.0005f;
-
 			//Tune if shadows should be brighter
 			const float shadowMult = 0.0f;
 
@@ -112,9 +112,6 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 
 					if (saturate(projectedTexCoord.x) == projectedTexCoord.x && saturate(projectedTexCoord.y) == projectedTexCoord.y)
 					{
-						//Peter panning, tune if it appears
-						const float shadowBias = 0.0005f;
-
 						//Rough estimate of view depth from light to point
 						const float viewDepth = lightViewToLightProj.z / lightViewToLightProj.w - shadowBias;
 

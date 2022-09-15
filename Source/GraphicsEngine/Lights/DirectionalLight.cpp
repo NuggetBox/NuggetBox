@@ -51,6 +51,5 @@ void DirectionalLight::Update(const Vector3f& aCameraPosition)
 	//TODO: Find a good distance to move the camera relative to player camera
 	Vector3f moveBackDiff = myTransform.GetBackward() * 10000.0f;
 	myTransform.SetPosition(aCameraPosition + moveBackDiff);
-	FORMATLOG("Dir light pos: X:{} Y:{} Z:{} Length:{}", myTransform.GetXPosition(), myTransform.GetYPosition(), myTransform.GetZPosition(), myTransform.GetPosition().Length());
 	myLightBufferData.ViewMatrix = Matrix4f::GetFastInverse(myTransform.GetMatrix());
 }

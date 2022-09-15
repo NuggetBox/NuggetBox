@@ -7,7 +7,7 @@ namespace Utility
 	class Queue
 	{
 	public:
-		Queue(int aSize = 16);
+		Queue(int aCapacity = 16);
 		~Queue();
 
 		Queue(const Queue& aQueue);
@@ -17,7 +17,9 @@ namespace Utility
 		void Clear();
 
 		int GetSize() const;
+		int GetCapacity() const;
 		bool IsEmpty() const;
+		bool IsFull() const;
 
 		const T& GetFront() const;
 		T& GetFront();
@@ -28,8 +30,6 @@ namespace Utility
 		T Dequeue();
 
 	private:
-		bool IsFull() const;
-
 		T* myQueue;
 
 		int myFirst;
@@ -103,6 +103,12 @@ namespace Utility
 		}
 
 		return (myLast - myFirst + 1 + myCapacity) % myCapacity;
+	}
+
+	template<class T>
+	int Queue<T>::GetCapacity() const
+	{
+		return myCapacity;
 	}
 
 	template<class T>
