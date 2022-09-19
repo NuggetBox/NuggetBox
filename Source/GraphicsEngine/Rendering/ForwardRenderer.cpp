@@ -142,10 +142,8 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
             DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
             DX11::Context->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(meshData.myPrimitiveTopology));
-            //DX11::Context->IASetInputLayout(meshData.myInputLayout.Get());
 
-            //DX11::Context->VSSetShader(meshData.myVertexShader.Get(), nullptr, 0);
-            //DX11::Context->PSSetShader(meshData.myPixelShader.Get(), nullptr, 0);
+            //DX11::Context->IASetInputLayout(meshData.myInputLayout.Get());
             meshData.myVertexShader->Bind();
             meshData.myPixelShader->Bind();
 

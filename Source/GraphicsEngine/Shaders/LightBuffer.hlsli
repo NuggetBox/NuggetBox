@@ -1,6 +1,6 @@
 struct LightData
 {
-	float4x4 ViewMatrix;
+	float4x4 ViewMatrix[6];
 	float4x4 ProjectionMatrix;
 
 	float3 Color;
@@ -36,6 +36,6 @@ cbuffer LightBuffer : register(b3)
 	float LB_padding;*/
 }
 
-Texture2D dirLightShadowMap : register(t20);
-Texture2D spotLightShadowMap : register(t21);
-Texture2D pointLightShadowMaps[6] : register(t22); //22-27
+Texture2D dirLightShadowMap : register(t10);
+Texture2D spotLightShadowMap : register(t20);
+Texture2D pointLightShadowMaps[6] : register(t30); //30-36

@@ -15,7 +15,7 @@ void Light::ClearShadowMap()
 	}
 }
 
-void Light::SetShadowMapAsTarget()
+void Light::SetShadowMapAsTarget(unsigned anIndex)
 {
 	if (myShadowMap)
 	{

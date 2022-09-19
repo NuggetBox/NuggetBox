@@ -88,18 +88,30 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 0.5f, Vector3f(45, -45, 0)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
+	//POINT LIGHT TESTING
+	auto pointLight = PointLight::Create({ 0, 1, 0 }, 30000, { -1000, 150, 0 }, 500);
+	auto pointTestCube = Model::Load("Cube");
+	pointTestCube->SetPosition(-1100, 50, 0);
+
+	myScene.AddModel(pointTestCube);
+	myScene.AddPointLight(pointLight);
+	//
+
 	// Add some random pointlights
-	for (int i = 0; i < 32 - 1; ++i)
+	/*for (int i = 0; i < 32 - 1; ++i)
 	{
 		auto pointLight = PointLight::Create({ 
 			(std::rand() % 100) / 100.0f,  (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f }, 
 			5000, { (static_cast<float>(i) - 32 / 2 + 1.5f) * 100.0f, 50.0f, -80.0f }, 200);
 		myScene.AddPointLight(pointLight);
-	}
+	}*/
 	//
 
-	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 50, 100);
+	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
 	myScene.AddSpotLight(spotLight);
+
+	/*auto spotLight2 = SpotLight::Create({ 1, 0, 0 }, 999999, { 0, 450, 0 }, 1000, { 90, 0, 0 }, 75, 200);
+	myScene.AddSpotLight(spotLight2);*/
 
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
@@ -532,8 +544,25 @@ void GraphicsEngine::RenderFrame()
 		if (light->CastShadows())
 		{
 			light->ClearShadowMap();
-			light->SetShadowMapAsTarget();
-			myShadowRenderer.RenderShadowPassPerLight(light, models);
+
+			if (light->GetLightType() == LightType::SpotLight)
+			{
+				light->SetShadowMapAsTarget();
+				myShadowRenderer.RenderShadowPassPerLight(light, models);
+			}
+			else if (light->GetLightType() == LightType::PointLight)
+			{
+				const std::shared_ptr<PointLight> pointLight = reinterpret_cast<const std::shared_ptr<PointLight>&>(light);
+				pointLight->ResetAllViewMatrix();
+
+				for (int i = 0; i < 6; ++i)
+				{
+					pointLight->SetShadowMapAsTarget(i);
+					pointLight->SetViewMatrix(i, 0);
+					myShadowRenderer.RenderShadowPassPerLight(pointLight, models);
+				}
+			}
+
 			ResetViewport();
 		}
 	}
@@ -541,17 +570,23 @@ void GraphicsEngine::RenderFrame()
 	myGBuffer->Clear();
 	myGBuffer->SetAsTarget();
 
-	myScene.GetDirectionalLight()->BindShadowMapAsResource(20);
+	myScene.GetDirectionalLight()->BindShadowMapAsResource(10);
 
 	for (auto& light : myScene.GetLights())
 	{
-		if (light->GetLightType() == LightType::SpotLight)
+		switch (light->GetLightType())
 		{
-			light->BindShadowMapAsResource(21);
-		}
-		else if (light->GetLightType() == LightType::PointLight)
-		{
-			
+			case LightType::SpotLight:
+			{
+				light->BindShadowMapAsResource(20);
+				break;
+			}
+			case LightType::PointLight:
+			{
+				light->BindShadowMapAsResource(30);
+				break;
+			}
+			default: break;
 		}
 	}
 

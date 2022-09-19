@@ -43,12 +43,12 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	//
 
 	//Peter panning, tune if it appears
-	const float shadowBias = 0.0005f;
+	const float shadowBias = 0.00005f;
 
 	//Calc DirLight Shadows
 	if (LB_DirectionalLight.CastShadows)
 	{
-		const float4 worldToLightView = mul(LB_DirectionalLight.ViewMatrix, worldPosition);
+		const float4 worldToLightView = mul(LB_DirectionalLight.ViewMatrix[0], worldPosition);
 		const float4 lightViewToLightProj = mul(LB_DirectionalLight.ProjectionMatrix, worldToLightView);
 
 		float2 projectedTexCoord; //Shadow map UVS
@@ -79,6 +79,7 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	float3 pointLight = 0;
 	float3 spotLight = 0;
 
+	[unroll(32)]
 	for (unsigned int l = 0; l < LB_NumLights; ++l)
 	{
 		const LightData light = LB_Lights[l];
@@ -94,8 +95,42 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 			//Point Light
 			case 2:
 			{
-				pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
-					light.Position, toEye, worldPosition.xyz);
+				bool evaluatePointLight = true;
+
+				if (light.CastShadows)
+				{
+					for (unsigned int i = 0; i < 6; ++i)
+					{
+						const float4 worldToLightView = mul(light.ViewMatrix[i], worldPosition);
+						const float4 lightViewToLightProj = mul(light.ProjectionMatrix, worldToLightView);
+
+						float2 projectedTexCoord; //Shadow map UVS
+						projectedTexCoord.x = lightViewToLightProj.x / lightViewToLightProj.w / 2.0f + 0.5f;
+						projectedTexCoord.y = -lightViewToLightProj.y / lightViewToLightProj.w / 2.0f + 0.5f;
+
+						if (saturate(projectedTexCoord.x) == projectedTexCoord.x && saturate(projectedTexCoord.y) == projectedTexCoord.y)
+						{
+							//Rough estimate of view depth from light to point
+							const float viewDepth = lightViewToLightProj.z / lightViewToLightProj.w - shadowBias;
+
+							//Shadow map value rendered from light camera
+							const float lightDepth = spotLightShadowMap.Sample(pointClampSampler, projectedTexCoord).r;
+
+							//P < D, if depth is lower than dist to point
+							if (lightDepth < viewDepth)
+							{
+								evaluatePointLight = false;
+								break;
+							}
+						}
+					}
+				}
+
+				if (evaluatePointLight)
+				{
+					pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
+						light.Position, toEye, worldPosition.xyz);
+				}
 				break;
 			}
 			//Spot Light
@@ -103,7 +138,7 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 			{
 				if (light.CastShadows)
 				{
-					const float4 worldToLightView = mul(light.ViewMatrix, worldPosition);
+					const float4 worldToLightView = mul(light.ViewMatrix[0], worldPosition);
 					const float4 lightViewToLightProj = mul(light.ProjectionMatrix, worldToLightView);
 
 					float2 projectedTexCoord; //Shadow map UVS

@@ -24,14 +24,14 @@ std::shared_ptr<SpotLight> SpotLight::Create(Vector3f aColor, float anIntensity,
 	constexpr POINT shadowResolution = { 2048, 2048 };
 	constexpr POINT projectionSize = { 2048, 2048 };
 
-	spotLight.myLightBufferData.ViewMatrix = Matrix4f::GetFastInverse(spotLight.myTransform.GetMatrix());
+	spotLight.myLightBufferData.ViewMatrix[0] = Matrix4f::GetFastInverse(spotLight.myTransform.GetMatrix());
 	spotLight.myLightBufferData.ProjectionMatrix = Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
 	spotLight.myLightBufferData.CastShadows = true;
 
 	spotLight.myLightBufferData.FarPlane = farPlane;
 	spotLight.myLightBufferData.NearPlane = nearPlane;
 
-	spotLight.myShadowMap = DepthStencil::Create("ShadowMap", shadowResolution.x, shadowResolution.y);
+	spotLight.myShadowMap = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
 
 	DEBUGLOG("Created a Spot Light");
 	return std::make_shared<SpotLight>(spotLight);

@@ -35,7 +35,7 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
 	const LightBufferData lightBufferData = aLight->GetLightBuffer();
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 
-	myFrameBufferData.View = lightBufferData.ViewMatrix;
+	myFrameBufferData.View = lightBufferData.ViewMatrix[0];
 	myFrameBufferData.Projection = lightBufferData.ProjectionMatrix;
     myFrameBufferData.CamTranslation = lightBufferData.Position;
     myFrameBufferData.NearPlane = lightBufferData.NearPlane;

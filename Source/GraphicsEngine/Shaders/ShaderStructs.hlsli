@@ -84,4 +84,4 @@ Texture2D vertexNormalTexture : register(t3);
 Texture2D worldPositionTexture : register(t4);
 Texture2D ambientOcclusionTexture : register(t5);
 
-TextureCube environmentTexture : register(t10);
+TextureCube environmentTexture : register(t6);

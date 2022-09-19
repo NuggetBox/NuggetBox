@@ -1,11 +1,9 @@
 #include "NuggetBox.pch.h"
 #include "DepthStencil.h"
 
-std::shared_ptr<DepthStencil> DepthStencil::Create(const std::string& aName, int aWidth, int aHeight)
+std::shared_ptr<DepthStencil> DepthStencil::Create(int aWidth, int aHeight)
 {
 	DepthStencil depthStencil;
-
-	depthStencil.myName = aName;
 
 	//Create Resource/Texture2D
 	D3D11_TEXTURE2D_DESC textureDesc;

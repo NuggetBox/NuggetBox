@@ -27,7 +27,7 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Vector3f aColor, floa
 	directionalLight.myLightBufferData.FarPlane = farPlane;
 	directionalLight.myLightBufferData.NearPlane = nearPlane;
 
-	directionalLight.myShadowMap = DepthStencil::Create("ShadowMap", shadowResolution.x, shadowResolution.y);
+	directionalLight.myShadowMap = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
 
 	DEBUGLOG("Created Directional Light");
 
@@ -49,7 +49,7 @@ void DirectionalLight::SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer)
 void DirectionalLight::Update(const Vector3f& aCameraPosition)
 {
 	//TODO: Find a good distance to move the camera relative to player camera
-	Vector3f moveBackDiff = myTransform.GetBackward() * 10000.0f;
+	Vector3f moveBackDiff = myTransform.GetBackward() * 1000.0f;
 	myTransform.SetPosition(aCameraPosition + moveBackDiff);
-	myLightBufferData.ViewMatrix = Matrix4f::GetFastInverse(myTransform.GetMatrix());
+	myLightBufferData.ViewMatrix[0] = Matrix4f::GetFastInverse(myTransform.GetMatrix());
 }
