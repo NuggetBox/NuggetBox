@@ -126,6 +126,8 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	GetClientRect(myWindowHandle, &clientRect);
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
+	myParticleEditor.Initialize();
+
 	Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
 	return true;
@@ -514,6 +516,9 @@ void GraphicsEngine::RenderFrame()
 	//ImGui::ShowDemoWindow();
 
 	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations);
+
+	std::vector<ParticleSystem> editorSystems;
+	myParticleEditor.Update(editorSystems);
 
 	//LEGENDARY TRANSPARENCY MODE
 	/*SetBlendState(BlendState::Additive);

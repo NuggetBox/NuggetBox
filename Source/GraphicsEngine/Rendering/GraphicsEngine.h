@@ -1,4 +1,6 @@
 #pragma once
+#include <ParticleEditor.h>
+
 #include "ForwardRenderer.h"
 #include "DeferredRenderer.h"
 #include "Scene/Scene.h"
@@ -56,6 +58,8 @@ public:
 	RenderMode GetRenderMode() const;
 
 private:
+	ParticleEditor myParticleEditor;
+
 	void SetupBlendStates();
 	void SetupDepthStencilStates();
 	void SetupSamplerStates();
