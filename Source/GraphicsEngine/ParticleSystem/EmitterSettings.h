@@ -25,7 +25,7 @@ struct EmitterSettings
 	Utility::Vector4f StartColor = {1.0f, 1.0f, 1.0f, 1.0f };
 	Utility::Vector4f EndColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	Utility::Vector3f StartSpeed = { 0.0f, 100.0f, 1.0f };
+	Utility::Vector3f StartSpeed = { 0.0f, 100.0f, 0.0f };
 	Utility::Vector3f EndSpeed = { 0.0f, -200.0f, 0.0f };
 	//If different from 1, all particles will not have the same start/end speed
 	float SpeedMultiplier = 1.0f;
@@ -35,8 +35,8 @@ struct EmitterSettings
 	//Maxspeed will be used to cap speed if acceleration is used
 	float MaxSpeed = 2500.0f;
 
-	//TODO: Blend mode setting
-	//BlendMode BlendingMode
+	//TODO: Blend mode setting?
+	//BlendMode BlendingMode = BlendMode::Additive;
 
 	bool Looping = true;
 	bool ScaledDeltaTime = true;

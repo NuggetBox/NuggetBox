@@ -39,22 +39,27 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 		if (ImGui::TreeNode("Cone Emitter Settings"))
 		{
 			ImGui::Text("Inner Radius");
+			ToolTip("The inner radius of the cone-shaped emission");
 			ImGui::SameLine();
 			ImGui::DragFloat("##InnerRadius", &settings.InnerRadius, 1.0f, 0.0f, settings.OuterRadius);
 
 			ImGui::Text("Outer Radius");
+			ToolTip("The outer radius of the cone-shaped emission, located 1 meter above the inner radius");
 			ImGui::SameLine();
 			ImGui::DragFloat("##OuterRadius", &settings.OuterRadius, 1.0f, settings.InnerRadius, FLT_MAX);
 
 			ImGui::Text("Spawn Origin");
+			ToolTip("Should the particles spawn on the edge of the inner circle of the cone, or inside the circle");
 			ImGui::SameLine();
 			if (ImGui::RadioButton("Spawn On Edge", settings.SpawnOnEdge))
 			{
+				ToolTip("The particles spawn on the edge of the inner circle");
 				settings.SpawnOnEdge = true;
 			}
 			ImGui::SameLine();
 			if (ImGui::RadioButton("Spawn On Circle", !settings.SpawnOnEdge))
 			{
+				ToolTip("The particles spawn inside the inner circle");
 				settings.SpawnOnEdge = false;
 			}
 
@@ -93,7 +98,7 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	ImGui::Text("Spawn Rate");
 	ToolTip("How many particles spawn per second");
 	ImGui::SameLine();
-	ImGui::DragFloat("##", &settings.SpawnRate, 1.0f, 0.0f, FLT_MAX);
+	ImGui::DragFloat("##SpawnRate", &settings.SpawnRate, 1.0f, 0.0f, FLT_MAX);
 	//
 
 	//Life Time
