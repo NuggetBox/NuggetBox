@@ -14,7 +14,7 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool 
 	myStride = sizeof(ParticleVertex);
 	myOffset = 0;
 
-	myMaxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime) * 1.1f + (2 / static_cast<int>(myEmitterSettings.SpawnRate)));
+	myMaxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.MaxLifeTime) * 1.1f + (2 / static_cast<int>(myEmitterSettings.SpawnRate)));
 	myParticles.resize(myMaxParticles);
 
 	myAvailableParticles.Initialize(myMaxParticles);
@@ -112,7 +112,7 @@ void ParticleEmitter::Update()
 		}
 		else
 		{
-			if (particle.LifeTime >= myEmitterSettings.LifeTime)
+			if (particle.LifeTime >= myEmitterSettings.MaxLifeTime)
 			{
 				//Particle surpassed lifetime, make available for spawn
 				myAvailableParticles.EnqueueUnsafe(i);
@@ -120,14 +120,14 @@ void ParticleEmitter::Update()
 			}
 			else
 			{
-				particle.Velocity.y -= myEmitterSettings.GravityScale * Timer::GetDeltaTime();
+				particle.Velocity.y -= myEmitterSettings.Acceleration.y * Timer::GetDeltaTime();
 				//TODO: Air resistance/Limit to speed?
 
 				particle.Position.x += particle.Velocity.x * Timer::GetDeltaTime();
 				particle.Position.y += particle.Velocity.y * Timer::GetDeltaTime();
 				particle.Position.z += particle.Velocity.z * Timer::GetDeltaTime();
 
-				float lifePercentage = particle.LifeTime / myEmitterSettings.LifeTime;
+				float lifePercentage = particle.LifeTime / myEmitterSettings.MaxLifeTime;
 
 				/*particle.Velocity.x = Utility::Lerp(myEmitterSettings.StartVelocity.x, myEmitterSettings.EndVelocity.x, lifePercentage);
 				particle.Velocity.y = Utility::Lerp(myEmitterSettings.StartVelocity.y, myEmitterSettings.EndVelocity.y, lifePercentage);
@@ -214,18 +214,18 @@ ParticleEmitterTemplate ParticleEmitter::Load(const std::filesystem::path& aTemp
 
 	EmitterSettings loadedSettings;
 	loadedSettings.SpawnRate = data["SpawnRate"];
-	loadedSettings.SpawnAngle = data["SpawnAngle"];
-	loadedSettings.LifeTime = data["LifeTime"];
+	//loadedSettings.SpawnAngle = data["SpawnAngle"];
+	loadedSettings.MaxLifeTime = data["LifeTime"];
 
-	loadedSettings.StartVelocity.x = data["StartVelocity"][0];
-	loadedSettings.StartVelocity.y = data["StartVelocity"][1];
-	loadedSettings.StartVelocity.z = data["StartVelocity"][2];
+	loadedSettings.StartSpeed.x = data["StartVelocity"][0];
+	loadedSettings.StartSpeed.y = data["StartVelocity"][1];
+	loadedSettings.StartSpeed.z = data["StartVelocity"][2];
 
-	loadedSettings.EndVelocity.x = data["EndVelocity"][0];
-	loadedSettings.EndVelocity.y = data["EndVelocity"][1];
-	loadedSettings.EndVelocity.z = data["EndVelocity"][2];
+	loadedSettings.EndSpeed.x = data["EndVelocity"][0];
+	loadedSettings.EndSpeed.y = data["EndVelocity"][1];
+	loadedSettings.EndSpeed.z = data["EndVelocity"][2];
 
-	loadedSettings.GravityScale = data["GravityScale"];
+	loadedSettings.Acceleration.y = data["GravityScale"];
 
 	loadedSettings.StartScale.x = data["StartScale"][0];
 	loadedSettings.StartScale.y = data["StartScale"][1];
@@ -271,7 +271,7 @@ void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 	x *= 50;
 	y *= 50;
 
-	myParticles[aParticleIndex].Velocity = myEmitterSettings.StartVelocity + Utility::Vector3f(x, 0, y);
+	myParticles[aParticleIndex].Velocity = myEmitterSettings.StartSpeed + Utility::Vector3f(x, 0, y);
 	myParticles[aParticleIndex].Scale = myEmitterSettings.StartScale;
 	myParticles[aParticleIndex].LifeTime = aLifeTime;
 }
