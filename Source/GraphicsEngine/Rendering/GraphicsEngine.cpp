@@ -30,6 +30,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	auto cube = Model::Load("Cube");
 	cube->SetPosition(350, 50, 0);
+	cube->ShouldSpin();
 	myScene.AddModel(cube);
 
 	auto pyramid = Model::Load("Pyramid");
@@ -89,8 +90,9 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	//POINT LIGHT TESTING
-	auto pointLight = PointLight::Create({ 0, 1, 0 }, 30000, { -1000, 150, 0 }, 500);
+	auto pointLight = PointLight::Create({ 0, 1, 0 }, 300000, { -1000, 50, 0 }, 300);
 	auto pointTestCube = Model::Load("Cube");
+	pointTestCube->ShouldSpin();
 	pointTestCube->SetPosition(-1100, 50, 0);
 
 	myScene.AddModel(pointTestCube);
@@ -498,11 +500,14 @@ void GraphicsEngine::RenderFrame()
 
 	CameraControls(camera);
 
-	float rotationPerSec = 0.0f;
+	float rotationPerSec = 30.0f;
 
 	for (auto& model : models) 
 	{
-		model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		if (model->GetShouldSpin())
+		{
+			model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+		}
 		model->Update(myLerpAnimations);
 	}
 
@@ -543,10 +548,9 @@ void GraphicsEngine::RenderFrame()
 	{
 		if (light->CastShadows())
 		{
-			light->ClearShadowMap();
-
 			if (light->GetLightType() == LightType::SpotLight)
 			{
+				light->ClearShadowMap();
 				light->SetShadowMapAsTarget();
 				myShadowRenderer.RenderShadowPassPerLight(light, models);
 			}
@@ -557,10 +561,13 @@ void GraphicsEngine::RenderFrame()
 
 				for (int i = 0; i < 6; ++i)
 				{
+					light->ClearShadowMap(i);
 					pointLight->SetShadowMapAsTarget(i);
 					pointLight->SetViewMatrix(i, 0);
 					myShadowRenderer.RenderShadowPassPerLight(pointLight, models);
+					pointLight->SetViewMatrix(i, i);
 				}
+				pointLight->ResetAllViewMatrix();
 			}
 
 			ResetViewport();

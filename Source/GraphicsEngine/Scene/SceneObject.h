@@ -7,6 +7,9 @@ public:
 	SceneObject() = default;
 	virtual ~SceneObject() = default;
 
+	void ShouldSpin();
+	bool GetShouldSpin() { return mySpin; }
+
 	void SetTransform(const Transform& aTransform);
 	void SetPosition(const Vector3<float>& aPosition);
 	void SetPosition(float aX, float aY, float aZ);
@@ -21,4 +24,5 @@ public:
 	
 protected:
 	Transform myTransform;
+	bool mySpin = false;
 };

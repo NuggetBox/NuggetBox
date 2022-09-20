@@ -1,6 +1,11 @@
 #include "NuggetBox.pch.h"
 #include "SceneObject.h"
 
+void SceneObject::ShouldSpin()
+{
+    mySpin = true;
+}
+
 void SceneObject::SetTransform(const Transform& aTransform)
 {
     myTransform = aTransform;

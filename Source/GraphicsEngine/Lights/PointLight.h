@@ -16,7 +16,7 @@ public:
 
 	//TODO: Update function for changing light buffer position data for example to be equal to transform pos
 
-	void ClearShadowMap() override;
+	void ClearShadowMap(unsigned anIndex = 0) override;
 	void SetShadowMapAsTarget(unsigned anIndex) override;
 	void BindShadowMapAsResource(unsigned aSlot) override;
 

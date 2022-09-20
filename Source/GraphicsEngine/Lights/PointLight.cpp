@@ -15,13 +15,14 @@ std::shared_ptr<PointLight> PointLight::Create(Vector3f aColor, float anIntensit
 	pointLight.SetPosition(aPosition);
 
 	//TODO: Tweak values to make for good shadow rendering, pointlight
-	constexpr float nearPlane = 1.0f;
-	constexpr float farPlane = 15000.0f;
+	constexpr float nearPlane = 0.1f;
+	constexpr float farPlane = 30000.0f;
 	constexpr POINT shadowResolution = { 2048, 2048 };
 	constexpr POINT projectionSize = { 2048, 2048 };
 
 	pointLight.ResetAllViewMatrix();
 
+	//MAGIC NUMBER DONT TOUCH 90.05745f FOV
 	pointLight.myLightBufferData.ProjectionMatrix = Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
 	pointLight.myLightBufferData.CastShadows = true;
 
@@ -29,6 +30,11 @@ std::shared_ptr<PointLight> PointLight::Create(Vector3f aColor, float anIntensit
 	pointLight.myLightBufferData.NearPlane = nearPlane;
 
 	pointLight.myShadowMap = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
+
+	for (int i = 0; i < 5; ++i)
+	{
+		pointLight.myExtraShadowMaps[i] = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
+	}
 
 	DEBUGLOG("Created a Point Light");
 	return std::make_shared<PointLight>(pointLight);
@@ -53,56 +59,58 @@ void PointLight::SetViewMatrix(unsigned aDir, unsigned aToSlot)
 	switch (aDir)
 	{
 		//Forward
-	case 0:
-	{
-		newView.SetRotation(0, 0, 0);
-		break;
-	}
-	//Backward
-	case 1:
-	{
-		newView.SetRotation(0, 180, 0);
-		break;
-	}
-	//Right
-	case 2:
-	{
-		newView.SetRotation(0, 90, 0);
-		break;
-	}
-	//Left
-	case 3:
-	{
-		newView.SetRotation(0, 270, 0);
-		break;
-	}
-	//Up
-	case 4:
-	{
-		newView.SetRotation(270, 0, 0);
-		break;
-	}
-	//Down
-	case 5:
-	{
-		newView.SetRotation(90, 0, 0);
-		break;
-	}
+		case 0:
+		{
+			newView.SetRotation(0, 0, 0);
+			break;
+		}
+		//Backward
+		case 1:
+		{
+			newView.SetRotation(0, 180, 0);
+			break;
+		}
+		//Right
+		case 2:
+		{
+			newView.SetRotation(0, 90, 0);
+			break;
+		}
+		//Left
+		case 3:
+		{
+			newView.SetRotation(0, 270, 0);
+			break;
+		}
+		//Up
+		case 4:
+		{
+			newView.SetRotation(270, 0, 0);
+			break;
+		}
+		//Down
+		case 5:
+		{
+			newView.SetRotation(90, 0, 0);
+			break;
+		}
 	}
 
 	myLightBufferData.ViewMatrix[aToSlot] = Matrix4f::GetFastInverse(newView.GetMatrix());
 }
 
 
-void PointLight::ClearShadowMap()
+void PointLight::ClearShadowMap(unsigned anIndex)
 {
-	Light::ClearShadowMap();
-
-	for (int i = 0; i < 5; ++i)
+	if (anIndex == 0)
 	{
-		if (myExtraShadowMaps[i])
+		Light::ClearShadowMap();
+	}
+	else
+	{
+		if (myExtraShadowMaps[anIndex - 1])
 		{
-			myExtraShadowMaps[i]->Clear();
+			myExtraShadowMaps[anIndex - 1]->Clear();
 		}
 	}
 }

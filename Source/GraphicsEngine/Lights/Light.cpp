@@ -7,7 +7,7 @@
 //	myLightBufferData.Intensity = anIntensity;
 //}
 
-void Light::ClearShadowMap()
+void Light::ClearShadowMap(unsigned anIndex)
 {
 	if (myShadowMap)
 	{

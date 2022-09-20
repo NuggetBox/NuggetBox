@@ -20,7 +20,7 @@ public:
 	//virtual void Initialize(Vector3f aColor, float anIntensity);
 
 	virtual void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) = 0;
-	virtual void ClearShadowMap();
+	virtual void ClearShadowMap(unsigned anIndex = 0);
 	virtual void SetShadowMapAsTarget(unsigned anIndex = 0);
 	virtual void BindShadowMapAsResource(unsigned aSlot);
 

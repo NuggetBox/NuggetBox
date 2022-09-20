@@ -38,4 +38,4 @@ cbuffer LightBuffer : register(b3)
 
 Texture2D dirLightShadowMap : register(t10);
 Texture2D spotLightShadowMap : register(t20);
-Texture2D pointLightShadowMaps[6] : register(t30); //30-36
+Texture2D pointLightShadowMaps[6] : register(t30); //30-35

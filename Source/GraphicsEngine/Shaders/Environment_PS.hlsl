@@ -95,8 +95,6 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 			//Point Light
 			case 2:
 			{
-				bool evaluatePointLight = true;
-
 				if (light.CastShadows)
 				{
 					for (unsigned int i = 0; i < 6; ++i)
@@ -114,23 +112,18 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 							const float viewDepth = lightViewToLightProj.z / lightViewToLightProj.w - shadowBias;
 
 							//Shadow map value rendered from light camera
-							const float lightDepth = spotLightShadowMap.Sample(pointClampSampler, projectedTexCoord).r;
+							const float lightDepth = pointLightShadowMaps[i].Sample(pointClampSampler, projectedTexCoord).r;
 
-							//P < D, if depth is lower than dist to point
-							if (lightDepth < viewDepth)
+							//P >= D, if depth is higher than dist to point
+							if (lightDepth >= viewDepth)
 							{
-								evaluatePointLight = false;
-								break;
+								pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range,
+									light.Position, toEye, worldPosition.xyz);
 							}
 						}
 					}
 				}
 
-				if (evaluatePointLight)
-				{
-					pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
-						light.Position, toEye, worldPosition.xyz);
-				}
 				break;
 			}
 			//Spot Light
