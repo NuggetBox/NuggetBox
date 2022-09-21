@@ -95,6 +95,8 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 			//Point Light
 			case 2:
 			{
+				bool evaluatePointLight = false;
+
 				if (light.CastShadows)
 				{
 					for (unsigned int i = 0; i < 6; ++i)
@@ -117,11 +119,20 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 							//P >= D, if depth is higher than dist to point
 							if (lightDepth >= viewDepth)
 							{
-								pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range,
-									light.Position, toEye, worldPosition.xyz);
+								evaluatePointLight = true;
 							}
 						}
 					}
+				}
+				else
+				{
+					evaluatePointLight = true;
+				}
+
+				if (evaluatePointLight)
+				{
+					pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range,
+						light.Position, toEye, worldPosition.xyz);
 				}
 
 				break;

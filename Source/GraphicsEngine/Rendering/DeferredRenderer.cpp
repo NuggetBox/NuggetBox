@@ -114,9 +114,10 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std:
     DX11::Context->Unmap(myFrameBuffer.Get(), 0);
     //
 
+    //Fill scenelightbuffer with dir&point&spotlights from scene and map-unmap lightbuffer
+    ZeroMemory(&mySceneLightBufferData, sizeof(SceneLightBuffer));
     if (aDirectionalLight)
     {
-        //aDirectionalLight->SetAsResource(myLightBuffer);
         mySceneLightBufferData.DirectionalLight = aDirectionalLight->GetLightBuffer();
     }
     if (anAmbientLight)
@@ -124,27 +125,25 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std:
         anAmbientLight->SetAsResource(nullptr);
     }
 
-    //Fill scenelightbuffer with point&spotlights from scene and map-unmap lightbuffer
-    mySceneLightBufferData.NumLights = 0;
-    ZeroMemory(mySceneLightBufferData.Lights, sizeof(LightBufferData) * MAX_DEFERRED_LIGHTS);
-
-    for (int l = 0; l < someLights.size() && l < MAX_DEFERRED_LIGHTS; ++l)
+    for(int l = 0; l < someLights.size() && l < MAX_DEFERRED_LIGHTS; ++l)
     {
         mySceneLightBufferData.Lights[l] = someLights[l]->GetLightBuffer();
         mySceneLightBufferData.NumLights++;
     }
+
     ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
     AssertIfFailed(DX11::Context->Map(myLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
     memcpy_s(bufferData.pData, sizeof(SceneLightBuffer), &mySceneLightBufferData, sizeof(SceneLightBuffer));
     DX11::Context->Unmap(myLightBuffer.Get(), 0);
-
     DX11::Context->PSSetConstantBuffers(3, 1, myLightBuffer.GetAddressOf());
     //
 
+    //Configure IA
     DX11::Context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     DX11::Context->IASetInputLayout(nullptr);
     DX11::Context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
     DX11::Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+    //
 
     DX11::Context->GSSetShader(nullptr, nullptr, 0);
 

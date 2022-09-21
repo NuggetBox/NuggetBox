@@ -90,10 +90,10 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	//POINT LIGHT TESTING
-	auto pointLight = PointLight::Create({ 0, 1, 0 }, 300000, { -1000, 50, 0 }, 300);
+	auto pointLight = PointLight::Create({ 0, 1, 0 }, 300000, { -500, 50, 0 }, 300);
 	auto pointTestCube = Model::Load("Cube");
 	pointTestCube->ShouldSpin();
-	pointTestCube->SetPosition(-1100, 50, 0);
+	pointTestCube->SetPosition(-600, 50, 0);
 
 	myScene.AddModel(pointTestCube);
 	myScene.AddPointLight(pointLight);
@@ -104,7 +104,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	{
 		auto pointLight = PointLight::Create({ 
 			(std::rand() % 100) / 100.0f,  (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f }, 
-			5000, { (static_cast<float>(i) - 32 / 2 + 1.5f) * 100.0f, 50.0f, -80.0f }, 200);
+			10000, { (static_cast<float>(i) - 32 / 2 + 1.5f) * 100.0f, 50.0f, -80.0f }, 300);
 		myScene.AddPointLight(pointLight);
 	}*/
 	//
@@ -225,9 +225,32 @@ void GraphicsEngine::AcceptFiles(HWND aHwnd)
 	}
 }
 
-void GraphicsEngine::HandleDroppedFile(std::filesystem::path& aPath)
+void GraphicsEngine::HandleDroppedFile(const std::filesystem::path& aPath)
 {
-	//TODO: Handle dropped file
+	//Copies file to asset folder right now
+	if (aPath.extension().string() == ".dds")
+	{
+		std::string pathToCheck = "Textures/" + aPath.filename().string();
+
+		//Insert a 0
+		int count = 0;
+		if (std::filesystem::exists(pathToCheck))
+		{
+			pathToCheck.insert(pathToCheck.find_last_of("."), std::to_string(count));
+		}
+
+		while (std::filesystem::exists(pathToCheck))
+		{
+			count++;
+			pathToCheck.replace(pathToCheck.find_last_of(".") - 1, 1, std::to_string(count));
+		}
+
+		std::filesystem::copy(aPath, pathToCheck);
+	}
+	else
+	{
+		FORMATWARNING("Only .dds texture files supported by drag&drop! Drag&Drop detected: {}", aPath.filename().string());
+	}
 }
 
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
@@ -539,10 +562,13 @@ void GraphicsEngine::RenderFrame()
 	//Render Models with deferred but particles with forward
 	ResetStates();
 
-	myScene.GetDirectionalLight()->ClearShadowMap();
-	myScene.GetDirectionalLight()->SetShadowMapAsTarget();
-	myShadowRenderer.RenderShadowPassPerLight(myScene.GetDirectionalLight(), models);
-	ResetViewport();
+	if (myScene.GetDirectionalLight()->CastShadows())
+	{
+		myScene.GetDirectionalLight()->ClearShadowMap();
+		myScene.GetDirectionalLight()->SetShadowMapAsTarget();
+		myShadowRenderer.RenderShadowPassPerLight(myScene.GetDirectionalLight(), models);
+		ResetViewport();
+	}
 
 	for (auto& light : myScene.GetLights())
 	{
@@ -565,7 +591,6 @@ void GraphicsEngine::RenderFrame()
 					pointLight->SetShadowMapAsTarget(i);
 					pointLight->SetViewMatrix(i, 0);
 					myShadowRenderer.RenderShadowPassPerLight(pointLight, models);
-					pointLight->SetViewMatrix(i, i);
 				}
 				pointLight->ResetAllViewMatrix();
 			}
