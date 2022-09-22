@@ -14,14 +14,12 @@ struct ParticleEmitterTemplate
 {
 	std::filesystem::path TexturePath;
 	EmitterSettings EmitterSettings;
-	//Transform Transform;
 };
 
 class ParticleEmitter : public SceneObject
 {
 public:
 	ParticleEmitter() = default;
-	//virtual ~ParticleEmitter() = default;
 
 	void Initialize(const ParticleEmitterTemplate& aTemplate, bool aStart = true);
 	void LoadAndInitialize(const std::filesystem::path& aTemplatePath, bool aStart = true);
@@ -46,11 +44,11 @@ private:
 	inline static std::unordered_map<std::string, ParticleEmitterTemplate> ourEmitterTemplateRegistry;
 
 	EmitterSettings myEmitterSettings;
+
+	Utility::Queue<size_t> myAvailableParticles;
 	std::vector<ParticleVertex> myParticles;
 	size_t myMaxParticles;
 
-	Utility::Queue<size_t> myAvailableParticles;
-	//std::queue<size_t> myAvailableParticles;
 	float mySpawnTimer;
 	bool myIsEmitting;
 
@@ -60,14 +58,9 @@ private:
 	UINT myOffset;
 	UINT myPrimitiveTopology;
 
-	//ComPtr<ID3D11VertexShader> myVertexShader;
-	//ComPtr<ID3D11PixelShader> myPixelShader;
-	//ComPtr<ID3D11GeometryShader> myGeometryShader;
 	std::shared_ptr<VertexShader> myVertexShader;
 	std::shared_ptr<PixelShader> myPixelShader;
 	std::shared_ptr<GeometryShader> myGeometryShader;
-
-	//ComPtr<ID3D11InputLayout> myInputLayout;
 
 	std::shared_ptr<Texture> myTexture;
 };

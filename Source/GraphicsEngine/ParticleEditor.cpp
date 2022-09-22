@@ -9,10 +9,8 @@ void ParticleEditor::Initialize()
 {
 }
 
-void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
+void ParticleEditor::Update(EmitterSettings& aSettings, std::string& aTexturePath)
 {
-	EmitterSettings& settings = myCurrentTemplate.EmitterSettings;
-
 	ImGui::Begin("Particle Emitter Settings");
 
 	//TODO: Drag&Drop .dds texture file to use for the particle system
@@ -21,15 +19,15 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	ImGui::Text("Emitter Type");
 	ToolTip("Changes the emission type of the emitter");
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Cone", settings.EmitterType == EmitterType::Cone))
+	if (ImGui::RadioButton("Cone", aSettings.EmitterType == EmitterType::Cone))
 	{
-		settings.EmitterType = EmitterType::Cone;
+		aSettings.EmitterType = EmitterType::Cone;
 	}
 	ToolTip("Particles emit from a cone");
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Sphere", settings.EmitterType == EmitterType::Sphere))
+	if (ImGui::RadioButton("Sphere", aSettings.EmitterType == EmitterType::Sphere))
 	{
-		settings.EmitterType = EmitterType::Sphere;
+		aSettings.EmitterType = EmitterType::Sphere;
 	}
 	ToolTip("Particles emit from a sphere");
 	//
@@ -37,32 +35,32 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	//TODO: ADD TOOLTIPS
 
 	//Cone settings
-	if (settings.EmitterType == EmitterType::Cone)
+	if (aSettings.EmitterType == EmitterType::Cone)
 	{
 		if (ImGui::TreeNode("Cone Emitter Settings"))
 		{
 			ImGui::Text("Inner Radius");
 			ToolTip("The inner radius of the cone-shaped emission (centimeters)");
 			ImGui::SameLine();
-			ImGui::DragFloat("##InnerRadius", &settings.InnerRadius, 1.0f, 0.0f, settings.OuterRadius);
+			ImGui::DragFloat("##InnerRadius", &aSettings.InnerRadius, 1.0f, 0.0f, aSettings.OuterRadius);
 
 			ImGui::Text("Outer Radius");
 			ToolTip("The outer radius of the cone-shaped emission (centimeters), located 1 meter above the inner radius");
 			ImGui::SameLine();
-			ImGui::DragFloat("##OuterRadius", &settings.OuterRadius, 1.0f, settings.InnerRadius, FLT_MAX);
+			ImGui::DragFloat("##OuterRadius", &aSettings.OuterRadius, 1.0f, aSettings.InnerRadius, FLT_MAX);
 
 			ImGui::Text("Spawn Origin");
 			ToolTip("Should the particles spawn on the edge of the inner circle of the cone, or inside the circle");
 			ImGui::SameLine();
-			if (ImGui::RadioButton("Spawn On Edge", settings.SpawnOnEdge))
+			if (ImGui::RadioButton("Spawn On Edge", aSettings.SpawnOnEdge))
 			{
-				settings.SpawnOnEdge = true;
+				aSettings.SpawnOnEdge = true;
 			}
 			//ToolTip("The particles spawn on the edge of the inner circle");
 			ImGui::SameLine();
-			if (ImGui::RadioButton("Spawn In Circle", !settings.SpawnOnEdge))
+			if (ImGui::RadioButton("Spawn In Circle", !aSettings.SpawnOnEdge))
 			{
-				settings.SpawnOnEdge = false;
+				aSettings.SpawnOnEdge = false;
 			}
 			//ToolTip("The particles spawn inside the inner circle");
 
@@ -72,27 +70,27 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	//
 
 	//Sphere Settings
-	if (settings.EmitterType == EmitterType::Sphere)
+	if (aSettings.EmitterType == EmitterType::Sphere)
 	{
 		if (ImGui::TreeNode("Sphere Emitter Settings"))
 		{
 			ImGui::Text("Sphere Radius");
 			ToolTip("The radius of the sphere-shaped emission (centimeters)");
 			ImGui::SameLine();
-			ImGui::DragFloat("##SphereRadius", &settings.Radius, 1.0f, 0.0f, FLT_MAX);
+			ImGui::DragFloat("##SphereRadius", &aSettings.Radius, 1.0f, 0.0f, FLT_MAX);
 
 			ImGui::Text("Spawn Origin");
 			ToolTip("Should the particles spawn on the surface of the sphere, or inside the sphere");
 			ImGui::SameLine();
-			if (ImGui::RadioButton("Spawn On Surface", settings.SpawnOnSurface))
+			if (ImGui::RadioButton("Spawn On Surface", aSettings.SpawnOnSurface))
 			{
-				settings.SpawnOnSurface = true;
+				aSettings.SpawnOnSurface = true;
 			}
 			ToolTip("The particles spawn on the surface of the sphere");
 			ImGui::SameLine();
-			if (ImGui::RadioButton("Spawn In Volume", !settings.SpawnOnSurface))
+			if (ImGui::RadioButton("Spawn In Volume", !aSettings.SpawnOnSurface))
 			{
-				settings.SpawnOnSurface = false;
+				aSettings.SpawnOnSurface = false;
 			}
 			ToolTip("The particles spawn inside of the sphere");
 
@@ -105,7 +103,7 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	ImGui::Text("Spawn Rate");
 	ToolTip("How many particles spawn per second");
 	ImGui::SameLine();
-	ImGui::DragFloat("##SpawnRate", &settings.SpawnRate, 1.0f, 0.0f, FLT_MAX);
+	ImGui::DragFloat("##SpawnRate", &aSettings.SpawnRate, 1.0f, 0.0f, FLT_MAX);
 	//
 
 	//Life Time
@@ -115,11 +113,11 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 		ImGui::Text("Min");
 		ToolTip("Minimum randomizable lifetime for any particle in the emitter (seconds)");
 		ImGui::SameLine();
-		ImGui::DragFloat("##Min", &settings.MinLifeTime, 0.1f, 0, settings.MaxLifeTime);
+		ImGui::DragFloat("##Min", &aSettings.MinLifeTime, 0.1f, 0, aSettings.MaxLifeTime);
 		ImGui::Text("Max");
 		ToolTip("Maximum randomizable lifetime for any particle in the emitter (seconds)");
 		ImGui::SameLine();
-		ImGui::DragFloat("##Max", &settings.MaxLifeTime, 0.1f, settings.MinLifeTime, FLT_MAX);
+		ImGui::DragFloat("##Max", &aSettings.MaxLifeTime, 0.1f, aSettings.MinLifeTime, FLT_MAX);
 
 		ImGui::TreePop();
 	}
@@ -132,17 +130,17 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 		ImGui::Text("Start");
 		ToolTip("The scale of the particle when it spawns");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##StartScale", &settings.StartScale.x, 0.1f, 0.0f, FLT_MAX);
+		ImGui::DragFloat3("##StartScale", &aSettings.StartScale.x, 0.1f, 0.0f, FLT_MAX);
 
 		ImGui::Text("End");
 		ToolTip("The scale of the particle before it disappears");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##EndScale", &settings.EndScale.x, 0.1f, 0.0f, FLT_MAX);
+		ImGui::DragFloat3("##EndScale", &aSettings.EndScale.x, 0.1f, 0.0f, FLT_MAX);
 
 		ImGui::Text("Scale Multiplier");
 		ToolTip("Introduces a variation in scale between the particles. For each particle, a number between 1 and Scale Multiplier will be generated and multiplied by the Start- and Endscale of that particle");
 		ImGui::SameLine();
-		ImGui::DragFloat("##ScaleMultiplier", &settings.ScaleMultiplier, 0.05f, 0.0f, FLT_MAX);
+		ImGui::DragFloat("##ScaleMultiplier", &aSettings.ScaleMultiplier, 0.05f, 0.0f, FLT_MAX);
 
 		ImGui::TreePop();
 	}
@@ -152,8 +150,8 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	if (ImGui::TreeNode("Color"))
 	{
 		ToolTip("The color of a particle will interpolate between StartColor and EndColor during its lifetime");
-		ImGui::ColorPicker4("StartColor", &settings.StartColor.x);
-		ImGui::ColorPicker4("EndColor", &settings.EndColor.x);
+		ImGui::ColorPicker4("StartColor", &aSettings.StartColor.x);
+		ImGui::ColorPicker4("EndColor", &aSettings.EndColor.x);
 
 		ImGui::TreePop();
 	}
@@ -166,17 +164,17 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 		ImGui::Text("Start");
 		ToolTip("The speed of the particle when it spawns (centimeters/second)");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##StartSpeed", &settings.StartSpeed.x, 0.5f, -FLT_MAX, FLT_MAX);
+		ImGui::DragFloat3("##StartSpeed", &aSettings.StartSpeed.x, 0.5f, -FLT_MAX, FLT_MAX);
 
 		ImGui::Text("End");
 		ToolTip("The speed of the particle before it disappears (centimeters/second)");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##EndSpeed", &settings.EndSpeed.x, 0.5f, -FLT_MAX, FLT_MAX);
+		ImGui::DragFloat3("##EndSpeed", &aSettings.EndSpeed.x, 0.5f, -FLT_MAX, FLT_MAX);
 
 		ImGui::Text("Speed Multiplier");
 		ToolTip("Introduces a variation in speed between the particles. For each particle, a number between 1 and Speed Multiplier will be generated and multiplied by the Start- and Endspeed of that particle");
 		ImGui::SameLine();
-		ImGui::DragFloat("##SpeedMultiplier", &settings.SpeedMultiplier, 0.05f, 0.0f, FLT_MAX);
+		ImGui::DragFloat("##SpeedMultiplier", &aSettings.SpeedMultiplier, 0.05f, 0.0f, FLT_MAX);
 
 		ImGui::TreePop();
 	}
@@ -186,19 +184,19 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	if (ImGui::TreeNode("Acceleration"))
 	{
 		ToolTip("The acceleration of a particle will affect the speed of that particle over time, like gravity (centimeters/second^2)");
-		ImGui::Checkbox("Use Acceleration", &settings.UseAcceleration);
+		ImGui::Checkbox("Use Acceleration", &aSettings.UseAcceleration);
 
-		if (settings.UseAcceleration)
+		if (aSettings.UseAcceleration)
 		{
 			ImGui::Text("Acceleration");
 			ToolTip("The acceleration of the particles in each direction (centimeters/second^2)");
 			ImGui::SameLine();
-			ImGui::DragFloat3("##Acceleration", &settings.Acceleration.x, 0.5f, -FLT_MAX, FLT_MAX);
+			ImGui::DragFloat3("##Acceleration", &aSettings.Acceleration.x, 0.5f, -FLT_MAX, FLT_MAX);
 
 			ImGui::Text("Maximum Speed");
 			ToolTip("The maximum speed allowed for any particle (centimeters/second)");
 			ImGui::SameLine();
-			ImGui::DragFloat("##MaxSpeed", &settings.MaxSpeed, 0.5f, 0.0f, FLT_MAX);
+			ImGui::DragFloat("##MaxSpeed", &aSettings.MaxSpeed, 0.5f, 0.0f, FLT_MAX);
 		}
 
 		ImGui::TreePop();
@@ -210,23 +208,28 @@ void ParticleEditor::Update(std::vector<ParticleSystem>& outSystems)
 	//
 
 	//Looping
-	ImGui::Checkbox("Looping", &settings.Looping);
+	ImGui::Checkbox("Looping", &aSettings.Looping);
 	ToolTip("Should the particle emitter loop or stop after one cycle");
 	//
 
 	//Scaled Delta Time
-	ImGui::Checkbox("Use Scaled DeltaTime", &settings.ScaledDeltaTime);
+	ImGui::Checkbox("Use Scaled DeltaTime", &aSettings.ScaledDeltaTime);
 	ToolTip("Should the particle emitter use Scaled Delta Time (affected by time manipulation) or Unscaled Delta Time (Even if time is slowed, the particle emitter runs at full speed)");
 	//
 
 	if (ImGui::Button("Save"))
 	{
-		SaveTemplate(myCurrentTemplate, "TEMPLATETEST.json");
+		ParticleEmitterTemplate save;
+		save.TexturePath = aTexturePath;
+		save.EmitterSettings = aSettings;
+		SaveTemplate(save, "TEMPLATETEST.json");
 	}
 
 	if (ImGui::Button("Load"))
 	{
-		myCurrentTemplate = LoadTemplate("TEMPLATETEST.json");
+		ParticleEmitterTemplate load = LoadTemplate("TEMPLATETEST.json");
+		aTexturePath = load.TexturePath.string();
+		aSettings = load.EmitterSettings;
 	}
 
 	ImGui::End();
