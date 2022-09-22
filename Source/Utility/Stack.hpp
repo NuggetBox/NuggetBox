@@ -13,6 +13,8 @@ namespace Utility
 		int GetSize() const;
 		bool IsEmpty() const;
 
+		void Clear();
+
 		const T& GetTop() const;
 		T& GetTop();
 
@@ -39,6 +41,12 @@ namespace Utility
 	bool Stack<T>::IsEmpty() const
 	{
 		return myObjects.empty();
+	}
+
+	template<class T>
+	void Stack<T>::Clear()
+	{
+		myObjects.clear();
 	}
 
 	template<class T>

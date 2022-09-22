@@ -22,7 +22,7 @@ public:
 	void AddSpotLight(std::shared_ptr<SpotLight> aSpotLight);
 
 	std::shared_ptr<Camera>& GetCamera() { return myCamera; }
-	const std::vector<std::shared_ptr<Model>>& GetModels() const { return myModels; }
+	std::vector<std::shared_ptr<Model>>& GetModels() { return myModels; }
 	const std::vector<std::shared_ptr<ParticleSystem>>& GetParticleSystems() const { return myParticleSystems; }
 	const std::shared_ptr<DirectionalLight>& GetDirectionalLight() const { return myDirectionalLight; }
 	const std::shared_ptr<AmbientLight>& GetAmbientLight() const { return myAmbientLight; }

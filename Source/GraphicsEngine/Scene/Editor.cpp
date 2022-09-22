@@ -51,7 +51,7 @@ void Editor::Initialize(Utility::Vector4<float>& aClearColor, bool& aLerpAnimati
 	}
 }
 
-void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations)
+void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations, std::filesystem::path& aTexturePathToLoad)
 {
 	ImGui::ShowDemoWindow();
 
@@ -225,6 +225,30 @@ void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& a
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Texture Manager"))
+	{
+		if (ImGui::TreeNode("Textures"))
+		{
+			for (auto& file : std::filesystem::recursive_directory_iterator("textures/"))
+			{
+				if (file.is_regular_file())
+				{
+					if (ImGui::TreeNode(file.path().filename().string().c_str()))
+					{
+						if (ImGui::Button("Load"))
+						{
+							aTexturePathToLoad = file.path();
+						}
+						ImGui::TreePop();
+					}
+				}
+			}
+			ImGui::TreePop();
+		}
+
+		ImGui::EndMenu();
+	}
+
 	ImGui::EndMainMenuBar();
 }
 
@@ -311,7 +335,6 @@ void Editor::LoadProperties(bool& aLerpAnimations)
 		}
 	}
 }
-
 
 void Editor::LoadBlendPopup()
 {

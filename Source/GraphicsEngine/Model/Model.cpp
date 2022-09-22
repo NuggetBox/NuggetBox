@@ -24,6 +24,14 @@ const std::vector<Mesh>& Model::GetMeshes() const
 	return myModelData.myMeshes;
 }
 
+void Model::SetMaterial(std::shared_ptr<Material> aMaterial)
+{
+	for (auto& mesh : myModelData.myMeshes)
+	{
+		mesh.SetMaterial(aMaterial);
+	}
+}
+
 void Model::AddSubMesh(const Mesh& aMesh)
 {
 	myModelData.myMeshes.push_back(aMesh);

@@ -5,7 +5,7 @@ class Editor
 {
 public:
 	void Initialize(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations);
-	void UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations);
+	void UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& aLerpAnimations, std::filesystem::path& aTexturePathToLoad);
 
 private:
 	void LoadProperties(bool& aLerpAnimations);

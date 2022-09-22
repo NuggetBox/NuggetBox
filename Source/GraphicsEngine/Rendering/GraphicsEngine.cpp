@@ -24,6 +24,11 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	Utility::Timer::Start();
 
+	auto spiderCat = Model::Load("meshes/SpiderCat.fbx");
+	spiderCat->AddPosition(0, 150, 0);
+	spiderCat->AddRotation(0, 180, 0);
+	myScene.AddModel(spiderCat);
+
 	auto plane = Model::Load("Plane");
 	plane->SetScale({ 100, 100, 100 });
 	myScene.AddModel(plane);
@@ -58,11 +63,6 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	gremlin2->PlayAnimation("Run");
 	myScene.AddModel(gremlin2);
 
-	auto spiderCat = Model::Load("meshes/SpiderCat.fbx");
-	spiderCat->AddPosition(0, 150, 0);
-	spiderCat->AddRotation(0, 180, 0);
-	myScene.AddModel(spiderCat);
-
 	auto sphere = Model::Load("meshes/sphere.fbx");
 	sphere->AddPosition(500, 250, 0);
 	sphere->SetScale(Vector3f(50, 50, 50));
@@ -90,7 +90,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	//POINT LIGHT TESTING
-	auto pointLight = PointLight::Create({ 0, 1, 0 }, 300000, { -500, 50, 0 }, 300);
+	auto pointLight = PointLight::Create({ 0, 1, 0 }, 100000, { -500, 50, 0 }, 300);
 	auto pointTestCube = Model::Load("Cube");
 	pointTestCube->ShouldSpin();
 	pointTestCube->SetPosition(-600, 50, 0);
@@ -541,7 +541,17 @@ void GraphicsEngine::RenderFrame()
 
 	//ImGui::ShowDemoWindow();
 
-	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations);
+	std::filesystem::path path;
+	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
+
+	if (path != "")
+	{
+		Material mat;
+		mat.SetAlbedoTexture(Texture::Load(path));
+		mat.SetNormalMap(Texture::Load("Textures/T_SpiderCat_N.DDS"));
+		mat.SetSurfaceTexture(Texture::Load("Textures/T_SpiderCat_M.DDS"));
+		myScene.GetModels()[0]->SetMaterial(std::make_shared<Material>(mat));
+	}
 
 	//LEGENDARY TRANSPARENCY MODE
 	/*SetBlendState(BlendState::Additive);

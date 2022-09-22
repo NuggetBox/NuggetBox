@@ -47,6 +47,9 @@ public:
 	//TODO: Fix something
 	Matrix4f* GetBoneTransforms() { return myBoneTransforms; }
 
+	//:(
+	void SetMaterial(std::shared_ptr<Material> aMaterial);
+
 private:
 	void AddSubMesh(const Mesh& aMesh);
 
