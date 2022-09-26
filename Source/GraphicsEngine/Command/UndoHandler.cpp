@@ -1,7 +1,7 @@
 #include "NuggetBox.pch.h"
 #include "UndoHandler.h"
 
-void UndoHandler::Do(Command* aCommand)
+void UndoHandler::Do(std::shared_ptr<Command> aCommand)
 {
 	aCommand->Do();
 	ourRedoStack.Clear();
@@ -10,7 +10,7 @@ void UndoHandler::Do(Command* aCommand)
 
 void UndoHandler::Undo()
 {
-	Command* latestDo = ourUndoStack.GetTop();
+	std::shared_ptr<Command> latestDo = ourUndoStack.GetTop();
 	latestDo->Undo();
 	ourRedoStack.Push(latestDo);
 	ourUndoStack.Pop();
@@ -18,7 +18,7 @@ void UndoHandler::Undo()
 
 void UndoHandler::Redo()
 {
-	Command* latestUndo = ourRedoStack.GetTop();
+	std::shared_ptr<Command> latestUndo = ourRedoStack.GetTop();
 	latestUndo->Do();
 	ourUndoStack.Push(latestUndo);
 	ourRedoStack.Pop();
