@@ -291,7 +291,7 @@ void ParticleEditor::SaveTemplate(const ParticleEmitterTemplate& aTemplate, cons
 	json["SpawnOnSurface"] = settings.SpawnOnSurface;
 
 	std::ofstream file(aPath.string());
-	file << json;
+	file << std::setw(4) << json;
 	file.close();
 }
 

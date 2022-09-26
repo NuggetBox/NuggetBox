@@ -126,7 +126,14 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	GetClientRect(myWindowHandle, &clientRect);
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
+	myTEMPSettings = { };
+	myTEMPPath = "";
+
 	myParticleEditor.Initialize();
+	ParticleEmitterTemplate temp;
+	temp.EmitterSettings = myTEMPSettings;
+	temp.TexturePath = "Textures/Ball.dds";
+	myTEMPEmitter.Initialize(temp);
 
 	Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
@@ -517,8 +524,6 @@ void GraphicsEngine::RenderFrame()
 
 	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations);
 
-	std::vector<ParticleSystem> editorSystems;
-	myParticleEditor.Update(editorSystems);
 
 	//LEGENDARY TRANSPARENCY MODE
 	/*SetBlendState(BlendState::Additive);
@@ -603,9 +608,18 @@ void GraphicsEngine::RenderFrame()
 	SetDepthStencilState(DepthStencilState::Off);
 	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
 
+
+
+	myParticleEditor.Update(myTEMPSettings, myTEMPPath);
+	myTEMPEmitter.SetEmitterSettings(myTEMPSettings);
+	myTEMPEmitter.Update();
+
+
+
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
-	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	myForwardRenderer.RenderParticles(camera, myTEMPEmitter);
+	//myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
 	//
 
 	InputHandler::UpdatePreviousState();

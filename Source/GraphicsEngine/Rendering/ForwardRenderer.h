@@ -31,6 +31,8 @@ public:
 						 const std::vector<std::shared_ptr<ParticleSystem>>& aParticleSystemList, 
 						 RenderMode aRenderMode);
 
+	void RenderParticles(const std::shared_ptr<Camera>& aCamera, ParticleEmitter aEmitter);
+
 private:
 	//ComPtr<ID3D11RasterizerState> myRasterizerSate;
 	struct SceneLightBuffer

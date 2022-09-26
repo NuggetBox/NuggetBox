@@ -253,25 +253,38 @@ ParticleEmitterTemplate ParticleEmitter::Load(const std::filesystem::path& aTemp
 	return loadedTemplate;
 }
 
+void ParticleEmitter::SetEmitterSettings(const EmitterSettings& aEmitterSettings)
+{
+	myEmitterSettings = aEmitterSettings;
+}
+
 void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 {
-	myParticles[aParticleIndex].Position.x = GetTransform().GetXPosition();
-	myParticles[aParticleIndex].Position.y = GetTransform().GetYPosition();
-	myParticles[aParticleIndex].Position.z = GetTransform().GetZPosition();
-	myParticles[aParticleIndex].Color = myEmitterSettings.StartColor;
+	ParticleVertex& particle = myParticles[aParticleIndex];
 
-	//TODO: Temp cone emitter code
-	float x = (std::rand() % 200) - 100;
-	float y = (std::rand() % 200) - 100;
+	//TODO: Random float between min and mix lifetime
+	particle.LifeTime = myEmitterSettings.MinLifeTime;
 
-	float c = sqrt(x * x + y * y);
-	x /= c;
-	y /= c;
+	particle.Scale = myEmitterSettings.StartScale /** Random(1, ScaleMultiplier)*/;
 
-	x *= 50;
-	y *= 50;
+	particle.Color = myEmitterSettings.StartColor;
 
-	myParticles[aParticleIndex].Velocity = myEmitterSettings.StartSpeed + Utility::Vector3f(x, 0, y);
-	myParticles[aParticleIndex].Scale = myEmitterSettings.StartScale;
-	myParticles[aParticleIndex].LifeTime = aLifeTime;
+	particle.Velocity = myEmitterSettings.StartSpeed /** Random(1, SpeedMultiplier)*/;
+
+	switch (myEmitterSettings.EmitterType)
+	{
+		case EmitterType::Cone:
+		{
+			break;
+		}
+		case EmitterType::Sphere:
+		{
+			break;
+		}
+	}
+
+	//TODO: Get from entity pos later and spawn based on cone or sphere
+	particle.Position.x = GetTransform().GetXPosition();
+	particle.Position.y = GetTransform().GetYPosition();
+	particle.Position.z = GetTransform().GetZPosition();
 }

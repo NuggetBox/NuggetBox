@@ -205,3 +205,45 @@ void ForwardRenderer::RenderParticles(const std::shared_ptr<Camera>& aCamera,
         }
     }
 }
+
+void ForwardRenderer::RenderParticles(const std::shared_ptr<Camera>& aCamera, ParticleEmitter aEmitter)
+{
+    D3D11_MAPPED_SUBRESOURCE bufferData;
+
+    //Update frame buffer data for this frame, later to be used as resource
+    myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
+    myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
+    myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
+    myFrameBufferData.RenderMode = 0;
+
+    //Map frame buffer resource
+    ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+    AssertIfFailed(DX11::Context->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
+    memcpy_s(bufferData.pData, sizeof(FrameBufferData), &myFrameBufferData, sizeof(FrameBufferData));
+    DX11::Context->Unmap(myFrameBuffer.Get(), 0);
+
+    //Give frame buffer as a resource to vs, gs & ps
+    DX11::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+    DX11::Context->GSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+    DX11::Context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+
+    myObjectBufferData.World = Matrix4f();
+
+    //MAYBE Cursed bool padding problems, zeromemory for now
+    ZeroMemory(&myObjectBufferData.HasBones, 16);
+    myObjectBufferData.HasBones = false;
+
+    //Map object buffer resource
+    ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+    AssertIfFailed(DX11::Context->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
+    memcpy_s(bufferData.pData, sizeof(ObjectBufferData), &myObjectBufferData, sizeof(ObjectBufferData));
+    DX11::Context->Unmap(myObjectBuffer.Get(), 0);
+
+    //Give object buffer as a resource to vs, gs, ps
+    DX11::Context->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+    DX11::Context->GSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+    DX11::Context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+
+    aEmitter.Bind();
+    aEmitter.Draw();
+}

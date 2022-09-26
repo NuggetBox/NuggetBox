@@ -36,6 +36,7 @@ public:
 
 	static ParticleEmitterTemplate Load(const std::filesystem::path& aTemplatePath);
 
+	void SetEmitterSettings(const EmitterSettings& aEmitterSettings);
 	const EmitterSettings& GetEmitterSettings() const { return myEmitterSettings; }
 
 private:

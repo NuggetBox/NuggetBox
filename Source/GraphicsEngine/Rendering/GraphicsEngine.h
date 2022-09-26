@@ -101,4 +101,8 @@ private:
 
 	// Container window message pump.
 	static LRESULT CALLBACK WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
+
+	ParticleEmitter myTEMPEmitter;
+	EmitterSettings myTEMPSettings;
+	std::string myTEMPPath;
 };
