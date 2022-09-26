@@ -4,9 +4,10 @@
 class BoolEditCommand : public Command
 {
 public:
-	BoolEditCommand(std::shared_ptr<bool> aEditedBool, bool aNewValue);
+	BoolEditCommand(std::shared_ptr<bool> aEditedBool);
 	void Do() override;
 	void Undo() override;
-private:
-};
 
+private:
+	std::shared_ptr<bool> myEditedBool;
+};
