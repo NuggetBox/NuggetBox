@@ -263,7 +263,7 @@ void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 	ParticleVertex& particle = myParticles[aParticleIndex];
 
 	//TODO: Random float between min and mix lifetime
-	particle.LifeTime = myEmitterSettings.MinLifeTime;
+	particle.LifeTime = 0;
 
 	particle.Scale = myEmitterSettings.StartScale /** Random(1, ScaleMultiplier)*/;
 

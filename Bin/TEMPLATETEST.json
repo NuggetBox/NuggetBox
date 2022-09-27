@@ -1,55 +1,55 @@
 {
     "Acceleration": [
         0.0,
-        -982.0,
+        0.0,
         0.0
     ],
     "AimForEdge": true,
-    "EmitterType": 1,
+    "EmitterType": 0,
     "EndColor": [
-        0.966292142868042,
-        1.0,
+        0.8801498413085938,
+        0.0,
         0.0,
         1.0
     ],
     "EndScale": [
-        10.100000381469727,
-        56.099998474121094,
-        1.0
+        20.0,
+        20.0,
+        20.0
     ],
     "EndSpeed": [
-        32.5,
-        -92.0,
+        0.0,
+        0.0,
         0.0
     ],
     "InnerRadius": 10.0,
-    "Looping": false,
+    "Looping": true,
     "MaxLifeTime": 5.0,
     "MaxSpeed": 2500.0,
-    "MinLifeTime": 5.0,
+    "MinLifeTime": 2.0,
     "OuterRadius": 50.0,
     "Radius": 50.0,
-    "ScaleMultiplier": 1.0,
+    "ScaleMultiplier": 3.0,
     "ScaledDeltaTime": true,
     "SpawnOnEdge": true,
     "SpawnOnSurface": true,
     "SpawnRate": 50.0,
-    "SpeedMultiplier": 1.0,
+    "SpeedMultiplier": 2.0,
     "StartColor": [
-        0.8014981150627136,
-        0.0,
+        1.0,
+        0.7640449404716492,
         0.0,
         1.0
     ],
     "StartScale": [
-        34.099998474121094,
-        37.0,
-        1.0
+        15.0,
+        15.0,
+        15.0
     ],
     "StartSpeed": [
-        -56.5,
+        0.0,
         100.0,
-        219.5
+        0.0
     ],
     "TexturePath": "",
     "UseAcceleration": false
