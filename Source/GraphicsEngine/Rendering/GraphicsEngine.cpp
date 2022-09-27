@@ -10,6 +10,7 @@
 #include "InputHandler.h"
 #include "Timer.h"
 #include "imgui/imgui.h"
+#include "Scene/Hierarchy.h"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
@@ -118,11 +119,14 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
 	myShadowRenderer.Initialize();
+	//myPostProcessRenderer.Initialize();
 
 	myLerpAnimations = true;
 	myDragAccept = false;
 
 	myEditor.Initialize(myClearColor, myLerpAnimations);
+
+	Hierarchy::Initialize();
 
 	RECT clientRect;
 	GetClientRect(myWindowHandle, &clientRect);
@@ -543,6 +547,8 @@ void GraphicsEngine::RenderFrame()
 
 	std::filesystem::path path;
 	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
+
+	Hierarchy::Update();
 
 	if (path != "")
 	{

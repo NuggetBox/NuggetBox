@@ -1,6 +1,7 @@
 #pragma once
 #include "ForwardRenderer.h"
 #include "DeferredRenderer.h"
+#include "PostProcessRenderer.h"
 #include "Scene/Scene.h"
 #include "RenderStructs.h"
 #include "GBuffer.h"
@@ -85,6 +86,7 @@ private:
 	DeferredRenderer myDeferredRenderer;
 	std::unique_ptr<GBuffer> myGBuffer;
 	ShadowRenderer myShadowRenderer;
+	PostProcessRenderer myPostProcessRenderer;
 
 	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 
