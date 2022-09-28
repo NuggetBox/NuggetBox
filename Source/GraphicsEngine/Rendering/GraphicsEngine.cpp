@@ -64,6 +64,30 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	gremlin2->PlayAnimation("Run");
 	myScene.AddModel(gremlin2);
 
+	auto minion = Model::Load("Meshes/minion_sk.fbx");
+	minion->AddPosition(-100, 0, -200);
+	minion->LoadAnimation("Meshes/minion_idle_anim.fbx", "Idle");
+	minion->LoadAnimation("Meshes/minion_run_anim.fbx", "Run");
+	minion->LoadAnimation("Meshes/minion_attack_anim.fbx", "Attack");
+	minion->PlayAnimation("Idle");
+	myScene.AddModel(minion);
+
+	auto minion2 = Model::Load("Meshes/minion_sk.fbx");
+	minion2->AddPosition(0, 0, -200);
+	minion2->LoadAnimation("Meshes/minion_idle_anim.fbx", "Idle");
+	minion2->LoadAnimation("Meshes/minion_run_anim.fbx", "Run");
+	minion2->LoadAnimation("Meshes/minion_attack_anim.fbx", "Attack");
+	minion2->PlayAnimation("Run");
+	myScene.AddModel(minion2);
+
+	auto minion3 = Model::Load("Meshes/minion_sk.fbx");
+	minion3->AddPosition(100, 0, -200);
+	minion3->LoadAnimation("Meshes/minion_idle_anim.fbx", "Idle");
+	minion3->LoadAnimation("Meshes/minion_run_anim.fbx", "Run");
+	minion3->LoadAnimation("Meshes/minion_attack_anim.fbx", "Attack");
+	minion3->PlayAnimation("Attack");
+	myScene.AddModel(minion3);
+
 	auto sphere = Model::Load("meshes/sphere.fbx");
 	sphere->AddPosition(500, 250, 0);
 	sphere->SetScale(Vector3f(50, 50, 50));

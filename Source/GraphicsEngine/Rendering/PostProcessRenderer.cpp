@@ -4,10 +4,10 @@
 void PostProcessRenderer::Initialize()
 {
 	std::array<std::string, static_cast<size_t>(PostProcessPass::COUNT)> shaderPaths;
-	shaderPaths[static_cast<size_t>(PostProcessPass::Copy)] = "PP-Copy.cso";
-	shaderPaths[static_cast<size_t>(PostProcessPass::Luminance)] = "PP-Luminance.cso";
-	shaderPaths[static_cast<size_t>(PostProcessPass::Gaussian)] = "PP-Gaussian.cso";
-	shaderPaths[static_cast<size_t>(PostProcessPass::Bloom)] = "PP-Bloom.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Copy)] = "PP_Copy.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Luminance)] = "PP_Luminance.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Gaussian)] = "PP_Gaussian.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Bloom)] = "PP_Bloom.cso";
 
 	for (int i = 0; i < static_cast<int>(PostProcessPass::COUNT); ++i)
 	{
