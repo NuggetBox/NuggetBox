@@ -48,14 +48,14 @@ void DepthStencil::Clear()
 	DX11::Context->ClearDepthStencilView(myDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
-void DepthStencil::SetRenderTarget()
+void DepthStencil::SetAsRenderTarget()
 {
 	ID3D11RenderTargetView* impostorBackBuffer = nullptr;
 	DX11::Context->OMSetRenderTargets(1, &impostorBackBuffer, myDSV.Get());
 	DX11::Context->RSSetViewports(1, &myViewport);
 }
 
-void DepthStencil::BindShadowResource(unsigned aSlot)
+void DepthStencil::SetAsResource(unsigned aSlot)
 {
 	DX11::Context->PSSetShaderResources(aSlot, 1, mySRV.GetAddressOf());
 }

@@ -23,6 +23,10 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	SetupDepthStencilStates();
 	SetupSamplerStates();
 
+	RECT clientRect;
+	GetClientRect(myWindowHandle, &clientRect);
+	POINT clientSize = { clientRect.right - clientRect.left, clientRect.bottom - clientRect.top };
+
 	Utility::Timer::Start();
 
 	auto spiderCat = Model::Load("meshes/SpiderCat.fbx");
@@ -63,30 +67,6 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	gremlin2->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
 	gremlin2->PlayAnimation("Run");
 	myScene.AddModel(gremlin2);
-
-	auto minion = Model::Load("Meshes/minion_sk.fbx");
-	minion->AddPosition(-100, 0, -200);
-	minion->LoadAnimation("Meshes/minion_idle_anim.fbx", "Idle");
-	minion->LoadAnimation("Meshes/minion_run_anim.fbx", "Run");
-	minion->LoadAnimation("Meshes/minion_attack_anim.fbx", "Attack");
-	minion->PlayAnimation("Idle");
-	myScene.AddModel(minion);
-
-	auto minion2 = Model::Load("Meshes/minion_sk.fbx");
-	minion2->AddPosition(0, 0, -200);
-	minion2->LoadAnimation("Meshes/minion_idle_anim.fbx", "Idle");
-	minion2->LoadAnimation("Meshes/minion_run_anim.fbx", "Run");
-	minion2->LoadAnimation("Meshes/minion_attack_anim.fbx", "Attack");
-	minion2->PlayAnimation("Run");
-	myScene.AddModel(minion2);
-
-	auto minion3 = Model::Load("Meshes/minion_sk.fbx");
-	minion3->AddPosition(100, 0, -200);
-	minion3->LoadAnimation("Meshes/minion_idle_anim.fbx", "Idle");
-	minion3->LoadAnimation("Meshes/minion_run_anim.fbx", "Run");
-	minion3->LoadAnimation("Meshes/minion_attack_anim.fbx", "Attack");
-	minion3->PlayAnimation("Attack");
-	myScene.AddModel(minion3);
 
 	auto sphere = Model::Load("meshes/sphere.fbx");
 	sphere->AddPosition(500, 250, 0);
@@ -137,13 +117,17 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
 	myScene.AddSpotLight(spotLight);
 
-	/*auto spotLight2 = SpotLight::Create({ 1, 0, 0 }, 999999, { 0, 450, 0 }, 1000, { 90, 0, 0 }, 75, 200);
-	myScene.AddSpotLight(spotLight2);*/
+	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y);
+	myIntermediateTargetB = RenderTarget::Create(clientSize.x, clientSize.y);
+	myHalfSizeTarget = RenderTarget::Create(clientSize.x / 2, clientSize.y / 2);
+	myQuarterSizeTarget = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
+	myBlurTargetA = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
+	myBlurTargetB = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
 
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
 	myShadowRenderer.Initialize();
-	//myPostProcessRenderer.Initialize();
+	myPostProcessRenderer.Initialize();
 
 	myLerpAnimations = true;
 	myDragAccept = false;
@@ -152,8 +136,6 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	Hierarchy::Initialize();
 
-	RECT clientRect;
-	GetClientRect(myWindowHandle, &clientRect);
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
 	Timer::Update();
@@ -535,6 +517,16 @@ std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
 void GraphicsEngine::BeginFrame()
 {
 	Timer::Update();
+
+	myIntermediateTargetA->Clear(myClearColor);
+	myIntermediateTargetB->Clear(myClearColor);
+	myHalfSizeTarget->Clear(myClearColor);
+	myQuarterSizeTarget->Clear(myClearColor);
+	myBlurTargetA->Clear(myClearColor);
+	myBlurTargetB->Clear(myClearColor);
+
+	ResetViewport();
+
 	DX11::BeginFrame(myClearColor);
 }
 
@@ -566,8 +558,6 @@ void GraphicsEngine::RenderFrame()
 	{
 		particleSystem->Update();
 	}
-
-	//ImGui::ShowDemoWindow();
 
 	std::filesystem::path path;
 	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
@@ -640,7 +630,7 @@ void GraphicsEngine::RenderFrame()
 	}
 
 	myGBuffer->Clear();
-	myGBuffer->SetAsTarget();
+	myGBuffer->SetAsRenderTarget();
 
 	myScene.GetDirectionalLight()->BindShadowMapAsResource(10);
 
@@ -663,16 +653,60 @@ void GraphicsEngine::RenderFrame()
 	}
 
 	myDeferredRenderer.GenerateGBuffer(camera, models);
-	myGBuffer->ClearTarget();
+	myGBuffer->ClearRenderTarget();
 
-	myGBuffer->SetAsResource(0);
-	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+	//DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+	myIntermediateTargetA->SetAsRenderTarget();
+
+	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::Off);
+	myGBuffer->SetAsResource(0);
 	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
 
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
 	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+
+	SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::ReadWrite);
+	myIntermediateTargetB->SetAsRenderTarget();
+	myIntermediateTargetA->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Luminance);
+
+	myHalfSizeTarget->SetAsRenderTarget();
+	myIntermediateTargetB->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Copy);
+
+	myQuarterSizeTarget->SetAsRenderTarget();
+	myHalfSizeTarget->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Copy);
+
+	myBlurTargetA->SetAsRenderTarget();
+	myQuarterSizeTarget->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Gaussian);
+
+	myBlurTargetB->SetAsRenderTarget();
+	myBlurTargetA->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Gaussian);
+
+	myQuarterSizeTarget->SetAsRenderTarget();
+	myBlurTargetB->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Copy);
+
+	myHalfSizeTarget->SetAsRenderTarget();
+	myQuarterSizeTarget->SetAsResource(40);
+	myPostProcessRenderer.Render(PostProcessPass::Copy);
+
+	//Render to backbuffer
+	ResetViewport();
+	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+
+	myIntermediateTargetA->SetAsResource(40);
+	myHalfSizeTarget->SetAsResource(41);
+	myPostProcessRenderer.Render(PostProcessPass::Bloom);
+
+	myIntermediateTargetA->ClearResource(40);
+	myHalfSizeTarget->ClearResource(41);
 	//
 
 	InputHandler::UpdatePreviousState();

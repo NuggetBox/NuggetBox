@@ -7,8 +7,8 @@ public:
 	DepthStencil() = default;
 	static std::shared_ptr<DepthStencil> Create(int aWidth, int aHeight);
 	void Clear();
-	void SetRenderTarget();
-	void BindShadowResource(unsigned aSlot);
+	void SetAsRenderTarget();
+	void SetAsResource(unsigned aSlot);
 
 private:
 	ComPtr<ID3D11Resource> myTexture;

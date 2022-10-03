@@ -7,6 +7,7 @@
 #include "GBuffer.h"
 #include "ShadowRenderer.h"
 #include "Scene/Editor.h"
+#include "Rendering/RenderTarget.h"
 
 enum class BlendState
 {
@@ -87,6 +88,13 @@ private:
 	std::unique_ptr<GBuffer> myGBuffer;
 	ShadowRenderer myShadowRenderer;
 	PostProcessRenderer myPostProcessRenderer;
+
+	std::shared_ptr<RenderTarget> myIntermediateTargetA;
+	std::shared_ptr<RenderTarget> myIntermediateTargetB;
+	std::shared_ptr<RenderTarget> myHalfSizeTarget;
+	std::shared_ptr<RenderTarget> myQuarterSizeTarget;
+	std::shared_ptr<RenderTarget> myBlurTargetA;
+	std::shared_ptr<RenderTarget> myBlurTargetB;
 
 	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 

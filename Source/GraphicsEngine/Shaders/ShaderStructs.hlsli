@@ -79,7 +79,6 @@ Texture2D albedoTexture : register(t0);
 Texture2D normalTexture : register(t1);
 Texture2D surfaceTexture : register(t2);
 
-//TODO: clean mess
 Texture2D vertexNormalTexture : register(t3);
 Texture2D worldPositionTexture : register(t4);
 Texture2D ambientOcclusionTexture : register(t5);

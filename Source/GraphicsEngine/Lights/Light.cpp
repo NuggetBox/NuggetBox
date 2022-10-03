@@ -19,7 +19,7 @@ void Light::SetShadowMapAsTarget(unsigned anIndex)
 {
 	if (myShadowMap)
 	{
-		myShadowMap->SetRenderTarget();
+		myShadowMap->SetAsRenderTarget();
 	}
 }
 
@@ -27,6 +27,6 @@ void Light::BindShadowMapAsResource(unsigned aSlot)
 {
 	if (myShadowMap)
 	{
-		myShadowMap->BindShadowResource(aSlot);
+		myShadowMap->SetAsResource(aSlot);
 	}
 }

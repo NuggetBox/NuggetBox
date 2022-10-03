@@ -125,7 +125,7 @@ void PointLight::SetShadowMapAsTarget(unsigned anIndex)
 	{
 		if (myExtraShadowMaps[anIndex - 1])
 		{
-			myExtraShadowMaps[anIndex - 1]->SetRenderTarget();
+			myExtraShadowMaps[anIndex - 1]->SetAsRenderTarget();
 		}
 	}
 }
@@ -138,7 +138,7 @@ void PointLight::BindShadowMapAsResource(unsigned aSlot)
 	{
 		if (myExtraShadowMaps[i])
 		{
-			myExtraShadowMaps[i]->BindShadowResource(aSlot + i + 1);
+			myExtraShadowMaps[i]->SetAsResource(aSlot + i + 1);
 		}
 	}
 }

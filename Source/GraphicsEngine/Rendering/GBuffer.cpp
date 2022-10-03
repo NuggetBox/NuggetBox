@@ -28,7 +28,7 @@ std::unique_ptr<GBuffer> GBuffer::CreateGBuffer(RECT aClientRect)
 	return std::make_unique<GBuffer>(gBuffer);
 }
 
-void GBuffer::SetAsTarget() const
+void GBuffer::SetAsRenderTarget() const
 {
 	ID3D11RenderTargetView* myRTVList[GBufferTexture::GB_COUNT];
 	for (unsigned i = 0; i < GBufferTexture::GB_COUNT; ++i)
@@ -39,7 +39,7 @@ void GBuffer::SetAsTarget() const
 	DX11::Context->OMSetRenderTargets(GBufferTexture::GB_COUNT, &myRTVList[0], DX11::DepthBuffer.Get());
 }
 
-void GBuffer::ClearTarget() const
+void GBuffer::ClearRenderTarget() const
 {
 	ID3D11RenderTargetView* emptyViews[GBufferTexture::GB_COUNT];
 	for (unsigned i = 0; i < GBufferTexture::GB_COUNT; ++i)
