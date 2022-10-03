@@ -668,7 +668,7 @@ void GraphicsEngine::RenderFrame()
 	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
 
 	SetBlendState(BlendState::None);
-	SetDepthStencilState(DepthStencilState::ReadWrite);
+	SetDepthStencilState(DepthStencilState::Off);
 	myIntermediateTargetB->SetAsRenderTarget();
 	myIntermediateTargetA->SetAsResource(40);
 	myPostProcessRenderer.Render(PostProcessPass::Luminance);

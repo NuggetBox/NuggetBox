@@ -3,13 +3,7 @@
 
 void RenderTarget::SetAsRenderTarget()
 {
-	/*ComPtr<ID3D11RenderTargetView> currentRTV;
-	ComPtr<ID3D11DepthStencilView> currentDSV;
-	DX11::Context->OMGetRenderTargets(1, currentRTV.GetAddressOf(), currentDSV.GetAddressOf());
-	DX11::Context->OMSetRenderTargets(1, myRTV.GetAddressOf(), currentDSV.Get());
-	DX11::Context->RSSetViewports(1, &myViewport);*/
-
-	DX11::Context->OMSetRenderTargets(1, myRTV.GetAddressOf(), nullptr);
+	DX11::Context->OMSetRenderTargets(1, myRTV.GetAddressOf(), DX11::DepthBuffer.Get());
 	DX11::Context->RSSetViewports(1, &myViewport);
 }
 
