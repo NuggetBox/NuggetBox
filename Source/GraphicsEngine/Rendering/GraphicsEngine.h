@@ -95,9 +95,9 @@ private:
 	std::shared_ptr<RenderTarget> myQuarterSizeTarget;
 	std::shared_ptr<RenderTarget> myBlurTargetA;
 	std::shared_ptr<RenderTarget> myBlurTargetB;
+	bool myLuminanceSwitch = false;
 
 	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
-
 	bool myLerpAnimations;
 
 	bool myDragAccept;

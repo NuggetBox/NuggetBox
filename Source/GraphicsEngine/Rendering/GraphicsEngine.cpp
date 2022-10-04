@@ -91,7 +91,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	fire->LoadAndInitialize("Json/ParticleSystems/System2.json");
 	myScene.AddParticleSystem(fire);
 
-	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 0.5f, Vector3f(45, -45, 0)));
+	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(45, -45, 0)));
 	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
 
 	//POINT LIGHT TESTING
@@ -99,6 +99,9 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	auto pointTestCube = Model::Load("Cube");
 	pointTestCube->ShouldSpin();
 	pointTestCube->SetPosition(-600, 50, 0);
+
+	/*auto pointLight2 = PointLight::Create({ 0, 1, 0 }, 100000, { -200, 50, 0 }, 300);
+	myScene.AddPointLight(pointLight2);*/
 
 	myScene.AddModel(pointTestCube);
 	myScene.AddPointLight(pointLight);
@@ -114,7 +117,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	}*/
 	//
 
-	auto spotLight = SpotLight::Create({0, 0, 1}, 999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
+	auto spotLight = SpotLight::Create({1, 0, 1}, 5999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
 	myScene.AddSpotLight(spotLight);
 
 	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y);
@@ -195,7 +198,12 @@ void GraphicsEngine::ResizeWindow(HWND aHWND, UINT someWidth, UINT someHeight)
 void GraphicsEngine::InputRenderMode()
 {
 #ifdef _DEBUG
-	UINT currentRenderMode = static_cast<UINT>(myRenderMode);
+	if (Utility::InputHandler::GetKeyDown(VK_F6))
+	{
+		myLuminanceSwitch = !myLuminanceSwitch;
+	}
+
+	/*UINT currentRenderMode = static_cast<UINT>(myRenderMode);
 
 	if (Utility::InputHandler::GetKeyDown(VK_F6))
 	{
@@ -222,7 +230,7 @@ void GraphicsEngine::InputRenderMode()
 
 		SetRenderMode(static_cast<RenderMode>(currentRenderMode));
 		DebugLogger::Message("Render Mode set to: " + RenderModeToString(myRenderMode));
-	}
+	}*/
 #endif
 }
 
@@ -669,44 +677,55 @@ void GraphicsEngine::RenderFrame()
 
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::Off);
-	myIntermediateTargetB->SetAsRenderTarget();
-	myIntermediateTargetA->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Luminance);
 
-	myHalfSizeTarget->SetAsRenderTarget();
-	myIntermediateTargetB->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Copy);
+	if (myLuminanceSwitch)
+	{
+		ResetViewport();
+		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+		myIntermediateTargetA->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Luminance);
+	}
+	else
+	{
+		myIntermediateTargetB->SetAsRenderTarget();
+		myIntermediateTargetA->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Luminance);
 
-	myQuarterSizeTarget->SetAsRenderTarget();
-	myHalfSizeTarget->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myHalfSizeTarget->SetAsRenderTarget();
+		myIntermediateTargetB->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Copy);
 
-	myBlurTargetA->SetAsRenderTarget();
-	myQuarterSizeTarget->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Gaussian);
+		myQuarterSizeTarget->SetAsRenderTarget();
+		myHalfSizeTarget->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Copy);
 
-	myBlurTargetB->SetAsRenderTarget();
-	myBlurTargetA->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Gaussian);
+		myBlurTargetA->SetAsRenderTarget();
+		myQuarterSizeTarget->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Gaussian);
 
-	myQuarterSizeTarget->SetAsRenderTarget();
-	myBlurTargetB->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myBlurTargetB->SetAsRenderTarget();
+		myBlurTargetA->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Gaussian);
 
-	myHalfSizeTarget->SetAsRenderTarget();
-	myQuarterSizeTarget->SetAsResource(40);
-	myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myQuarterSizeTarget->SetAsRenderTarget();
+		myBlurTargetB->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Copy);
 
-	//Render to backbuffer
-	ResetViewport();
-	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+		myHalfSizeTarget->SetAsRenderTarget();
+		myQuarterSizeTarget->SetAsResource(40);
+		myPostProcessRenderer.Render(PostProcessPass::Copy);
 
-	myIntermediateTargetA->SetAsResource(40);
-	myHalfSizeTarget->SetAsResource(41);
-	myPostProcessRenderer.Render(PostProcessPass::Bloom);
+		//Render to backbuffer
+		ResetViewport();
+		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 
-	myIntermediateTargetA->ClearResource(40);
-	myHalfSizeTarget->ClearResource(41);
+		myIntermediateTargetA->SetAsResource(40);
+		myHalfSizeTarget->SetAsResource(41);
+		myPostProcessRenderer.Render(PostProcessPass::Bloom);
+
+		myIntermediateTargetA->ClearResource(40);
+		myHalfSizeTarget->ClearResource(41);
+	}
 	//
 
 	InputHandler::UpdatePreviousState();

@@ -6,10 +6,10 @@ void PostProcessRenderer::Initialize()
 	myFullscreenVS = VertexShader::Load("Shaders/Fullscreen_VS.cso");
 
 	std::array<std::string, static_cast<size_t>(PostProcessPass::COUNT)> shaderPaths;
-	shaderPaths[static_cast<size_t>(PostProcessPass::Copy)] = "Shaders/Copy_PS.cso";
-	shaderPaths[static_cast<size_t>(PostProcessPass::Luminance)] = "Shaders/Luminance_PS.cso";
-	shaderPaths[static_cast<size_t>(PostProcessPass::Gaussian)] = "Shaders/Gaussian_PS.cso";
-	shaderPaths[static_cast<size_t>(PostProcessPass::Bloom)] = "Shaders/Bloom_PS.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Copy)] = "Shaders/PP_Copy_PS.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Luminance)] = "Shaders/PP_Luminance_PS.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Gaussian)] = "Shaders/PP_Gaussian_PS.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::Bloom)] = "Shaders/PP_Bloom_PS.cso";
 
 	for (int i = 0; i < static_cast<int>(PostProcessPass::COUNT); ++i)
 	{

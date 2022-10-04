@@ -32,6 +32,9 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	const float emissiveStrength = surface.a;
 	//
 
+#define EMISSIVE_BOOST (2.0f);
+	const float3 emissiveColor = albedo.rgb * emissive * emissiveStrength * EMISSIVE_BOOST;
+
 	//Get toeye, speccolor, diffusecolor
 	const float3 toEye = normalize(FB_CamTranslation.xyz - worldPosition.xyz);
 	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
@@ -177,8 +180,8 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	}
 	//
 
-	//assemble light, lineartogamma
-	result.Color.rgb = LinearToGamma(ambientLighting + directionalLighting + emissive * emissiveStrength * albedo + pointLight + spotLight);
+	//assemble light, no more lineartogamma due to postprocess effects
+	result.Color.rgb = ambientLighting + directionalLighting + emissiveColor + pointLight + spotLight;
 	result.Color.a = 1.0f;
 
 	//TODO: Rendermodes for deferred rendering
