@@ -120,14 +120,14 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	auto spotLight = SpotLight::Create({1, 0, 1}, 5999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
 	myScene.AddSpotLight(spotLight);
 
-	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y);
-	myIntermediateTargetB = RenderTarget::Create(clientSize.x, clientSize.y);
-	myHalfSizeTarget = RenderTarget::Create(clientSize.x / 2, clientSize.y / 2);
-	myQuarterSizeTarget = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
-	myBlurTargetA = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
-	myBlurTargetB = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
+	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	myIntermediateTargetB = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	myHalfSizeTarget = RenderTarget::Create(clientSize.x / 2, clientSize.y / 2, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	myQuarterSizeTarget = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	myBlurTargetA = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	myBlurTargetB = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	mySSAOTarget = RenderTarget::Create(clientSize.x, clientSize.y);
+	mySSAOTarget = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32_FLOAT);
 	myBlueNoise = Texture::Load("Textures/BlueNoise.dds");
 
 	myForwardRenderer.Initialize();
@@ -699,10 +699,12 @@ void GraphicsEngine::RenderFrame()
 	myGBuffer->SetAsResource(0);
 
 	//SSAO Pass
-	/*mySSAOTarget->SetAsRenderTarget();
+	mySSAOTarget->SetAsRenderTarget();
 	myBlueNoise->SetAsResource(8);
-	myPostProcessRenderer.Render(PostProcessPass::SSAO, camera);*/
+	myPostProcessRenderer.Render(PostProcessPass::SSAO, camera);
 	//
+
+	mySSAOTarget->SetAsResource(8);
 
 	//DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 	myIntermediateTargetA->SetAsRenderTarget();

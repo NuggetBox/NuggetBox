@@ -10,7 +10,7 @@ enum class PostProcessPass
 	Luminance,
 	Gaussian,
 	Bloom,
-	//SSAO,
+	SSAO,
 	COUNT
 };
 

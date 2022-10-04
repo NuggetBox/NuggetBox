@@ -10,7 +10,7 @@ public:
 	void ClearResource(unsigned aSlot);
 	void Clear(const Utility::Vector4f& aClearColor);
 
-	static std::shared_ptr<RenderTarget> Create(int aWidth, int aHeight);
+	static std::shared_ptr<RenderTarget> Create(int aWidth, int aHeight, DXGI_FORMAT aFormat);
 
 private:
 	ComPtr<ID3D11Texture2D> myTexture;

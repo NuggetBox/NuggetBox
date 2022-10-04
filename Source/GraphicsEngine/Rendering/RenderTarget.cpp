@@ -23,7 +23,7 @@ void RenderTarget::Clear(const Utility::Vector4f& aClearColor)
 	DX11::Context->ClearRenderTargetView(myRTV.Get(), &aClearColor.x);
 }
 
-std::shared_ptr<RenderTarget> RenderTarget::Create(int aWidth, int aHeight)
+std::shared_ptr<RenderTarget> RenderTarget::Create(int aWidth, int aHeight, DXGI_FORMAT aFormat)
 {
 	RenderTarget renderTarget;
 
@@ -33,7 +33,7 @@ std::shared_ptr<RenderTarget> RenderTarget::Create(int aWidth, int aHeight)
 	textureDesc.Height = aHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.Format = aFormat;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;

@@ -1,6 +1,7 @@
 #include "CBuffers.hlsli"
 #include "PBRFunctions.hlsli"
 #include "ShaderStructs.hlsli"
+#include "PostProcessStructs.hlsli"
 
 #define MAX_LIGHTS 64
 #include "LightBuffer.hlsli"
@@ -35,14 +36,20 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 #define EMISSIVE_BOOST (2.0f);
 	const float3 emissiveColor = albedo.rgb * emissive * emissiveStrength * EMISSIVE_BOOST;
 
+
 	//Get toeye, speccolor, diffusecolor
 	const float3 toEye = normalize(FB_CamTranslation.xyz - worldPosition.xyz);
 	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
 	const float3 diffuseColor = lerp((float3)0.00f, albedo, 1 - metalness);
 
 	//Calc Ambient+DirLight
-	const float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
+	float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
 	float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
+	//
+
+	//Apply SSAO
+	const float ssao = TextureSlot9.Sample(defaultSampler, input.myUV).r;
+	ambientLighting *= ssao;
 	//
 
 	//Peter panning, tune if it appears
