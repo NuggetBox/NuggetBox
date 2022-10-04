@@ -8,8 +8,13 @@ struct FrameBufferData
 	Utility::Matrix4x4<float> View;
 	Utility::Matrix4x4<float> Projection;
 
+	Utility::Vector4f FrustrumCorners[4];
+
 	Utility::Vector3f CamTranslation;
 	UINT RenderMode;
+
+	Utility::Vector2<unsigned> Resolution;
+	Utility::Vector2f Padding;
 
 	float NearPlane;
 	float FarPlane;

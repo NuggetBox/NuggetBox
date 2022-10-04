@@ -19,6 +19,9 @@ public:
 	float GetFov();
 	void SetFov(float someDegrees);
 
+	float GetNearPlane() { return myNearPlane; }
+	float GetFarPlane() { return myFarPlane; }
+
 private:
 	float myFov;
 	float myNearPlane;

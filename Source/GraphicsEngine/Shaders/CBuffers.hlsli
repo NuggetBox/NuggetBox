@@ -3,8 +3,13 @@ cbuffer FrameBuffer : register(b0)
 	float4x4 FB_ToView;
 	float4x4 FB_ToProjection;
 
+	float4 FB_FrustrumCorners[4];
+
 	float3 FB_CamTranslation;
 	unsigned int FB_RenderMode;
+
+	uint2 FB_Resolution;
+	float2 FB_Padding;
 
 	float FB_NearPlane;
 	float FB_FarPlane;

@@ -127,6 +127,9 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myBlurTargetA = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
 	myBlurTargetB = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4);
 
+	mySSAOTarget = RenderTarget::Create(clientSize.x, clientSize.y);
+	myBlueNoise = Texture::Load("Textures/BlueNoise.dds");
+
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
 	myShadowRenderer.Initialize();
@@ -394,6 +397,7 @@ void GraphicsEngine::SetupDepthStencilStates()
 
 void GraphicsEngine::SetupSamplerStates()
 {
+	//Default
 	D3D11_SAMPLER_DESC defaultSampleDesc{};
 	defaultSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	defaultSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -409,7 +413,27 @@ void GraphicsEngine::SetupSamplerStates()
 	defaultSampleDesc.MinLOD = -D3D11_FLOAT32_MAX;
 	defaultSampleDesc.MaxLOD = -D3D11_FLOAT32_MAX;
 	AssertIfFailed(DX11::Device->CreateSamplerState(&defaultSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::Default)]));
+	//
 
+	//Dunno if works: Wrap
+	/*D3D11_SAMPLER_DESC wrapSampleDesc{};
+	wrapSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	wrapSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	wrapSampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	wrapSampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	wrapSampleDesc.MipLODBias = 0.0f;
+	wrapSampleDesc.MaxAnisotropy = 1;
+	wrapSampleDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	wrapSampleDesc.BorderColor[0] = 1.0f;
+	wrapSampleDesc.BorderColor[1] = 1.0f;
+	wrapSampleDesc.BorderColor[2] = 1.0f;
+	wrapSampleDesc.BorderColor[3] = 1.0f;
+	wrapSampleDesc.MinLOD = -D3D11_FLOAT32_MAX;
+	wrapSampleDesc.MaxLOD = -D3D11_FLOAT32_MAX;
+	AssertIfFailed(DX11::Device->CreateSamplerState(&wrapSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::Wrap)]));*/
+	//
+
+	//Point Clamp
 	D3D11_SAMPLER_DESC pointSampleDesc{};
 	pointSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 	pointSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -419,8 +443,14 @@ void GraphicsEngine::SetupSamplerStates()
 	pointSampleDesc.MinLOD = -FLT_MAX;
 	pointSampleDesc.MaxLOD = FLT_MAX;
 	AssertIfFailed(DX11::Device->CreateSamplerState(&pointSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::PointClamp)]));
+	//
 
-	//Wrap
+	//Point Wrap
+	pointSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	pointSampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	pointSampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	AssertIfFailed(DX11::Device->CreateSamplerState(&pointSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::PointWrap)]));
+	//
 
 	DEBUGLOG("Sampler States Setup Successfully");
 }
@@ -430,7 +460,8 @@ void GraphicsEngine::ResetStates()
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
 	SetSamplerState(SamplerState::Default, 0);
-	SetSamplerState(SamplerState::PointClamp, 1);
+	SetSamplerState(SamplerState::PointWrap, 1);
+	SetSamplerState(SamplerState::PointClamp, 2);
 }
 
 void GraphicsEngine::ResetViewport()
@@ -660,20 +691,33 @@ void GraphicsEngine::RenderFrame()
 		}
 	}
 
+	//Deferred Pass
 	myDeferredRenderer.GenerateGBuffer(camera, models);
+	//
+
 	myGBuffer->ClearRenderTarget();
+	myGBuffer->SetAsResource(0);
+
+	//SSAO Pass
+	/*mySSAOTarget->SetAsRenderTarget();
+	myBlueNoise->SetAsResource(8);
+	myPostProcessRenderer.Render(PostProcessPass::SSAO, camera);*/
+	//
 
 	//DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 	myIntermediateTargetA->SetAsRenderTarget();
 
+	//Draw deferred pass to screen space triangle
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::Off);
-	myGBuffer->SetAsResource(0);
 	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
+	//
 
+	//Particle pass
 	SetBlendState(BlendState::Additive);
 	SetDepthStencilState(DepthStencilState::ReadOnly);
 	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	//
 
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::Off);
@@ -682,49 +726,49 @@ void GraphicsEngine::RenderFrame()
 	{
 		ResetViewport();
 		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
-		myIntermediateTargetA->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Luminance);
+		myIntermediateTargetA->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Luminance, camera);
 	}
 	else
 	{
 		myIntermediateTargetB->SetAsRenderTarget();
-		myIntermediateTargetA->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Luminance);
+		myIntermediateTargetA->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Luminance, camera);
 
 		myHalfSizeTarget->SetAsRenderTarget();
-		myIntermediateTargetB->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myIntermediateTargetB->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
 		myQuarterSizeTarget->SetAsRenderTarget();
-		myHalfSizeTarget->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myHalfSizeTarget->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
 		myBlurTargetA->SetAsRenderTarget();
-		myQuarterSizeTarget->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Gaussian);
+		myQuarterSizeTarget->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Gaussian, camera);
 
 		myBlurTargetB->SetAsRenderTarget();
-		myBlurTargetA->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Gaussian);
+		myBlurTargetA->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Gaussian, camera);
 
 		myQuarterSizeTarget->SetAsRenderTarget();
-		myBlurTargetB->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myBlurTargetB->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
 		myHalfSizeTarget->SetAsRenderTarget();
-		myQuarterSizeTarget->SetAsResource(40);
-		myPostProcessRenderer.Render(PostProcessPass::Copy);
+		myQuarterSizeTarget->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
 		//Render to backbuffer
 		ResetViewport();
 		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 
-		myIntermediateTargetA->SetAsResource(40);
-		myHalfSizeTarget->SetAsResource(41);
-		myPostProcessRenderer.Render(PostProcessPass::Bloom);
+		myIntermediateTargetA->SetAsResource(0);
+		myHalfSizeTarget->SetAsResource(1);
+		myPostProcessRenderer.Render(PostProcessPass::Bloom, camera);
 
-		myIntermediateTargetA->ClearResource(40);
-		myHalfSizeTarget->ClearResource(41);
+		myIntermediateTargetA->ClearResource(0);
+		myHalfSizeTarget->ClearResource(1);
 	}
 	//
 

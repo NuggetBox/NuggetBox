@@ -28,7 +28,9 @@ enum class DepthStencilState
 enum class SamplerState
 {
 	Default,
+	Wrap,
 	PointClamp,
+	PointWrap,
 	COUNT
 };
 
@@ -96,6 +98,9 @@ private:
 	std::shared_ptr<RenderTarget> myBlurTargetA;
 	std::shared_ptr<RenderTarget> myBlurTargetB;
 	bool myLuminanceSwitch = false;
+
+	std::shared_ptr<RenderTarget> mySSAOTarget;
+	std::shared_ptr<Texture> myBlueNoise;
 
 	Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 	bool myLerpAnimations;
