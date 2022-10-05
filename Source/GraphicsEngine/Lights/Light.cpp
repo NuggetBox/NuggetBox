@@ -30,3 +30,11 @@ void Light::BindShadowMapAsResource(unsigned aSlot)
 		myShadowMap->SetAsResource(aSlot);
 	}
 }
+
+void Light::RemoveShadowMapResource(unsigned aSlot)
+{
+	if (myShadowMap)
+	{
+		myShadowMap->RemoveResource(aSlot);
+	}
+}

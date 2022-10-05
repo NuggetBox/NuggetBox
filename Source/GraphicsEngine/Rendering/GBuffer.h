@@ -20,7 +20,7 @@ public:
 	void SetAsRenderTarget() const;
 	void ClearRenderTarget() const;
 	void SetAsResource(unsigned aStartSlot) const;
-	void ClearResource(unsigned aStartSlot) const;
+	void RemoveResource(unsigned aStartSlot) const;
 	void Clear();
 
 private:

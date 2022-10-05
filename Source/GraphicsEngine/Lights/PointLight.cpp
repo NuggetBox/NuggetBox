@@ -142,3 +142,16 @@ void PointLight::BindShadowMapAsResource(unsigned aSlot)
 		}
 	}
 }
+
+void PointLight::RemoveShadowMapResource(unsigned aSlot)
+{
+	Light::RemoveShadowMapResource(aSlot);
+
+	for (int i = 0; i < 5; ++i)
+	{
+		if (myExtraShadowMaps[i])
+		{
+			myExtraShadowMaps[i]->RemoveResource(aSlot + i + 1);
+		}
+	}
+}

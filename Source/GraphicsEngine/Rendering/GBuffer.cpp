@@ -61,7 +61,7 @@ void GBuffer::SetAsResource(unsigned aStartSlot) const
 	DX11::Context->PSSetShaderResources(aStartSlot, GBufferTexture::GB_COUNT, &mySRVList[0]);
 }
 
-void GBuffer::ClearResource(unsigned aStartSlot) const
+void GBuffer::RemoveResource(unsigned aStartSlot) const
 {
 	ID3D11ShaderResourceView* emptyResources[GBufferTexture::GB_COUNT];
 	for (unsigned i = 0; i < GBufferTexture::GB_COUNT; ++i)

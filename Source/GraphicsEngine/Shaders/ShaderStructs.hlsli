@@ -64,7 +64,7 @@ struct DeferredVertexInput
 struct DeferredVertexToPixel
 {
 	float4 myPosition : SV_POSITION;
-	float2 myUV : UV0;
+	float2 myUV : TEXCOORD;
 };
 
 struct DeferredPixelOutput
@@ -84,4 +84,4 @@ Texture2D vertexNormalTexture : register(t3);
 Texture2D worldPositionTexture : register(t4);
 Texture2D ambientOcclusionTexture : register(t5);
 
-TextureCube environmentTexture : register(t6);
+TextureCube environmentTexture : register(t127);

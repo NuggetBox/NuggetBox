@@ -9,6 +9,7 @@ public:
 	void Clear();
 	void SetAsRenderTarget();
 	void SetAsResource(unsigned aSlot);
+	void RemoveResource(unsigned aSlot);
 
 private:
 	ComPtr<ID3D11Resource> myTexture;

@@ -59,3 +59,9 @@ void DepthStencil::SetAsResource(unsigned aSlot)
 {
 	DX11::Context->PSSetShaderResources(aSlot, 1, mySRV.GetAddressOf());
 }
+
+void DepthStencil::RemoveResource(unsigned aSlot)
+{
+	ComPtr<ID3D11ShaderResourceView> impostorSRV = nullptr;
+	DX11::Context->PSSetShaderResources(aSlot, 1, impostorSRV.GetAddressOf());
+}

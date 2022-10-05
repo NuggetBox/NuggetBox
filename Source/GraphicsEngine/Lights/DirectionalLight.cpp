@@ -16,8 +16,8 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Vector3f aColor, floa
 	directionalLight.myLightBufferData.LightType = static_cast<unsigned>(LightType::DirectionalLight);
 
 	//TODO: Tweak values to make for good shadow rendering, dirlight
-	constexpr float nearPlane = 1.0f;
-	constexpr float farPlane = 15000.0f;
+	constexpr float nearPlane = 0.1f;
+	constexpr float farPlane = 50000.0f;
 	constexpr POINT shadowResolution = { 2048, 2048 };
 	constexpr POINT projectionSize = { 2048, 2048 };
 

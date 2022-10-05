@@ -37,7 +37,7 @@ void DX11::BeginFrame(Utility::Vector4<float> aClearColor)
 
 void DX11::EndFrame()
 {
-	SwapChain->Present(1, 0);
+	SwapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
 }
 
 void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
@@ -52,6 +52,7 @@ void DX11::CreateSwapChain(HWND aWindowHandle, bool aEnableDeviceDebug)
 	//Daniels windows 8+ change
 	//swapChainDesc.BufferCount = 1;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 	swapChainDesc.BufferCount = 2;
 
 	AssertIfFailed(D3D11CreateDeviceAndSwapChain

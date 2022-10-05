@@ -17,6 +17,6 @@ void AmbientLight::SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer)
 {
 	if (myTexture)
 	{
-		myTexture->SetAsResource(6);
+		myTexture->SetAsResource(127);
 	}
 }

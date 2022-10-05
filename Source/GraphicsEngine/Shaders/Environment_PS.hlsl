@@ -33,9 +33,10 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	const float emissiveStrength = surface.a;
 	//
 
-#define EMISSIVE_BOOST (2.0f);
+	//Calculate emission
+	#define EMISSIVE_BOOST (2.0f);
 	const float3 emissiveColor = albedo.rgb * emissive * emissiveStrength * EMISSIVE_BOOST;
-
+	//
 
 	//Get toeye, speccolor, diffusecolor
 	const float3 toEye = normalize(FB_CamTranslation.xyz - worldPosition.xyz);

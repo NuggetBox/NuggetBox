@@ -28,7 +28,6 @@ enum class DepthStencilState
 enum class SamplerState
 {
 	Default,
-	Wrap,
 	PointClamp,
 	PointWrap,
 	COUNT

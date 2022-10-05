@@ -23,6 +23,7 @@ public:
 	virtual void ClearShadowMap(unsigned anIndex = 0);
 	virtual void SetShadowMapAsTarget(unsigned anIndex = 0);
 	virtual void BindShadowMapAsResource(unsigned aSlot);
+	virtual void RemoveShadowMapResource(unsigned aSlot);
 
 	const LightBufferData& GetLightBuffer() const { return myLightBufferData; }
 

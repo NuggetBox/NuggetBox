@@ -68,8 +68,8 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 
 	//result.Color.rgb = (GetViewNormal(input.UV) + 1.0f) / 2.0f;
 	//result.Color.rgb = (GetViewPosition(input.UV) + 1.0f) / 2.0f;
-	result.Color.rgb = float3((GetRandom(FB_Resolution / input.UV, 1.0f) + 1.0f) / 2.0f, 0);
-	//result.Color.rgb = 1.0f - occlusion;
+	//result.Color.rgb = float3((GetRandom(FB_Resolution / input.UV, 1.0f) + 1.0f) / 2.0f, 0);
+	result.Color.rgb = 1.0f - occlusion;
 	result.Color.a = 1.0f;
 
 	return result;

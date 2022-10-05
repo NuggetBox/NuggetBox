@@ -326,7 +326,7 @@ void GraphicsEngine::SetDepthStencilState(DepthStencilState aDepthStencilState)
 
 void GraphicsEngine::SetSamplerState(SamplerState aSamplerState, unsigned aSlot)
 {
-	DX11::Context->VSSetSamplers(aSlot, 1, mySamplerStates[static_cast<UINT>(aSamplerState)].GetAddressOf());
+	DX11::Context->PSSetSamplers(aSlot, 1, mySamplerStates[static_cast<UINT>(aSamplerState)].GetAddressOf());
 }
 
 void GraphicsEngine::SetRenderMode(RenderMode aRenderMode)
@@ -411,7 +411,7 @@ void GraphicsEngine::SetupSamplerStates()
 	defaultSampleDesc.BorderColor[2] = 1.0f;
 	defaultSampleDesc.BorderColor[3] = 1.0f;
 	defaultSampleDesc.MinLOD = -D3D11_FLOAT32_MAX;
-	defaultSampleDesc.MaxLOD = -D3D11_FLOAT32_MAX;
+	defaultSampleDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	AssertIfFailed(DX11::Device->CreateSamplerState(&defaultSampleDesc, &mySamplerStates[static_cast<UINT>(SamplerState::Default)]));
 	//
 
@@ -459,9 +459,9 @@ void GraphicsEngine::ResetStates()
 {
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::ReadWrite);
-	SetSamplerState(SamplerState::Default, 0);
-	SetSamplerState(SamplerState::PointWrap, 1);
-	SetSamplerState(SamplerState::PointClamp, 2);
+	SetSamplerState(SamplerState::Default, static_cast<unsigned>(SamplerState::Default));
+	SetSamplerState(SamplerState::PointClamp, static_cast<unsigned>(SamplerState::PointClamp));
+	SetSamplerState(SamplerState::PointWrap, static_cast<unsigned>(SamplerState::PointWrap));
 }
 
 void GraphicsEngine::ResetViewport()
@@ -699,9 +699,12 @@ void GraphicsEngine::RenderFrame()
 	myGBuffer->SetAsResource(0);
 
 	//SSAO Pass
+	SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::Off);
 	mySSAOTarget->SetAsRenderTarget();
 	myBlueNoise->SetAsResource(8);
 	myPostProcessRenderer.Render(PostProcessPass::SSAO, camera);
+	mySSAOTarget->RemoveRenderTarget();
 	//
 
 	mySSAOTarget->SetAsResource(8);
@@ -714,6 +717,30 @@ void GraphicsEngine::RenderFrame()
 	SetDepthStencilState(DepthStencilState::Off);
 	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
 	//
+
+	mySSAOTarget->RemoveResource(8);
+
+	myScene.GetDirectionalLight()->RemoveShadowMapResource(10);
+
+	for (auto& light : myScene.GetLights())
+	{
+		switch (light->GetLightType())
+		{
+			case LightType::SpotLight:
+			{
+				light->RemoveShadowMapResource(20);
+				break;
+			}
+			case LightType::PointLight:
+			{
+				light->RemoveShadowMapResource(30);
+				break;
+			}
+			default: break;
+		}
+	}
+
+	myGBuffer->RemoveResource(0);
 
 	//Particle pass
 	SetBlendState(BlendState::Additive);
@@ -733,6 +760,7 @@ void GraphicsEngine::RenderFrame()
 	}
 	else
 	{
+		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), nullptr);
 		myIntermediateTargetB->SetAsRenderTarget();
 		myIntermediateTargetA->SetAsResource(0);
 		myPostProcessRenderer.Render(PostProcessPass::Luminance, camera);
@@ -769,8 +797,8 @@ void GraphicsEngine::RenderFrame()
 		myHalfSizeTarget->SetAsResource(1);
 		myPostProcessRenderer.Render(PostProcessPass::Bloom, camera);
 
-		myIntermediateTargetA->ClearResource(0);
-		myHalfSizeTarget->ClearResource(1);
+		myIntermediateTargetA->RemoveResource(0);
+		myHalfSizeTarget->RemoveResource(1);
 	}
 	//
 

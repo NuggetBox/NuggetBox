@@ -6,8 +6,9 @@ class RenderTarget
 public:
 	RenderTarget() = default;
 	void SetAsRenderTarget();
+	void RemoveRenderTarget();
 	void SetAsResource(unsigned aSlot);
-	void ClearResource(unsigned aSlot);
+	void RemoveResource(unsigned aSlot);
 	void Clear(const Utility::Vector4f& aClearColor);
 
 	static std::shared_ptr<RenderTarget> Create(int aWidth, int aHeight, DXGI_FORMAT aFormat);

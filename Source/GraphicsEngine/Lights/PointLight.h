@@ -19,6 +19,7 @@ public:
 	void ClearShadowMap(unsigned anIndex = 0) override;
 	void SetShadowMapAsTarget(unsigned anIndex) override;
 	void BindShadowMapAsResource(unsigned aSlot) override;
+	void RemoveShadowMapResource(unsigned aSlot) override;
 
 private:
 	//Do we need extra depthstencils or can we just draw to the same one everytime?
