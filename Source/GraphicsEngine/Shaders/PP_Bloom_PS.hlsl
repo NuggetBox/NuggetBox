@@ -17,8 +17,7 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	//Scaled
 	{
 		float3 scaledResource = resource1.rgb * (1.0f - saturate(resource2.rgb));
-		//TODO: REMOVE LINEAR TO GAMMA WHEN TONEMAPPING OR SSAO, this may not be the last pass
-		result.Color.rgb = LinearToGamma(scaledResource + resource2.rgb);
+		result.Color.rgb = scaledResource + resource2.rgb;
 	}
 
 	//Luminance based
@@ -29,6 +28,5 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	}*/
 
 	result.Color.a = 1.0f;
-
 	return result;
 }

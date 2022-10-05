@@ -15,6 +15,7 @@ void PostProcessRenderer::Initialize()
 	shaderPaths[static_cast<size_t>(PostProcessPass::Gaussian)] = "Shaders/PP_Gaussian_PS.cso";
 	shaderPaths[static_cast<size_t>(PostProcessPass::Bloom)] = "Shaders/PP_Bloom_PS.cso";
 	shaderPaths[static_cast<size_t>(PostProcessPass::SSAO)] = "Shaders/PP_SSAO_PS.cso";
+	shaderPaths[static_cast<size_t>(PostProcessPass::TONEMAP)] = "Shaders/PP_TONEMAP_PS.cso";
 
 	for (int i = 0; i < static_cast<int>(PostProcessPass::COUNT); ++i)
 	{

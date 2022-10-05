@@ -11,6 +11,7 @@ enum class PostProcessPass
 	Gaussian,
 	Bloom,
 	SSAO,
+	TONEMAP,
 	COUNT
 };
 

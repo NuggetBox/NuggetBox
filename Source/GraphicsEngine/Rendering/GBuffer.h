@@ -18,7 +18,7 @@ public:
 	static std::unique_ptr<GBuffer> CreateGBuffer(RECT aClientRect);
 
 	void SetAsRenderTarget() const;
-	void ClearRenderTarget() const;
+	void RemoveRenderTarget() const;
 	void SetAsResource(unsigned aStartSlot) const;
 	void RemoveResource(unsigned aStartSlot) const;
 	void Clear();

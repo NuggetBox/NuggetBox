@@ -14,6 +14,7 @@ public:
 	static std::shared_ptr<Texture> LoadDefaultSurface();
 
 	void SetAsResource(UINT aSlot);
+	void RemoveAsResource(UINT aSlot);
 
 	virtual ~Texture();
 

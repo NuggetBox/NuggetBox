@@ -39,7 +39,7 @@ void GBuffer::SetAsRenderTarget() const
 	DX11::Context->OMSetRenderTargets(GBufferTexture::GB_COUNT, &myRTVList[0], DX11::DepthBuffer.Get());
 }
 
-void GBuffer::ClearRenderTarget() const
+void GBuffer::RemoveRenderTarget() const
 {
 	ID3D11RenderTargetView* emptyViews[GBufferTexture::GB_COUNT];
 	for (unsigned i = 0; i < GBufferTexture::GB_COUNT; ++i)

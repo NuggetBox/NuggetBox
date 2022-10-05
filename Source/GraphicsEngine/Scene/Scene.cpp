@@ -35,3 +35,49 @@ void Scene::AddSpotLight(std::shared_ptr<SpotLight> aSpotLight)
 {
 	myLights.push_back(aSpotLight);
 }
+
+void Scene::BindLightsAsResources()
+{
+	myDirectionalLight->BindShadowMapAsResource(10);
+
+	for (auto& light : myLights)
+	{
+		switch (light->GetLightType())
+		{
+			case LightType::SpotLight:
+			{
+				light->BindShadowMapAsResource(20);
+				break;
+			}
+			case LightType::PointLight:
+			{
+				light->BindShadowMapAsResource(30);
+				break;
+			}
+			default: break;
+		}
+	}
+}
+
+void Scene::RemoveLightsAsResources()
+{
+	myDirectionalLight->RemoveShadowMapResource(10);
+
+	for (auto& light : myLights)
+	{
+		switch (light->GetLightType())
+		{
+			case LightType::SpotLight:
+			{
+				light->RemoveShadowMapResource(20);
+				break;
+			}
+			case LightType::PointLight:
+			{
+				light->RemoveShadowMapResource(30);
+				break;
+			}
+			default: break;
+		}
+	}
+}

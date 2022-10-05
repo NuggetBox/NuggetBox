@@ -20,6 +20,8 @@ public:
 	void SetAmbientLight(std::shared_ptr<AmbientLight> anAmbientLight);
 	void AddPointLight(std::shared_ptr<PointLight> aPointLight);
 	void AddSpotLight(std::shared_ptr<SpotLight> aSpotLight);
+	void BindLightsAsResources();
+	void RemoveLightsAsResources();
 
 	std::shared_ptr<Camera>& GetCamera() { return myCamera; }
 	std::vector<std::shared_ptr<Model>>& GetModels() { return myModels; }

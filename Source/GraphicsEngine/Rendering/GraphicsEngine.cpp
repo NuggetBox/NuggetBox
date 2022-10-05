@@ -668,34 +668,13 @@ void GraphicsEngine::RenderFrame()
 		}
 	}
 
+	//Deferred Pass
 	myGBuffer->Clear();
 	myGBuffer->SetAsRenderTarget();
-
-	myScene.GetDirectionalLight()->BindShadowMapAsResource(10);
-
-	for (auto& light : myScene.GetLights())
-	{
-		switch (light->GetLightType())
-		{
-			case LightType::SpotLight:
-			{
-				light->BindShadowMapAsResource(20);
-				break;
-			}
-			case LightType::PointLight:
-			{
-				light->BindShadowMapAsResource(30);
-				break;
-			}
-			default: break;
-		}
-	}
-
-	//Deferred Pass
 	myDeferredRenderer.GenerateGBuffer(camera, models);
+	myGBuffer->RemoveRenderTarget();
 	//
 
-	myGBuffer->ClearRenderTarget();
 	myGBuffer->SetAsResource(0);
 
 	//SSAO Pass
@@ -705,42 +684,24 @@ void GraphicsEngine::RenderFrame()
 	myBlueNoise->SetAsResource(8);
 	myPostProcessRenderer.Render(PostProcessPass::SSAO, camera);
 	mySSAOTarget->RemoveRenderTarget();
+	myBlueNoise->RemoveAsResource(8);
 	//
 
-	mySSAOTarget->SetAsResource(8);
-
-	//DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+	//Start rendering to intermediate target to which we apply post processing effects
 	myIntermediateTargetA->SetAsRenderTarget();
 
-	//Draw deferred pass to screen space triangle
+	//Calculate lighting and draw the previosly drawn deferred pass to a screen space triangle
+	//Using SSAO target (which we drew SSAO on) as resource for drawing SSAO.
+	//Also Drawing it to IntermediateTargetA so we can use that texture for post processing
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::Off);
+	mySSAOTarget->SetAsResource(8);
+	myScene.BindLightsAsResources();
 	myDeferredRenderer.Render(camera, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
-	//
-
-	mySSAOTarget->RemoveResource(8);
-
-	myScene.GetDirectionalLight()->RemoveShadowMapResource(10);
-
-	for (auto& light : myScene.GetLights())
-	{
-		switch (light->GetLightType())
-		{
-			case LightType::SpotLight:
-			{
-				light->RemoveShadowMapResource(20);
-				break;
-			}
-			case LightType::PointLight:
-			{
-				light->RemoveShadowMapResource(30);
-				break;
-			}
-			default: break;
-		}
-	}
-
 	myGBuffer->RemoveResource(0);
+	mySSAOTarget->RemoveResource(8);
+	myScene.RemoveLightsAsResources();
+	//
 
 	//Particle pass
 	SetBlendState(BlendState::Additive);
@@ -789,16 +750,22 @@ void GraphicsEngine::RenderFrame()
 		myQuarterSizeTarget->SetAsResource(0);
 		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
-		//Render to backbuffer
-		ResetViewport();
-		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+		myIntermediateTargetB->Clear({ 0,0,0,0 });
+		myIntermediateTargetB->SetAsRenderTarget();
 
 		myIntermediateTargetA->SetAsResource(0);
 		myHalfSizeTarget->SetAsResource(1);
 		myPostProcessRenderer.Render(PostProcessPass::Bloom, camera);
-
 		myIntermediateTargetA->RemoveResource(0);
 		myHalfSizeTarget->RemoveResource(1);
+
+		//Render to backbuffer
+		ResetViewport();
+		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+
+		myIntermediateTargetB->SetAsResource(0);
+		myPostProcessRenderer.Render(PostProcessPass::TONEMAP, camera);
+		myIntermediateTargetB->RemoveResource(0);
 	}
 	//
 

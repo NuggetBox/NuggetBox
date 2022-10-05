@@ -80,6 +80,12 @@ void Texture::SetAsResource(UINT aSlot)
 	DX11::Context->PSSetShaderResources(aSlot, 1, myShaderResourceView.GetAddressOf());
 }
 
+void Texture::RemoveAsResource(UINT aSlot)
+{
+	ComPtr<ID3D11ShaderResourceView> impostorSRV = nullptr;
+	DX11::Context->PSSetShaderResources(aSlot, 1, impostorSRV.GetAddressOf());
+}
+
 Texture::~Texture()
 {
 	myTexture.Reset();
