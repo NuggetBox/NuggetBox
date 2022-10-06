@@ -14,6 +14,9 @@ struct VertexInput
 	float3 myBinormal : BINORMAL;
 	uint4 myBoneIDs : BONEIDS;
 	float4 myBoneWeights : BONEWEIGHTS;
+
+	float4x4 World : WORLD;
+	uint InstanceID : SV_InstanceID;
 };
 
 struct VertexToPixel

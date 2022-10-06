@@ -17,8 +17,8 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	const float Pi2 = 6.28318530718;
 
 	const float Directions = 16.0f;
-	const float Quality = 6.0f;
-	const float Radius = 2.0f;
+	const float Quality = 4.0f;
+	const float Radius = 3.0f;
 
 	const float2 rad = Radius / 2048.f;
 

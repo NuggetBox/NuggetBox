@@ -120,6 +120,24 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	auto spotLight = SpotLight::Create({1, 0, 1}, 5999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
 	myScene.AddSpotLight(spotLight);
 
+	auto instancedChest = Model::Load("Meshes/Particle_Chest.fbx");
+	instancedChest->SetPosition(700, 0, 0);
+	instancedChest->SetRotation({ 0, 180, 0 });
+
+	for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 8; ++j)
+		{
+			Transform transform;
+			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Vector3f(i * 200, 0, j * 200));
+			transform.SetRotation(instancedChest->GetTransform().GetRotation());
+			instancedChest->AddRenderedInstance(transform.GetMatrix());
+		}
+	}
+
+	instancedChest->UpdateInstanceBuffer();
+	myScene.AddModel(instancedChest);
+
 	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	myIntermediateTargetB = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	myHalfSizeTarget = RenderTarget::Create(clientSize.x / 2, clientSize.y / 2, DXGI_FORMAT_R32G32B32A32_FLOAT);

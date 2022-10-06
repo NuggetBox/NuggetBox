@@ -53,6 +53,8 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, c
     DX11::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
     DX11::Context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
+    DX11::Context->GSSetShader(nullptr, nullptr, 0);
+
     for (auto& model : aModelList)
     {
         //Object Buffer
@@ -60,6 +62,7 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, c
         memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Matrix4f) * MAX_BONES);
         ZeroMemory(&myObjectBufferData.HasBones, 16);
         myObjectBufferData.HasBones = model->HasBones();
+        myObjectBufferData.IsInstanced = model->HasRenderedInstances();
 
         ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
         AssertIfFailed(DX11::Context->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
@@ -73,25 +76,31 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, c
 	    for (auto& mesh : model->GetMeshes())
 	    {
             const auto& meshData = mesh.GetMeshData();
-
-            //Configure Input Assembler (IA)
-            DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
-            DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-            DX11::Context->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(meshData.myPrimitiveTopology));
-            //DX11::Context->IASetInputLayout(meshData.myInputLayout.Get());
-            //
-
             meshData.myMaterial->SetAsResource(myMaterialBuffer);
-
             DX11::Context->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
 
             meshData.myVertexShader->Bind();
             myPixelShader->Bind();
 
-            //TODO: Turn off geo shader somewhere else //Turn off Geometry Shader so that models work
-            DX11::Context->GSSetShader(nullptr, nullptr, 0);
+            //Configure Input Assembler (IA)
+            DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+            DX11::Context->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(meshData.myPrimitiveTopology));
+            //
 
-            DX11::Context->DrawIndexed(meshData.myNumberOfIndices, 0, 0);
+            if (model->HasRenderedInstances())
+            {
+                ID3D11Buffer* buffers[2] = { meshData.myVertexBuffer.Get(), model->GetInstanceBuffer().Get() };
+                UINT stride[2] = { meshData.myStride, sizeof(InstanceData) };
+                UINT offset[2] = { 0, 0 };
+
+                DX11::Context->IASetVertexBuffers(0, 2, buffers, stride, offset);
+                DX11::Context->DrawIndexedInstanced(meshData.myNumberOfIndices, model->GetNumberOfInstances(), 0, 0, 0);
+            }
+            else
+            {
+                DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
+                DX11::Context->DrawIndexed(meshData.myNumberOfIndices, 0, 0);
+            }
 	    }
     }
 }

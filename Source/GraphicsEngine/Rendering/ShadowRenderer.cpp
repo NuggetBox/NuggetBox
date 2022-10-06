@@ -62,6 +62,7 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
         memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Matrix4f) * MAX_BONES);
         ZeroMemory(&myObjectBufferData.HasBones, 16);
         myObjectBufferData.HasBones = model->HasBones();
+        myObjectBufferData.IsInstanced = model->HasRenderedInstances();
         //
 
         //Map object buffer resource
@@ -77,13 +78,25 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
             const auto& meshData = mesh.GetMeshData();
 
             //Configure IA
-            DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
             DX11::Context->IASetIndexBuffer(meshData.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
             DX11::Context->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(meshData.myPrimitiveTopology));
             meshData.myVertexShader->Bind();
             //
 
-            DX11::Context->DrawIndexed(meshData.myNumberOfIndices, 0, 0);
+            if (model->HasRenderedInstances())
+            {
+                ID3D11Buffer* buffers[2] = { meshData.myVertexBuffer.Get(), model->GetInstanceBuffer().Get() };
+                UINT stride[2] = { meshData.myStride, sizeof(InstanceData) };
+                UINT offset[2] = { 0, 0 };
+
+                DX11::Context->IASetVertexBuffers(0, 2, buffers, stride, offset);
+                DX11::Context->DrawIndexedInstanced(meshData.myNumberOfIndices, model->GetNumberOfInstances(), 0, 0, 0);
+            }
+            else
+            {
+	            DX11::Context->IASetVertexBuffers(0, 1, meshData.myVertexBuffer.GetAddressOf(), &meshData.myStride, &meshData.myOffset);
+	            DX11::Context->DrawIndexed(meshData.myNumberOfIndices, 0, 0);
+            }
 	    }
     }
 }

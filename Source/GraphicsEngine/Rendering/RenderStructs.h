@@ -26,7 +26,10 @@ struct ObjectBufferData
 {
 	Utility::Matrix4x4<float> World;
 	Utility::Matrix4x4<float> BoneData[MAX_BONES];
-	alignas(16) bool HasBones = false;
+	alignas(4) bool HasBones = false;
+	alignas(4) bool IsInstanced = false;
+
+	Utility::Vector2<float> Padding;
 	//bool HasBones = false;
 	//Vector3f padding;
 };

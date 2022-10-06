@@ -22,7 +22,9 @@ cbuffer ObjectBuffer : register(b1)
 	float4x4 OB_ToWorld;
 	float4x4 OB_BoneData[128];
 	bool OB_HasBones;
-	//float3 OB_padding;
+	bool OB_IsInstanced;
+
+	float2 OB_padding;
 }
 
 cbuffer MaterialBuffer : register(b2)

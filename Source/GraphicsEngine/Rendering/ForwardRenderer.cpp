@@ -81,6 +81,7 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
         //Cursed bool padding problems, zeromemory for now
         ZeroMemory(&myObjectBufferData.HasBones, 16);
         myObjectBufferData.HasBones = model->HasBones();
+        myObjectBufferData.IsInstanced = model->HasRenderedInstances();
 
         //Map object buffer resource
         ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));

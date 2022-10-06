@@ -32,6 +32,27 @@ void Model::SetMaterial(std::shared_ptr<Material> aMaterial)
 	}
 }
 
+void Model::AddRenderedInstance(const Matrix4f& aTransform)
+{
+	myRenderedInstances.push_back({aTransform});
+}
+
+void Model::UpdateInstanceBuffer()
+{
+	D3D11_BUFFER_DESC instanceVertexBufferDesc;
+	instanceVertexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(InstanceData) * myRenderedInstances.size());
+	instanceVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	instanceVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceVertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	instanceVertexBufferDesc.MiscFlags = 0;
+	instanceVertexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	subresourceData.pSysMem = myRenderedInstances.data();
+
+	AssertIfFailed(DX11::Device->CreateBuffer(&instanceVertexBufferDesc, &subresourceData, myInstanceBuffer.GetAddressOf()));
+}
+
 void Model::AddSubMesh(const Mesh& aMesh)
 {
 	myModelData.myMeshes.push_back(aMesh);

@@ -22,6 +22,11 @@ struct ModelData
 	std::shared_ptr<Skeleton> mySkeleton = nullptr;
 };
 
+struct InstanceData
+{
+	Matrix4f World;
+};
+
 class Model : public SceneObject
 {
 public:
@@ -50,8 +55,17 @@ public:
 	//:(
 	void SetMaterial(std::shared_ptr<Material> aMaterial);
 
+	void AddRenderedInstance(const Matrix4f& aTransform);
+	void UpdateInstanceBuffer();
+	bool HasRenderedInstances() const { return !myRenderedInstances.empty(); }
+	int GetNumberOfInstances() const { return myRenderedInstances.size(); }
+	ComPtr<ID3D11Buffer> GetInstanceBuffer() const { return myInstanceBuffer; }
+
 private:
 	void AddSubMesh(const Mesh& aMesh);
+
+	ComPtr<ID3D11Buffer> myInstanceBuffer;
+	std::vector<InstanceData> myRenderedInstances;
 
 	//TODO: :eyes: Template registry? :eyes:
 	static inline std::unordered_map<std::string, ModelData> ourModelRegistry;
@@ -59,13 +73,7 @@ private:
 	//static std::unordered_map<std::string, AnimationData> ourAnimationRegistry;
 
 	ModelData myModelData;
-
-	/*std::vector<Mesh> myMeshes;
-	std::shared_ptr<Skeleton> mySkeleton = nullptr;*/
-	//std::shared_ptr<SkeletonData> mySkeleton = nullptr;
-
 	std::unordered_map<std::string, std::shared_ptr<Animation>> myAnimations;
-	//std::vector<std::shared_ptr<Animation>> myAnimations;
 
 	//TODO: REFACTOR ANIMATIONS
 	Matrix4f myBoneTransforms[MAX_BONES] = { Matrix4f() };
