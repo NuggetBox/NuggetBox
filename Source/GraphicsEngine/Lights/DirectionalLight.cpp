@@ -19,7 +19,7 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Vector3f aColor, floa
 	constexpr float nearPlane = 0.1f;
 	constexpr float farPlane = 150000.0f;
 	constexpr POINT shadowResolution = { 16384, 16384 };
-	constexpr POINT projectionSize = { 1024, 1024 };
+	constexpr POINT projectionSize = { 2048, 2048 };
 
 	directionalLight.myLightBufferData.ProjectionMatrix = Matrix4f::CreateProjectionMatrixOrthographic(projectionSize.x, projectionSize.y, nearPlane, farPlane);
 	directionalLight.myLightBufferData.CastShadows = true;

@@ -50,7 +50,11 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 
 	//Apply SSAO
 	const float ssao = TextureSlot9.Sample(defaultSampler, input.myUV).r;
-	ambientLighting *= ssao;
+
+	if (FB_RenderMode % 2 == 0)
+	{
+		ambientLighting *= ssao;
+	}
 	//
 
 	//Peter panning, tune if it appears

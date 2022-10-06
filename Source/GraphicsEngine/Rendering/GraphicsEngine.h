@@ -96,7 +96,6 @@ private:
 	std::shared_ptr<RenderTarget> myQuarterSizeTarget;
 	std::shared_ptr<RenderTarget> myBlurTargetA;
 	std::shared_ptr<RenderTarget> myBlurTargetB;
-	bool myLuminanceSwitch = false;
 
 	std::shared_ptr<RenderTarget> mySSAOTarget;
 	std::shared_ptr<Texture> myBlueNoise;

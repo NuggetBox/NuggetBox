@@ -201,12 +201,7 @@ void GraphicsEngine::ResizeWindow(HWND aHWND, UINT someWidth, UINT someHeight)
 void GraphicsEngine::InputRenderMode()
 {
 #ifdef _DEBUG
-	if (Utility::InputHandler::GetKeyDown(VK_F6))
-	{
-		myLuminanceSwitch = !myLuminanceSwitch;
-	}
-
-	/*UINT currentRenderMode = static_cast<UINT>(myRenderMode);
+	UINT currentRenderMode = static_cast<UINT>(myRenderMode);
 
 	if (Utility::InputHandler::GetKeyDown(VK_F6))
 	{
@@ -233,7 +228,7 @@ void GraphicsEngine::InputRenderMode()
 
 		SetRenderMode(static_cast<RenderMode>(currentRenderMode));
 		DebugLogger::Message("Render Mode set to: " + RenderModeToString(myRenderMode));
-	}*/
+	}
 #endif
 }
 
@@ -671,7 +666,7 @@ void GraphicsEngine::RenderFrame()
 	//Deferred Pass
 	myGBuffer->Clear();
 	myGBuffer->SetAsRenderTarget();
-	myDeferredRenderer.GenerateGBuffer(camera, models);
+	myDeferredRenderer.GenerateGBuffer(camera, models, myRenderMode);
 	myGBuffer->RemoveRenderTarget();
 	//
 
@@ -712,61 +707,51 @@ void GraphicsEngine::RenderFrame()
 	SetBlendState(BlendState::None);
 	SetDepthStencilState(DepthStencilState::Off);
 
-	if (myLuminanceSwitch)
-	{
-		ResetViewport();
-		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
-		myIntermediateTargetA->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Luminance, camera);
-	}
-	else
-	{
-		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), nullptr);
-		myIntermediateTargetB->SetAsRenderTarget();
-		myIntermediateTargetA->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Luminance, camera);
+	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), nullptr);
+	myIntermediateTargetB->SetAsRenderTarget();
+	myIntermediateTargetA->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Luminance, camera);
 
-		myHalfSizeTarget->SetAsRenderTarget();
-		myIntermediateTargetB->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
+	myHalfSizeTarget->SetAsRenderTarget();
+	myIntermediateTargetB->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
-		myQuarterSizeTarget->SetAsRenderTarget();
-		myHalfSizeTarget->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
+	myQuarterSizeTarget->SetAsRenderTarget();
+	myHalfSizeTarget->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
-		myBlurTargetA->SetAsRenderTarget();
-		myQuarterSizeTarget->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Gaussian, camera);
+	myBlurTargetA->SetAsRenderTarget();
+	myQuarterSizeTarget->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Gaussian, camera);
 
-		myBlurTargetB->SetAsRenderTarget();
-		myBlurTargetA->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Gaussian, camera);
+	myBlurTargetB->SetAsRenderTarget();
+	myBlurTargetA->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Gaussian, camera);
 
-		myQuarterSizeTarget->SetAsRenderTarget();
-		myBlurTargetB->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
+	myQuarterSizeTarget->SetAsRenderTarget();
+	myBlurTargetB->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
-		myHalfSizeTarget->SetAsRenderTarget();
-		myQuarterSizeTarget->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
+	myHalfSizeTarget->SetAsRenderTarget();
+	myQuarterSizeTarget->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::Copy, camera);
 
-		myIntermediateTargetB->Clear({ 0,0,0,0 });
-		myIntermediateTargetB->SetAsRenderTarget();
+	myIntermediateTargetB->Clear({ 0,0,0,0 });
+	myIntermediateTargetB->SetAsRenderTarget();
 
-		myIntermediateTargetA->SetAsResource(0);
-		myHalfSizeTarget->SetAsResource(1);
-		myPostProcessRenderer.Render(PostProcessPass::Bloom, camera);
-		myIntermediateTargetA->RemoveResource(0);
-		myHalfSizeTarget->RemoveResource(1);
+	myIntermediateTargetA->SetAsResource(0);
+	myHalfSizeTarget->SetAsResource(1);
+	myPostProcessRenderer.Render(PostProcessPass::Bloom, camera);
+	myIntermediateTargetA->RemoveResource(0);
+	myHalfSizeTarget->RemoveResource(1);
 
-		//Render to backbuffer
-		ResetViewport();
-		DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
+	//Render to backbuffer
+	ResetViewport();
+	DX11::Context->OMSetRenderTargets(1, DX11::BackBuffer.GetAddressOf(), DX11::DepthBuffer.Get());
 
-		myIntermediateTargetB->SetAsResource(0);
-		myPostProcessRenderer.Render(PostProcessPass::TONEMAP, camera);
-		myIntermediateTargetB->RemoveResource(0);
-	}
+	myIntermediateTargetB->SetAsResource(0);
+	myPostProcessRenderer.Render(PostProcessPass::TONEMAP, camera);
+	myIntermediateTargetB->RemoveResource(0);
 	//
 
 	InputHandler::UpdatePreviousState();

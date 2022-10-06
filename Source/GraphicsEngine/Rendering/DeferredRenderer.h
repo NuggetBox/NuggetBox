@@ -10,7 +10,7 @@ class DeferredRenderer
 public:
 	DeferredRenderer() = default;
 	void Initialize();
-	void GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList);
+	void GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, RenderMode aRenderMode);
 	void Render(const std::shared_ptr<Camera>& aCamera, const std::shared_ptr<DirectionalLight>& aDirectionalLight,
 				const std::shared_ptr<AmbientLight>& anAmbientLight, const std::vector<std::shared_ptr<Light>>& someLights, RenderMode aRenderMode);
 

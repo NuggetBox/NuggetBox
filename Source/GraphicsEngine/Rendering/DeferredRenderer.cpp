@@ -35,16 +35,14 @@ void DeferredRenderer::Initialize()
     DEBUGLOG("Deferred Renderer Initialized");
 }
 
-void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList)
+void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList, RenderMode aRenderMode)
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
     myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
-
-    //Used for deferred rendering?
-    //myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
+    myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
 
     //Map frame buffer resource
     ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -103,6 +101,7 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std:
 {
     //Frame Buffer
     D3D11_MAPPED_SUBRESOURCE bufferData;
+    ZeroMemory(&myFrameBufferData, sizeof(FrameBufferData));
     myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
@@ -112,6 +111,9 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std:
     AssertIfFailed(DX11::Context->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData));
     memcpy_s(bufferData.pData, sizeof(FrameBufferData), &myFrameBufferData, sizeof(FrameBufferData));
     DX11::Context->Unmap(myFrameBuffer.Get(), 0);
+
+    //Give FB to PS for rendermode for SSAO switch
+    DX11::Context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
     //
 
     //Fill scenelightbuffer with dir&point&spotlights from scene and map-unmap lightbuffer
