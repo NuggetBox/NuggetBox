@@ -10,6 +10,7 @@
 #include "InputHandler.h"
 #include "Timer.h"
 #include "imgui/imgui.h"
+#include "Scene/ContentBrowser.h"
 #include "Scene/Hierarchy.h"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
@@ -29,7 +30,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	Utility::Timer::Start();
 
-	auto spiderCat = Model::Load("meshes/SpiderCat.fbx");
+	auto spiderCat = Model::Load("assets/meshes/SpiderCat.fbx");
 	spiderCat->AddPosition(0, 150, 0);
 	spiderCat->AddRotation(0, 180, 0);
 	myScene.AddModel(spiderCat);
@@ -47,28 +48,28 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	pyramid->SetPosition(200, 50, 0);
 	myScene.AddModel(pyramid);
 
-	auto chest = Model::Load("Meshes/Particle_Chest.fbx");
+	auto chest = Model::Load("assets/Meshes/Particle_Chest.fbx");
 	chest->SetPosition(-200, 0, 0);
 	chest->AddRotation(0, 180, 0);
 	myScene.AddModel(chest);
 
-	auto gremlin = Model::Load("Meshes/gremlin.fbx");
+	auto gremlin = Model::Load("assets/Meshes/gremlin.fbx");
 	gremlin->AddPosition(-20, 0, 0);
 	gremlin->AddRotation(0, 180, 0);
-	gremlin->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
-	gremlin->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
+	gremlin->LoadAnimation("assets/Meshes/gremlin@walk.fbx", "Walk");
+	gremlin->LoadAnimation("assets/Meshes/gremlin@run.fbx", "Run");
 	gremlin->PlayAnimation("Walk");
 	myScene.AddModel(gremlin);
 
-	auto gremlin2 = Model::Load("Meshes/gremlin.fbx");
+	auto gremlin2 = Model::Load("assets/Meshes/gremlin.fbx");
 	gremlin2->AddPosition(40, 0, 0);
 	gremlin2->AddRotation(0, 180, 0);
-	gremlin2->LoadAnimation("Meshes/gremlin@walk.fbx", "Walk");
-	gremlin2->LoadAnimation("Meshes/gremlin@run.fbx", "Run");
+	gremlin2->LoadAnimation("assets/Meshes/gremlin@walk.fbx", "Walk");
+	gremlin2->LoadAnimation("assets/Meshes/gremlin@run.fbx", "Run");
 	gremlin2->PlayAnimation("Run");
 	myScene.AddModel(gremlin2);
 
-	auto sphere = Model::Load("meshes/sphere.fbx");
+	auto sphere = Model::Load("assets/meshes/sphere.fbx");
 	sphere->AddPosition(500, 250, 0);
 	sphere->SetScale(Vector3f(50, 50, 50));
 	myScene.AddModel(sphere);
@@ -83,16 +84,16 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
 	system->SetPosition(0, 170, 0);
-	system->LoadAndInitialize("Json/ParticleSystems/System1.json");
+	system->LoadAndInitialize("assets/Json/ParticleSystems/System1.json");
 	myScene.AddParticleSystem(system);
 
 	std::shared_ptr<ParticleSystem> fire = std::make_shared<ParticleSystem>();
 	fire->SetPosition(200, 97, 0);
-	fire->LoadAndInitialize("Json/ParticleSystems/System2.json");
+	fire->LoadAndInitialize("assets/Json/ParticleSystems/System2.json");
 	myScene.AddParticleSystem(fire);
 
 	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(45, -45, 0)));
-	myScene.SetAmbientLight(AmbientLight::Create("Textures/skansen_cubemap.dds"));
+	myScene.SetAmbientLight(AmbientLight::Create("assets/Textures/skansen_cubemap.dds"));
 
 	//POINT LIGHT TESTING
 	auto pointLight = PointLight::Create({ 0, 1, 0 }, 100000, { -500, 50, 0 }, 300);
@@ -120,7 +121,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	auto spotLight = SpotLight::Create({1, 0, 1}, 5999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
 	myScene.AddSpotLight(spotLight);
 
-	auto instancedChest = Model::Load("Meshes/Particle_Chest.fbx");
+	auto instancedChest = Model::Load("assets/Meshes/Particle_Chest.fbx");
 	instancedChest->SetPosition(700, 0, 0);
 	instancedChest->SetRotation({ 0, 180, 0 });
 
@@ -146,7 +147,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myBlurTargetB = RenderTarget::Create(clientSize.x / 4, clientSize.y / 4, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	mySSAOTarget = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32_FLOAT);
-	myBlueNoise = Texture::Load("Textures/BlueNoise.dds");
+	myBlueNoise = Texture::Load("assets/Textures/BlueNoise.dds");
 
 	myForwardRenderer.Initialize();
 	myDeferredRenderer.Initialize();
@@ -159,6 +160,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myEditor.Initialize(myClearColor, myLerpAnimations);
 
 	Hierarchy::Initialize();
+	ContentBrowser::Initialize();
 
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
@@ -261,30 +263,32 @@ void GraphicsEngine::AcceptFiles(HWND aHwnd)
 
 void GraphicsEngine::HandleDroppedFile(const std::filesystem::path& aPath)
 {
-	//Copies file to asset folder right now
-	if (aPath.extension().string() == ".dds")
-	{
-		std::string pathToCheck = "Textures/" + aPath.filename().string();
+	ContentBrowser::HandleDragDrop(aPath);
 
-		//Insert a 0
-		int count = 0;
-		if (std::filesystem::exists(pathToCheck))
-		{
-			pathToCheck.insert(pathToCheck.find_last_of("."), std::to_string(count));
-		}
+	//Old assignment
+	//if (aPath.extension().string() == ".dds")
+	//{
+	//	std::string pathToCheck = "assets/Textures/" + aPath.filename().string();
 
-		while (std::filesystem::exists(pathToCheck))
-		{
-			count++;
-			pathToCheck.replace(pathToCheck.find_last_of(".") - 1, 1, std::to_string(count));
-		}
+	//	//Insert a 0
+	//	int count = 0;
+	//	if (std::filesystem::exists(pathToCheck))
+	//	{
+	//		pathToCheck.insert(pathToCheck.find_last_of("."), std::to_string(count));
+	//	}
 
-		std::filesystem::copy(aPath, pathToCheck);
-	}
-	else
-	{
-		FORMATWARNING("Only .dds texture files supported by drag&drop! Drag&Drop detected: {}", aPath.filename().string());
-	}
+	//	while (std::filesystem::exists(pathToCheck))
+	//	{
+	//		count++;
+	//		pathToCheck.replace(pathToCheck.find_last_of(".") - 1, 1, std::to_string(count));
+	//	}
+
+	//	std::filesystem::copy(aPath, pathToCheck);
+	//}
+	//else
+	//{
+	//	FORMATWARNING("Only .dds texture files supported by drag&drop! Drag&Drop detected: {}", aPath.filename().string());
+	//}
 }
 
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
@@ -615,13 +619,14 @@ void GraphicsEngine::RenderFrame()
 	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
 
 	Hierarchy::Update();
+	ContentBrowser::Update();
 
 	if (path != "")
 	{
 		Material mat;
 		mat.SetAlbedoTexture(Texture::Load(path));
-		mat.SetNormalMap(Texture::Load("Textures/T_SpiderCat_N.DDS"));
-		mat.SetSurfaceTexture(Texture::Load("Textures/T_SpiderCat_M.DDS"));
+		mat.SetNormalMap(Texture::Load("assets/Textures/T_SpiderCat_N.DDS"));
+		mat.SetSurfaceTexture(Texture::Load("assets/Textures/T_SpiderCat_M.DDS"));
 		myScene.GetModels()[0]->SetMaterial(std::make_shared<Material>(mat));
 	}
 

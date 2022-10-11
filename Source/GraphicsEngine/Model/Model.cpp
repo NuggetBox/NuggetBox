@@ -291,9 +291,9 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 
 			//Load Material
 			std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
-			meshMaterial->SetAlbedoTexture(Texture::Load("Textures/" + albedoFileName));
-			meshMaterial->SetNormalMap(Texture::Load("Textures/" + normalFileName));
-			meshMaterial->SetSurfaceTexture(Texture::Load("Textures/" + surfaceFileName));
+			meshMaterial->SetAlbedoTexture(Texture::Load("assets/Textures/" + albedoFileName));
+			meshMaterial->SetNormalMap(Texture::Load("assets/Textures/" + normalFileName));
+			meshMaterial->SetSurfaceTexture(Texture::Load("assets/Textures/" + surfaceFileName));
 
 			Mesh mesh(vertices, indices);
 			mesh.SetMaterial(meshMaterial);

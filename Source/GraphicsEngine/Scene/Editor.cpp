@@ -19,9 +19,9 @@ void Editor::Initialize(Utility::Vector4<float>& aClearColor, bool& aLerpAnimati
 	myPresetInput1 = aClearColor;
 	myPresetInput2 = aClearColor;
 
-	if (std::filesystem::exists("Json/ClearColorSettings/Blends/Default.json"))
+	if (std::filesystem::exists("assets/Json/ClearColorSettings/Blends/Default.json"))
 	{
-		std::ifstream file("Json/ClearColorSettings/Blends/Default.json");
+		std::ifstream file("assets/Json/ClearColorSettings/Blends/Default.json");
 		nlohmann::json json = nlohmann::json::parse(file);
 		if (json.contains("PreviousBlend"))
 		{
@@ -218,7 +218,7 @@ void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& a
 			nlohmann::json fileToWrite;
 			fileToWrite["LerpAnimations"] = aLerpAnimations;
 			fileToWrite["TimeScale"] = timeScale;
-			std::ofstream file("Json/Properties.json");
+			std::ofstream file("assets/Json/Properties.json");
 			file << fileToWrite;
 		}
 
@@ -229,7 +229,7 @@ void Editor::UpdateEditorInterface(Utility::Vector4<float>& aClearColor, bool& a
 	{
 		if (ImGui::TreeNode("Textures"))
 		{
-			for (auto& file : std::filesystem::recursive_directory_iterator("textures/"))
+			for (auto& file : std::filesystem::recursive_directory_iterator("assets/textures/"))
 			{
 				if (file.is_regular_file())
 				{
@@ -274,7 +274,7 @@ void Editor::LoadColorPopup(Utility::Vector4f& aColorToLoad)
 {
 	if (ImGui::TreeNode("Saved Presets")) 
 	{
-		for (auto& file : std::filesystem::recursive_directory_iterator("json/clearcolorsettings/presets/"))
+		for (auto& file : std::filesystem::recursive_directory_iterator("assets/json/clearcolorsettings/presets/"))
 		{
 			if (file.is_regular_file())
 			{
@@ -315,17 +315,17 @@ void Editor::SaveColorPopup(const Utility::Vector4f& aColorToSave)
 		fileToWrite["ClearColor"]["g"] = aColorToSave.y;
 		fileToWrite["ClearColor"]["b"] = aColorToSave.z;
 		fileToWrite["ClearColor"]["a"] = aColorToSave.w;
-		std::ofstream file("Json/ClearColorSettings/Presets/" + myInputBuffer + ".json");
+		std::ofstream file("assets/Json/ClearColorSettings/Presets/" + myInputBuffer + ".json");
 		file << fileToWrite;
 	}
 }
 
 void Editor::LoadProperties(bool& aLerpAnimations)
 {
-	if (std::filesystem::exists("Json/Properties.json"))
+	if (std::filesystem::exists("assets/Json/Properties.json"))
 	{
 		std::ifstream file;
-		file.open("Json/Properties.json");
+		file.open("assets/Json/Properties.json");
 		nlohmann::json json = nlohmann::json::parse(file);
 
 		if (json.contains("LerpAnimations") && json.contains("TimeScale"))
@@ -340,7 +340,7 @@ void Editor::LoadBlendPopup()
 {
 	if (ImGui::TreeNode("Saved Blends"))
 	{
-		for (auto& file : std::filesystem::recursive_directory_iterator("json/clearcolorsettings/blends/"))
+		for (auto& file : std::filesystem::recursive_directory_iterator("assets/json/clearcolorsettings/blends/"))
 		{
 			if (file.is_regular_file())
 			{
@@ -407,14 +407,14 @@ void Editor::SaveBlendPopup()
 
 		fileToWrite["BlendFactor"] = myBlendFactor;
 
-		std::ofstream file("Json/ClearColorSettings/Blends/" + myInputBuffer + ".json");
+		std::ofstream file("assets/Json/ClearColorSettings/Blends/" + myInputBuffer + ".json");
 		file << fileToWrite;
 
 		//Save previous saved blend
 		fileToWrite.clear();
 		file.close();
-		fileToWrite["PreviousBlend"] = "Json/ClearColorSettings/Blends/" + myInputBuffer + ".json";
-		file.open("Json/ClearColorSettings/Blends/Default.json");
+		fileToWrite["PreviousBlend"] = "assets/Json/ClearColorSettings/Blends/" + myInputBuffer + ".json";
+		file.open("assets/Json/ClearColorSettings/Blends/Default.json");
 		file << fileToWrite;
 	}
 }

@@ -86,20 +86,6 @@ void ParticleEmitter::ClearParticles()
 
 void ParticleEmitter::Update()
 {
-	//TODO: Put somewhere reasonable
-	if (InputHandler::GetKeyDown('J'))
-	{
-		Start();
-	}
-	else if (InputHandler::GetKeyDown('K'))
-	{
-		Pause();
-	}
-	else if (InputHandler::GetKeyDown('L'))
-	{
-		ClearParticles();
-	}
-
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];

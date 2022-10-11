@@ -1,0 +1,16 @@
+{
+	"Emitters": [
+		{
+			"SettingsPath": "assets/Json/ParticleSystems/Emitter1.json",
+			"Transform": 1.0
+		},
+		{	
+			"SettingsPath": "assets/Json/ParticleSystems/Emitter2.json",
+			"Transform": 1.0
+		},
+		{	
+			"SettingsPath": "assets/Json/ParticleSystems/Emitter3.json",
+			"Transform": 1.0
+		}
+	]
+}

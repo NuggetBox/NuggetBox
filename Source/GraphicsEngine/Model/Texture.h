@@ -16,6 +16,8 @@ public:
 	void SetAsResource(UINT aSlot);
 	void RemoveAsResource(UINT aSlot);
 
+	const ComPtr<ID3D11ShaderResourceView>& GetSRV() const { return myShaderResourceView; }
+
 	virtual ~Texture();
 
 private:
@@ -32,7 +34,7 @@ private:
 	//inline static const std::string myNormalSuffix = "_N";
 	//inline static const std::string mySurfaceSuffix = "_M";
 
-	inline static const std::string myDefaultAlbedoPath = "Textures/Defaults/T_Default_C.dds";
-	inline static const std::string myDefaultNormalPath = "Textures/Defaults/T_Default_N.dds";
-	inline static const std::string myDefaultSurfacePath = "Textures/Defaults/T_Default_M.dds";
+	inline static const std::string myDefaultAlbedoPath = "assets/Textures/Defaults/T_Default_C.dds";
+	inline static const std::string myDefaultNormalPath = "assets/Textures/Defaults/T_Default_N.dds";
+	inline static const std::string myDefaultSurfacePath = "assets/Textures/Defaults/T_Default_M.dds";
 };

@@ -1,0 +1,13 @@
+{
+  "TexturePath": "assets/Textures/Ball.dds",
+  "SpawnRate": 100.0,
+  "SpawnAngle": 0.0,
+  "LifeTime": 1.0,
+  "StartVelocity": [ 0.0, 50.0, -20.0 ],
+  "EndVelocity": [ 0.0, 0.0, -50.0 ],
+  "GravityScale": 0,
+  "StartScale": [ 20.0, 20.0, 20.0 ],
+  "EndScale": [ 2.0, 2.0, 2.0 ],
+  "StartColor": [ 1.0, 0.2, 0.4, 1.0 ],
+  "EndColor": [ 1.0, 1.0, 1.0, 0.5 ]
+}

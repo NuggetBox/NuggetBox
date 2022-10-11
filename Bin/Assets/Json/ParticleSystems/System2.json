@@ -1,0 +1,8 @@
+{
+	"Emitters": [
+		{
+			"SettingsPath": "assets/Json/ParticleSystems/fire.json",
+			"Transform": 1.0
+		}
+	]
+}
