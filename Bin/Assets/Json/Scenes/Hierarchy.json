@@ -1,0 +1,43 @@
+{
+    "Objects": {
+        "Children": [
+            {
+                "Name": "SpinningCube"
+            },
+            {
+                "Name": "Cube"
+            },
+            {
+                "Children": [
+                    {
+                        "Name": "RunningGoblin"
+                    }
+                ],
+                "Name": "WalkingGoblin"
+            },
+            {
+                "Name": "Pyramid"
+            },
+            {
+                "Name": "SpiderCat"
+            },
+            {
+                "Name": "Floor"
+            },
+            {
+                "Children": [
+                    {
+                        "Children": [
+                            {
+                                "Name": "DirectionalLight"
+                            }
+                        ],
+                        "Name": "PointLight"
+                    }
+                ],
+                "Name": "SpotLight"
+            }
+        ],
+        "Name": "Root"
+    }
+}

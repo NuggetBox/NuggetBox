@@ -1,6 +1,7 @@
 #include "NuggetBox.pch.h"
 #include "Hierarchy.h"
 
+#include "json.hpp"
 #include "InputHandler.h"
 #include <imgui/imgui.h>
 
@@ -22,6 +23,17 @@ void Hierarchy::Initialize()
 void Hierarchy::Update()
 {
 	ImGui::Begin("Hierarchy");
+
+	if (ImGui::Button("Save Hierarchy"))
+	{
+		SaveHierarchy();
+	}
+
+	if (ImGui::Button("Load Hierarchy"))
+	{
+
+	}
+
 	DrawObject(myRoot);
 	ImGui::End();
 }
@@ -193,4 +205,26 @@ void Hierarchy::DrawObject(std::shared_ptr<HierarchyObject> aObject)
 			ImGui::TreePop();
 		}
 	}
+}
+
+void Hierarchy::SaveHierarchy()
+{
+	nlohmann::json json;
+	SaveObject(myRoot, json["Objects"]);
+	std::ofstream file("Assets/Json/Scenes/Hierarchy.json");
+	file << std::setw(4) << json;
+}
+
+void Hierarchy::SaveObject(const std::shared_ptr<HierarchyObject>& aObject, nlohmann::basic_json<>& aJson)
+{
+	aJson["Name"] = aObject->GetName();
+
+	for (int i = 0; i < aObject->GetChildren().size(); ++i)
+	{
+		SaveObject(aObject->GetChildren()[i], aJson["Children"][i]);
+	}
+}
+
+void Hierarchy::LoadHierarchy()
+{
 }
