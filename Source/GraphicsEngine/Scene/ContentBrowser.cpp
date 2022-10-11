@@ -35,6 +35,14 @@ void ContentBrowser::Update()
 			{
 				ImGui::Image(myFileIcon->GetSRV().Get(), { 90, 90 });
 
+				if (entry.path().extension() == ".dds")
+				{
+					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+					{
+						ImGui::SetDragDropPayload("TEXTURE", entry.path().string().c_str(), entry.path().string().size() + 1);
+						ImGui::EndDragDropSource();
+					}
+				}
 			}
 			//Directory entries
 			else if (entry.is_directory())

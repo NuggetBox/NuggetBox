@@ -12,6 +12,7 @@
 #include "imgui/imgui.h"
 #include "Scene/ContentBrowser.h"
 #include "Scene/Hierarchy.h"
+#include "Scene/TextureDropTarget.h"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
@@ -85,12 +86,12 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
 	system->SetPosition(0, 170, 0);
 	system->LoadAndInitialize("assets/Json/ParticleSystems/System1.json");
-	myScene.AddParticleSystem(system);
+	//myScene.AddParticleSystem(system);
 
 	std::shared_ptr<ParticleSystem> fire = std::make_shared<ParticleSystem>();
 	fire->SetPosition(200, 97, 0);
 	fire->LoadAndInitialize("assets/Json/ParticleSystems/System2.json");
-	myScene.AddParticleSystem(fire);
+	//myScene.AddParticleSystem(fire);
 
 	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(45, -45, 0)));
 	myScene.SetAmbientLight(AmbientLight::Create("assets/Textures/skansen_cubemap.dds"));
@@ -161,6 +162,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	Hierarchy::Initialize();
 	ContentBrowser::Initialize();
+	TextureDropTarget::Initialize();
 
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
@@ -620,6 +622,7 @@ void GraphicsEngine::RenderFrame()
 
 	Hierarchy::Update();
 	ContentBrowser::Update();
+	TextureDropTarget::Update(path);
 
 	if (path != "")
 	{
