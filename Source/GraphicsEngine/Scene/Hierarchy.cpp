@@ -20,8 +20,10 @@ void Hierarchy::Initialize()
 	myRoot->AddChild(std::make_shared<HierarchyObject>("DirectionalLight"), myRoot);
 }
 
-void Hierarchy::Update()
+void Hierarchy::Update(HWND aHandle)
 {
+	myHandle = aHandle;
+
 	ImGui::Begin("Hierarchy");
 
 	if (ImGui::Button("Save Hierarchy"))
