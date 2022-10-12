@@ -15,9 +15,12 @@ public:
 	static void SaveHierarchy();
 	static void SaveObject(const std::shared_ptr<HierarchyObject>& aObject, nlohmann::basic_json<>& aJson);
 	static void LoadHierarchy();
+	static void LoadObject(std::shared_ptr<HierarchyObject>& aObject, const nlohmann::basic_json<>& aJson);
 
 private:
-	static inline std::shared_ptr<HierarchyObject>myRoot;
+	static inline std::shared_ptr<HierarchyObject> myRoot;
 	static inline std::vector<std::shared_ptr<HierarchyObject>> mySelectedObjects;
 	static inline HWND myHandle;
+
+	static inline std::string myInputBuffer;
 };

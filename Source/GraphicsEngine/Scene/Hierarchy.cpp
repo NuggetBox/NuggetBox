@@ -3,7 +3,8 @@
 
 #include "json.hpp"
 #include "InputHandler.h"
-#include <imgui/imgui.h>
+#include "imgui/imgui.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
 
 void Hierarchy::Initialize()
 {
@@ -28,12 +29,33 @@ void Hierarchy::Update(HWND aHandle)
 
 	if (ImGui::Button("Save Hierarchy"))
 	{
-		SaveHierarchy();
+		ImGui::OpenPopup("SaveHierarchy");
+		myInputBuffer = "Hierarchy";
 	}
 
 	if (ImGui::Button("Load Hierarchy"))
 	{
+		ImGui::OpenPopup("LoadHierarchy");
+	}
 
+	if (ImGui::BeginPopup("SaveHierarchy"))
+	{
+		ImGui::InputText("Filename", &myInputBuffer);
+		if (ImGui::Button("Save"))
+		{
+			SaveHierarchy();
+		}
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopup("LoadHierarchy"))
+	{
+		ImGui::InputText("Filename", &myInputBuffer);
+		if (ImGui::Button("Load"))
+		{
+			LoadHierarchy();
+		}
+		ImGui::EndPopup();
 	}
 
 	DrawObject(myRoot);
@@ -213,7 +235,7 @@ void Hierarchy::SaveHierarchy()
 {
 	nlohmann::json json;
 	SaveObject(myRoot, json["Objects"]);
-	std::ofstream file("Assets/Json/Scenes/Hierarchy.json");
+	std::ofstream file("Assets/Json/Scenes/" + myInputBuffer + ".json");
 	file << std::setw(4) << json;
 }
 
@@ -229,4 +251,36 @@ void Hierarchy::SaveObject(const std::shared_ptr<HierarchyObject>& aObject, nloh
 
 void Hierarchy::LoadHierarchy()
 {
+	std::filesystem::path path = "Assets/Json/Scenes/" + myInputBuffer + ".json";
+
+	if (std::filesystem::exists(path))
+	{
+		std::fstream file;
+		file.open(path);
+		nlohmann::json json = nlohmann::json::parse(file);
+
+		if (json.contains("Objects"))
+		{
+			nlohmann::basic_json<> objects = json["Objects"];
+			LoadObject(myRoot, objects);
+		}
+	}
+}
+
+void Hierarchy::LoadObject(std::shared_ptr<HierarchyObject>& aObject, const nlohmann::basic_json<>& aJson)
+{
+	if (aJson.contains("Name"))
+	{
+		aObject = std::make_shared<HierarchyObject>(aJson["Name"]);
+	}
+
+	if (aJson.contains("Children"))
+	{
+		for (auto& child : aJson["Children"])
+		{
+			std::shared_ptr<HierarchyObject> obj;
+			LoadObject(obj, child);
+			aObject->AddChild(obj, aObject);
+		}
+	}
 }

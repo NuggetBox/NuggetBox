@@ -2,6 +2,9 @@
 #include "ContentBrowser.h"
 
 #include <imgui/imgui.h>
+#include <algorithm>
+#include <cctype>
+#include <string>
 
 void ContentBrowser::Initialize()
 {
@@ -24,7 +27,7 @@ void ContentBrowser::Update()
 		}
 	}
 
-	if (ImGui::BeginTable("##ContentBrowserStuff", ImGui::GetContentRegionAvail().x / 90.0f, ImGuiTableFlags_SizingFixedFit))
+	if (ImGui::BeginTable("##ContentBrowserStuff", ImGui::GetContentRegionAvail().x / 90.0f))
 	{
 		for (auto& entry : std::filesystem::directory_iterator(myCurrentPath))
 		{
@@ -35,7 +38,11 @@ void ContentBrowser::Update()
 			{
 				ImGui::Image(myFileIcon->GetSRV().Get(), { 90, 90 });
 
-				if (entry.path().extension() == ".dds")
+				std::string extension = entry.path().extension().string();
+				//To lower
+				std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return std::tolower(c); });
+
+				if (extension == ".dds")
 				{
 					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 					{

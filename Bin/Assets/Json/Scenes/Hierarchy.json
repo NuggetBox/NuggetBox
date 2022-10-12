@@ -8,11 +8,9 @@
                 "Name": "Cube"
             },
             {
-                "Children": [
-                    {
-                        "Name": "RunningGoblin"
-                    }
-                ],
+                "Name": "RunningGoblin"
+            },
+            {
                 "Name": "WalkingGoblin"
             },
             {
@@ -25,17 +23,13 @@
                 "Name": "Floor"
             },
             {
-                "Children": [
-                    {
-                        "Children": [
-                            {
-                                "Name": "DirectionalLight"
-                            }
-                        ],
-                        "Name": "PointLight"
-                    }
-                ],
+                "Name": "PointLight"
+            },
+            {
                 "Name": "SpotLight"
+            },
+            {
+                "Name": "DirectionalLight"
             }
         ],
         "Name": "Root"

@@ -1,0 +1,55 @@
+{
+    "Objects": {
+        "Children": [
+            {
+                "Children": [
+                    {
+                        "Children": [
+                            {
+                                "Children": [
+                                    {
+                                        "Children": [
+                                            {
+                                                "Children": [
+                                                    {
+                                                        "Children": [
+                                                            {
+                                                                "Children": [
+                                                                    {
+                                                                        "Children": [
+                                                                            {
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "SpotLight"
+                                                                                    }
+                                                                                ],
+                                                                                "Name": "PointLight"
+                                                                            }
+                                                                        ],
+                                                                        "Name": "Floor"
+                                                                    }
+                                                                ],
+                                                                "Name": "SpiderCat"
+                                                            }
+                                                        ],
+                                                        "Name": "Pyramid"
+                                                    }
+                                                ],
+                                                "Name": "WalkingGoblin"
+                                            }
+                                        ],
+                                        "Name": "RunningGoblin"
+                                    }
+                                ],
+                                "Name": "Cube"
+                            }
+                        ],
+                        "Name": "DirectionalLight"
+                    }
+                ],
+                "Name": "SpinningCube"
+            }
+        ],
+        "Name": "Root"
+    }
+}

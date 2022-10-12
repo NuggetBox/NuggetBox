@@ -24,5 +24,7 @@ void TextureDropTarget::Update(std::filesystem::path& aTextureToLoad)
 		}
 	}
 
+	ImGui::Text("Spider Cat Texture Dropping Area");
+
 	ImGui::End();
 }
