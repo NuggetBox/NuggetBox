@@ -620,7 +620,7 @@ void GraphicsEngine::RenderFrame()
 	std::filesystem::path path;
 	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
 
-	Hierarchy::Update(GetWindowHandle());
+	Hierarchy::Update();
 	ContentBrowser::Update();
 	TextureDropTarget::Update(path);
 

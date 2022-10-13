@@ -8,7 +8,7 @@ public:
 	Hierarchy() = default;
 
 	static void Initialize();
-	static void Update(HWND aHandle);
+	static void Update();
 
 	static void DrawObject(std::shared_ptr<HierarchyObject> aObject);
 
@@ -20,7 +20,6 @@ public:
 private:
 	static inline std::shared_ptr<HierarchyObject> myRoot;
 	static inline std::vector<std::shared_ptr<HierarchyObject>> mySelectedObjects;
-	static inline HWND myHandle;
 
 	static inline std::string myInputBuffer;
 };
