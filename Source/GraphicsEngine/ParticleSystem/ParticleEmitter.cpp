@@ -89,7 +89,7 @@ void ParticleEmitter::Update()
 	for (size_t i = 0; i < myParticles.size(); ++i)
 	{
 		ParticleVertex& particle = myParticles[i];
-		particle.LifeTime += Timer::GetDeltaTime();
+		particle.LifeTime += Utility::Timer::GetDeltaTime();
 
 		//Do not show dead particles
 		if (particle.LifeTime <= 0.0f)
@@ -106,12 +106,12 @@ void ParticleEmitter::Update()
 			}
 			else
 			{
-				particle.Velocity.y -= myEmitterSettings.GravityScale * Timer::GetDeltaTime();
+				particle.Velocity.y -= myEmitterSettings.GravityScale * Utility::Timer::GetDeltaTime();
 				//TODO: Air resistance/Limit to speed?
 
-				particle.Position.x += particle.Velocity.x * Timer::GetDeltaTime();
-				particle.Position.y += particle.Velocity.y * Timer::GetDeltaTime();
-				particle.Position.z += particle.Velocity.z * Timer::GetDeltaTime();
+				particle.Position.x += particle.Velocity.x * Utility::Timer::GetDeltaTime();
+				particle.Position.y += particle.Velocity.y * Utility::Timer::GetDeltaTime();
+				particle.Position.z += particle.Velocity.z * Utility::Timer::GetDeltaTime();
 
 				float lifePercentage = particle.LifeTime / myEmitterSettings.LifeTime;
 
@@ -145,7 +145,7 @@ void ParticleEmitter::Update()
 			}
 		}
 
-		mySpawnTimer -= Timer::GetDeltaTime();
+		mySpawnTimer -= Utility::Timer::GetDeltaTime();
 	}
 }
 

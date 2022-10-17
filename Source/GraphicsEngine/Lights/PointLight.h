@@ -4,7 +4,7 @@
 class PointLight : public Light
 {
 public:
-	static std::shared_ptr<PointLight> Create(Vector3f aColor, float anIntensity, Vector3f aPosition, float aRange);
+	static std::shared_ptr<PointLight> Create(Utility::Vector3f aColor, float anIntensity, Utility::Vector3f aPosition, float aRange);
 
 	void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) override;
 

@@ -32,7 +32,7 @@ void Model::SetMaterial(std::shared_ptr<Material> aMaterial)
 	}
 }
 
-void Model::AddRenderedInstance(const Matrix4f& aTransform)
+void Model::AddRenderedInstance(const Utility::Matrix4f& aTransform)
 {
 	myRenderedInstances.push_back({aTransform});
 }
@@ -240,7 +240,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 			for (int i = 0; i < loadedMesh.Vertices.size(); ++i)
 			{
 				//Copy vertex positions
-				memcpy_s(&vertices[i], sizeof(Vector4<float>), &loadedMesh.Vertices[i].Position, sizeof(float[4]));
+				memcpy_s(&vertices[i], sizeof(Utility::Vector4<float>), &loadedMesh.Vertices[i].Position, sizeof(float[4]));
 
 				//Copy vertex colors
 				for (int verCol = 0; verCol < 4; ++verCol)
@@ -325,7 +325,7 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 				skeletonData.BoneNameToIndex.insert(std::pair(tgaModel.Skeleton.Joints[i].Name, i));
 
 				skeletonData.Bones[i].Parent = tgaModel.Skeleton.Joints[i].Parent;
-				memcpy_s(&skeletonData.Bones[i].BindPoseInverse, sizeof(Matrix4f), &tgaModel.Skeleton.Joints[i].BindPoseInverse, sizeof(TGA::Matrix));
+				memcpy_s(&skeletonData.Bones[i].BindPoseInverse, sizeof(Utility::Matrix4f), &tgaModel.Skeleton.Joints[i].BindPoseInverse, sizeof(TGA::Matrix));
 
 				/*skeleton.Bones[i].Children.resize(tgaModel.Skeleton.Joints[i].Children.size());
 				for (size_t c = 0; c < tgaModel.Skeleton.Joints[i].Children.size(); ++c)
@@ -365,7 +365,7 @@ void Model::Update(bool aLerpAnimations)
 	{
 		const std::shared_ptr<Animation>& currentAnim = myAnimations[myCurrentAnim];
 
-		myAnimationTimer += Timer::GetDeltaTime();
+		myAnimationTimer += Utility::Timer::GetDeltaTime();
 
 		if (myAnimationTimer > currentAnim->GetDuration())
 		{
@@ -381,11 +381,11 @@ void Model::Update(bool aLerpAnimations)
 
 		if (aLerpAnimations)
 		{
-			LerpAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0], lerpFactor);
+			LerpAnimationHierarchy(currentFrame, nextFrame, 0, Utility::Matrix4f(), &myBoneTransforms[0], lerpFactor);
 		}
 		else
 		{
-			UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Matrix4f(), &myBoneTransforms[0]);
+			UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Utility::Matrix4f(), &myBoneTransforms[0]);
 		}
 	}
 }
@@ -410,13 +410,13 @@ bool Model::HasBones() const
 	return HasSkeleton() && myModelData.mySkeleton->GetRoot() != nullptr;
 }
 
-void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms)
+void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Utility::Matrix4f& aParentTransform, Utility::Matrix4f* outBoneTransforms)
 {
 	const BoneData& currentBone = myModelData.mySkeleton->GetBones()[aBoneIndex];
-	const Matrix4f currentBoneLocalTransform = myAnimations[myCurrentAnim]->GetFrames()[aCurrentFrame].LocalTransforms[aBoneIndex];
-	const Matrix4f currentBoneGlobalTransform = aParentTransform * currentBoneLocalTransform;
+	const Utility::Matrix4f currentBoneLocalTransform = myAnimations[myCurrentAnim]->GetFrames()[aCurrentFrame].LocalTransforms[aBoneIndex];
+	const Utility::Matrix4f currentBoneGlobalTransform = aParentTransform * currentBoneLocalTransform;
 
-	Matrix4f finalBoneTransform;
+	Utility::Matrix4f finalBoneTransform;
 	finalBoneTransform *= currentBoneGlobalTransform; // Cursed: finalBoneTransform *= currentBoneLocalTransform;
 	finalBoneTransform *= currentBone.BindPoseInverse;
 
@@ -429,16 +429,16 @@ void Model::UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame
 }
 
 void Model::LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex,
-	const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms, float aLerpFactor)
+	const Utility::Matrix4f& aParentTransform, Utility::Matrix4f* outBoneTransforms, float aLerpFactor)
 {
 	const BoneData& currentBone = myModelData.mySkeleton->GetBones()[aBoneIndex];
-	const Matrix4f currentBoneLocalTransform = myAnimations[myCurrentAnim]->GetFrames()[aCurrentFrame].LocalTransforms[aBoneIndex];
-	const Matrix4f currentBoneGlobalTransform = aParentTransform * currentBoneLocalTransform;
+	const Utility::Matrix4f currentBoneLocalTransform = myAnimations[myCurrentAnim]->GetFrames()[aCurrentFrame].LocalTransforms[aBoneIndex];
+	const Utility::Matrix4f currentBoneGlobalTransform = aParentTransform * currentBoneLocalTransform;
 
-	const Matrix4f currentBoneLocalTransformNextFrame = myAnimations[myCurrentAnim]->GetFrames()[aNextFrame].LocalTransforms[aBoneIndex];
-	const Matrix4f currentBoneGlobalTransformNextFrame = aParentTransform * currentBoneLocalTransformNextFrame;
+	const Utility::Matrix4f currentBoneLocalTransformNextFrame = myAnimations[myCurrentAnim]->GetFrames()[aNextFrame].LocalTransforms[aBoneIndex];
+	const Utility::Matrix4f currentBoneGlobalTransformNextFrame = aParentTransform * currentBoneLocalTransformNextFrame;
 
-	Matrix4f finalBoneTransform = Matrix4f::Lerp(currentBoneGlobalTransform, currentBoneGlobalTransformNextFrame, aLerpFactor);
+	Utility::Matrix4f finalBoneTransform = Utility::Matrix4f::Lerp(currentBoneGlobalTransform, currentBoneGlobalTransformNextFrame, aLerpFactor);
 
 	for (unsigned child : currentBone.Children)
 	{

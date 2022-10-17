@@ -4,7 +4,7 @@
 class SpotLight : public Light
 {
 public:
-	static std::shared_ptr<SpotLight> Create(Vector3f aColor, float anIntensity, Vector3f aPosition, float aRange, Vector3f aRotation, float anInnerRadius, float anOuterRadius);
+	static std::shared_ptr<SpotLight> Create(Utility::Vector3f aColor, float anIntensity, Utility::Vector3f aPosition, float aRange, Utility::Vector3f aRotation, float anInnerRadius, float anOuterRadius);
 
 	void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) override;
 

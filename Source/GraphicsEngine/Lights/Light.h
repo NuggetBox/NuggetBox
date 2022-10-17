@@ -27,9 +27,9 @@ public:
 
 	const LightBufferData& GetLightBuffer() const { return myLightBufferData; }
 
-	Vector3f GetColor() const { return myLightBufferData.Color; }
+	Utility::Vector3f GetColor() const { return myLightBufferData.Color; }
 	float GetIntensity() const { return myLightBufferData.Intensity; }
-	Vector3f GetDirection() const { return myLightBufferData.Direction; }
+	Utility::Vector3f GetDirection() const { return myLightBufferData.Direction; }
 	bool CastShadows() const { return myLightBufferData.CastShadows; }
 	LightType GetLightType() const { return static_cast<LightType>(myLightBufferData.LightType); }
 

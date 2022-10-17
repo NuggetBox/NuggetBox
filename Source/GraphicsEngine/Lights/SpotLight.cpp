@@ -1,7 +1,7 @@
 #include "NuggetBox.pch.h"
 #include "SpotLight.h"
 
-std::shared_ptr<SpotLight> SpotLight::Create(Vector3f aColor, float anIntensity, Vector3f aPosition, float aRange, Vector3f aRotation, float anInnerRadius, float anOuterRadius)
+std::shared_ptr<SpotLight> SpotLight::Create(Utility::Vector3f aColor, float anIntensity, Utility::Vector3f aPosition, float aRange, Utility::Vector3f aRotation, float anInnerRadius, float anOuterRadius)
 {
 	SpotLight spotLight;
 	ZeroMemory(&spotLight.myLightBufferData, sizeof(LightBufferData));
@@ -24,8 +24,8 @@ std::shared_ptr<SpotLight> SpotLight::Create(Vector3f aColor, float anIntensity,
 	constexpr POINT shadowResolution = { 2048, 2048 };
 	constexpr POINT projectionSize = { 2048, 2048 };
 
-	spotLight.myLightBufferData.ViewMatrix[0] = Matrix4f::GetFastInverse(spotLight.myTransform.GetMatrix());
-	spotLight.myLightBufferData.ProjectionMatrix = Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
+	spotLight.myLightBufferData.ViewMatrix[0] = Utility::Matrix4f::GetFastInverse(spotLight.myTransform.GetMatrix());
+	spotLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
 	spotLight.myLightBufferData.CastShadows = true;
 
 	spotLight.myLightBufferData.FarPlane = farPlane;

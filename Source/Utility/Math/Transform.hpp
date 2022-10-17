@@ -2,68 +2,66 @@
 #include "Matrix.h"
 #include "Vector.h"
 
-using namespace Utility;
-
 class Transform 
 {
 public:
 	Transform();
 	Transform(const Transform& aTransform);
-	Transform(const Vector3f& aPosition, const Vector3f& aRotation, const Vector3f& aScale);
+	Transform(const Utility::Vector3f& aPosition, const Utility::Vector3f& aRotation, const Utility::Vector3f& aScale);
 
-	void SetPosition(const Vector3f& aPosition);
+	void SetPosition(const Utility::Vector3f& aPosition);
 	void SetPosition(float aX, float aY, float aZ);
 	void SetXPosition(float aX);
 	void SetYPosition(float aY);
 	void SetZPosition(float aZ);
 
-	void SetRotation(const Vector3f& aRotation);
+	void SetRotation(const Utility::Vector3f& aRotation);
 	void SetRotation(float aX, float aY, float aZ);
 	void SetXRotation(float aX);
 	void SetYRotation(float aY);
 	void SetZRotation(float aZ);
 
-	void SetScale(Matrix4f aScaleMatrix);
-	void SetScale(Vector3f aScaleVector);
+	void SetScale(Utility::Matrix4f aScaleMatrix);
+	void SetScale(Utility::Vector3f aScaleVector);
 	void SetScale(float aX, float aY, float az);
 	void SetXScale(float aX);
 	void SetYScale(float aY);
 	void SetZScale(float aZ);
 
-	void AddPosition(Vector3f someMovement);
+	void AddPosition(Utility::Vector3f someMovement);
 	void AddPosition(float aX, float aY, float aZ);
 
-	void AddRotation(Vector3f someRotation);
+	void AddRotation(Utility::Vector3f someRotation);
 	void AddRotation(float aX, float aY, float aZ);
 
-	Matrix4f GetMatrix();
+	Utility::Matrix4f GetMatrix();
 
-	Vector3<float> GetPosition() const;
+	Utility::Vector3<float> GetPosition() const;
 	float GetXPosition() const;
 	float GetYPosition() const;
 	float GetZPosition() const;
 
-	Vector3<float> GetRotation() const;
-	Vector3<float> GetScale() const;
+	Utility::Vector3<float> GetRotation() const;
+	Utility::Vector3<float> GetScale() const;
 
-	Vector3<float> GetRight();
-	Vector3<float> GetLeft();
+	Utility::Vector3<float> GetRight();
+	Utility::Vector3<float> GetLeft();
 
-	Vector3<float> GetUp();
-	Vector3<float> GetDown();
+	Utility::Vector3<float> GetUp();
+	Utility::Vector3<float> GetDown();
 
-	Vector3<float> GetForward();
-	Vector3<float> GetBackward();
+	Utility::Vector3<float> GetForward();
+	Utility::Vector3<float> GetBackward();
 
 private:
 	void NormalizeRotations();
 
-	Matrix4f myCachedMatrix;
+	Utility::Matrix4f myCachedMatrix;
 	bool myWasModified;
 
-	Vector3f myPosition;
-	Vector3f myRotation;
-	Vector3f myScale;
+	Utility::Vector3f myPosition;
+	Utility::Vector3f myRotation;
+	Utility::Vector3f myScale;
 };
 
 inline Transform::Transform() : myScale(1, 1, 1)
@@ -80,7 +78,7 @@ inline Transform::Transform(const Transform& aTransform)
 	myWasModified = false;
 }
 
-inline Transform::Transform(const Vector3f& aPosition, const Vector3f& aRotation, const Vector3f& aScale)
+inline Transform::Transform(const Utility::Vector3f& aPosition, const Utility::Vector3f& aRotation, const Utility::Vector3f& aScale)
 {
 	myPosition = aPosition;
 	myRotation = aRotation;
@@ -88,7 +86,7 @@ inline Transform::Transform(const Vector3f& aPosition, const Vector3f& aRotation
 	myWasModified = true;
 }
 
-inline void Transform::SetPosition(const Vector3f& aPosition)
+inline void Transform::SetPosition(const Utility::Vector3f& aPosition)
 {
 	myPosition = aPosition;
 	myWasModified = true;
@@ -96,7 +94,7 @@ inline void Transform::SetPosition(const Vector3f& aPosition)
 
 inline void Transform::SetPosition(float aX, float aY, float aZ)
 {
-	myPosition = Vector3f(aX, aY, aZ);
+	myPosition = Utility::Vector3f(aX, aY, aZ);
 	myWasModified = true;
 }
 
@@ -118,7 +116,7 @@ inline void Transform::SetZPosition(float aZ)
 	myWasModified = true;
 }
 
-inline void Transform::SetRotation(const Vector3f& aRotation)
+inline void Transform::SetRotation(const Utility::Vector3f& aRotation)
 {
 	myRotation = aRotation;
 	myWasModified = true;
@@ -150,7 +148,7 @@ inline void Transform::SetZRotation(float aZ)
 	myWasModified = true;
 }
 
-inline void Transform::SetScale(Matrix4f aScaleMatrix)
+inline void Transform::SetScale(Utility::Matrix4f aScaleMatrix)
 {
 	myScale.x = aScaleMatrix(1, 1);
 	myScale.y = aScaleMatrix(2, 2);
@@ -158,7 +156,7 @@ inline void Transform::SetScale(Matrix4f aScaleMatrix)
 	myWasModified = true;
 }
 
-inline void Transform::SetScale(Vector3f aScaleVector)
+inline void Transform::SetScale(Utility::Vector3f aScaleVector)
 {
 	myScale = aScaleVector;
 	myWasModified = true;
@@ -190,7 +188,7 @@ inline void Transform::SetZScale(float aZ)
 	myWasModified = true;
 }
 
-inline void Transform::AddPosition(Vector3f someMovement)
+inline void Transform::AddPosition(Utility::Vector3f someMovement)
 {
 	myPosition += someMovement;
 	myWasModified = true;
@@ -204,7 +202,7 @@ inline void Transform::AddPosition(float aX, float aY, float aZ)
 	myWasModified = true;
 }
 
-inline void Transform::AddRotation(Vector3f someRotation)
+inline void Transform::AddRotation(Utility::Vector3f someRotation)
 {
 	myRotation += someRotation;
 	NormalizeRotations();
@@ -220,22 +218,22 @@ inline void Transform::AddRotation(float aX, float aY, float aZ)
 	myWasModified = true;
 }
 
-inline Matrix4f Transform::GetMatrix()
+inline Utility::Matrix4f Transform::GetMatrix()
 {
 	if (myWasModified)
 	{
-		Matrix4f result;
+		Utility::Matrix4f result;
 
-		Matrix4f scaleMatrix;
+		Utility::Matrix4f scaleMatrix;
 		scaleMatrix(1, 1) = myScale.x;
 		scaleMatrix(2, 2) = myScale.y;
 		scaleMatrix(3, 3) = myScale.z;
 
-		Matrix4f rotationX = Matrix4f::CreateRotationAroundX(DEGTORAD(myRotation.x));
-		Matrix4f rotationY = Matrix4f::CreateRotationAroundY(DEGTORAD(myRotation.y));
-		Matrix4f rotationZ = Matrix4f::CreateRotationAroundZ(DEGTORAD(myRotation.z));
+		Utility::Matrix4f rotationX = Utility::Matrix4f::CreateRotationAroundX(DEGTORAD(myRotation.x));
+		Utility::Matrix4f rotationY = Utility::Matrix4f::CreateRotationAroundY(DEGTORAD(myRotation.y));
+		Utility::Matrix4f rotationZ = Utility::Matrix4f::CreateRotationAroundZ(DEGTORAD(myRotation.z));
 
-		Matrix4f translationMatrix;
+		Utility::Matrix4f translationMatrix;
 		translationMatrix(4, 1) = myPosition.x;
 		translationMatrix(4, 2) = myPosition.y;
 		translationMatrix(4, 3) = myPosition.z;
@@ -254,7 +252,7 @@ inline Matrix4f Transform::GetMatrix()
 	return myCachedMatrix;
 }
 
-inline Vector3f Transform::GetPosition() const
+inline Utility::Vector3f Transform::GetPosition() const
 {
 	return myPosition;
 }
@@ -274,45 +272,45 @@ inline float Transform::GetZPosition() const
 	return myPosition.z;
 }
 
-inline Vector3f Transform::GetRotation() const
+inline Utility::Vector3f Transform::GetRotation() const
 {
 	return myRotation;
 }
 
-inline Vector3f Transform::GetScale() const
+inline Utility::Vector3f Transform::GetScale() const
 {
 	return myScale;
 }
 
-inline Vector3<float> Transform::GetRight()
+inline Utility::Vector3<float> Transform::GetRight()
 {
-	Matrix4f transform = GetMatrix();
-	return Vector3f(transform(1, 1), transform(1, 2), transform(1, 3)).GetNormalized();
+	Utility::Matrix4f transform = GetMatrix();
+	return Utility::Vector3f(transform(1, 1), transform(1, 2), transform(1, 3)).GetNormalized();
 }
 
-inline Vector3<float> Transform::GetLeft()
+inline Utility::Vector3<float> Transform::GetLeft()
 {
 	return GetRight() * -1.0f;
 }
 
-inline Vector3<float> Transform::GetUp()
+inline Utility::Vector3<float> Transform::GetUp()
 {
-	Matrix4f transform = GetMatrix();
-	return Vector3f(transform(2, 1), transform(2, 2), transform(2, 3)).GetNormalized();
+	Utility::Matrix4f transform = GetMatrix();
+	return Utility::Vector3f(transform(2, 1), transform(2, 2), transform(2, 3)).GetNormalized();
 }
 
-inline Vector3<float> Transform::GetDown()
+inline Utility::Vector3<float> Transform::GetDown()
 {
 	return GetUp() * -1.0f;
 }
 
-inline Vector3<float> Transform::GetForward()
+inline Utility::Vector3<float> Transform::GetForward()
 {
-	Matrix4f transform = GetMatrix();
-	return Vector3f(transform(3, 1), transform(3, 2), transform(3, 3)).GetNormalized();
+	Utility::Matrix4f transform = GetMatrix();
+	return Utility::Vector3f(transform(3, 1), transform(3, 2), transform(3, 3)).GetNormalized();
 }
 
-inline Vector3<float> Transform::GetBackward()
+inline Utility::Vector3<float> Transform::GetBackward()
 {
 	return GetForward() * -1.0f;
 }

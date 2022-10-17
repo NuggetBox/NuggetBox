@@ -3,7 +3,7 @@
 
 #include "Core/DebugLogger.h"
 
-std::shared_ptr<DirectionalLight> DirectionalLight::Create(Vector3f aColor, float anIntensity, Vector3f aRotation)
+std::shared_ptr<DirectionalLight> DirectionalLight::Create(Utility::Vector3f aColor, float anIntensity, Utility::Vector3f aRotation)
 {
 	DirectionalLight directionalLight;
 	ZeroMemory(&directionalLight.myLightBufferData, sizeof(LightBufferData));
@@ -21,7 +21,7 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Vector3f aColor, floa
 	constexpr POINT shadowResolution = { 16384, 16384 };
 	constexpr POINT projectionSize = { 2048, 2048 };
 
-	directionalLight.myLightBufferData.ProjectionMatrix = Matrix4f::CreateProjectionMatrixOrthographic(projectionSize.x, projectionSize.y, nearPlane, farPlane);
+	directionalLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixOrthographic(projectionSize.x, projectionSize.y, nearPlane, farPlane);
 	directionalLight.myLightBufferData.CastShadows = true;
 
 	directionalLight.myLightBufferData.FarPlane = farPlane;
@@ -46,10 +46,10 @@ void DirectionalLight::SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer)
 	DX11::Context->PSSetConstantBuffers(3, 1, aLightBuffer.GetAddressOf());*/
 }
 
-void DirectionalLight::Update(const Vector3f& aCameraPosition)
+void DirectionalLight::Update(const Utility::Vector3f& aCameraPosition)
 {
 	//TODO: Find a good distance to move the camera relative to player camera
-	Vector3f moveBackDiff = myTransform.GetBackward() * 1000.0f;
+	Utility::Vector3f moveBackDiff = myTransform.GetBackward() * 1000.0f;
 	myTransform.SetPosition(aCameraPosition + moveBackDiff);
-	myLightBufferData.ViewMatrix[0] = Matrix4f::GetFastInverse(myTransform.GetMatrix());
+	myLightBufferData.ViewMatrix[0] = Utility::Matrix4f::GetFastInverse(myTransform.GetMatrix());
 }

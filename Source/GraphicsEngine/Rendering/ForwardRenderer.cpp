@@ -52,7 +52,7 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
-    myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
+    myFrameBufferData.View = Utility::Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
     myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
@@ -76,7 +76,7 @@ void ForwardRenderer::RenderModels(const std::shared_ptr<Camera>& aCamera, const
         myObjectBufferData.World = model->GetTransform().GetMatrix();
 
         //Copy BoneTransforms
-        memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Matrix4f) * MAX_BONES);
+        memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Utility::Matrix4f) * MAX_BONES);
 
         //Cursed bool padding problems, zeromemory for now
         ZeroMemory(&myObjectBufferData.HasBones, 16);
@@ -164,7 +164,7 @@ void ForwardRenderer::RenderParticles(const std::shared_ptr<Camera>& aCamera,
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
     //Update frame buffer data for this frame, later to be used as resource
-    myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
+    myFrameBufferData.View = Utility::Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
     myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);

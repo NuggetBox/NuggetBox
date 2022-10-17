@@ -11,7 +11,7 @@ void SceneObject::SetTransform(const Transform& aTransform)
     myTransform = aTransform;
 }
 
-void SceneObject::SetPosition(const Vector3<float>& aPosition)
+void SceneObject::SetPosition(const Utility::Vector3<float>& aPosition)
 {
     myTransform.SetPosition(aPosition);
 }
@@ -21,17 +21,17 @@ void SceneObject::SetPosition(float aX, float aY, float aZ)
     myTransform.SetPosition(aX, aY, aZ);
 }
 
-void SceneObject::SetRotation(const Vector3<float>& aRotation)
+void SceneObject::SetRotation(const Utility::Vector3<float>& aRotation)
 {
     myTransform.SetRotation(aRotation);
 }
 
-void SceneObject::SetScale(const Vector3<float>& aScale)
+void SceneObject::SetScale(const Utility::Vector3<float>& aScale)
 {
     myTransform.SetScale(aScale);
 }
 
-void SceneObject::AddPosition(const Vector3<float>& aPosition)
+void SceneObject::AddPosition(const Utility::Vector3<float>& aPosition)
 {
     myTransform.AddPosition(aPosition);
 }

@@ -11,12 +11,12 @@ public:
 	bool GetShouldSpin() { return mySpin; }
 
 	void SetTransform(const Transform& aTransform);
-	void SetPosition(const Vector3<float>& aPosition);
+	void SetPosition(const Utility::Vector3<float>& aPosition);
 	void SetPosition(float aX, float aY, float aZ);
-	void SetRotation(const Vector3<float>& aRotation);
-	void SetScale(const Vector3<float>& aScale);
+	void SetRotation(const Utility::Vector3<float>& aRotation);
+	void SetScale(const Utility::Vector3<float>& aScale);
 
-	void AddPosition(const Vector3<float>& aPosition);
+	void AddPosition(const Utility::Vector3<float>& aPosition);
 	void AddPosition(float aX, float aY, float aZ);
 	void AddRotation(float aX, float aY, float aZ);
 

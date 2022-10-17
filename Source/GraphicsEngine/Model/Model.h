@@ -8,14 +8,6 @@
 #include "Model/Animation/Skeleton.h"
 #include "Model/Animation/Animation.h"
 
-//using namespace Microsoft::WRL;
-using namespace Utility;
-
-//struct ID3D11Buffer;
-//struct ID3D11InputLayout;
-//struct ID3D11VertexShader;
-//struct ID3D11PixelShader;
-
 struct ModelData
 {
 	std::vector<Mesh> myMeshes;
@@ -24,7 +16,7 @@ struct ModelData
 
 struct InstanceData
 {
-	Matrix4f World;
+	Utility::Matrix4f World;
 };
 
 class Model : public SceneObject
@@ -50,12 +42,12 @@ public:
 	bool HasBones() const;
 
 	//TODO: Fix something
-	Matrix4f* GetBoneTransforms() { return myBoneTransforms; }
+	Utility::Matrix4f* GetBoneTransforms() { return myBoneTransforms; }
 
 	//:(
 	void SetMaterial(std::shared_ptr<Material> aMaterial);
 
-	void AddRenderedInstance(const Matrix4f& aTransform);
+	void AddRenderedInstance(const Utility::Matrix4f& aTransform);
 	void UpdateInstanceBuffer();
 	bool HasRenderedInstances() const { return !myRenderedInstances.empty(); }
 	int GetNumberOfInstances() const { return myRenderedInstances.size(); }
@@ -76,9 +68,9 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Animation>> myAnimations;
 
 	//TODO: REFACTOR ANIMATIONS
-	Matrix4f myBoneTransforms[MAX_BONES] = { Matrix4f() };
-	void UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms);
-	void LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Matrix4f& aParentTransform, Matrix4f* outBoneTransforms, float aLerpFactor);
+	Utility::Matrix4f myBoneTransforms[MAX_BONES] = { Utility::Matrix4f() };
+	void UpdateAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Utility::Matrix4f& aParentTransform, Utility::Matrix4f* outBoneTransforms);
+	void LerpAnimationHierarchy(unsigned aCurrentFrame, unsigned aNextFrame, unsigned aBoneIndex, const Utility::Matrix4f& aParentTransform, Utility::Matrix4f* outBoneTransforms, float aLerpFactor);
 	//TODO: Make unique timer for each animation
 	float myAnimationTimer = 0;
 	//TODO: better solution for current anim

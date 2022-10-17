@@ -21,7 +21,7 @@ private:
 		LightBufferData Lights[MAX_DEFERRED_LIGHTS];
 
 		unsigned NumLights;
-		Vector3f Padding;
+		Utility::Vector3f Padding;
 	} mySceneLightBufferData;
 
 	std::shared_ptr<PixelShader> myPixelShader;

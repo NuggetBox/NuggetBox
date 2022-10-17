@@ -39,7 +39,7 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, c
 {
     D3D11_MAPPED_SUBRESOURCE bufferData;
 
-    myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
+    myFrameBufferData.View = Utility::Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
     myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);
@@ -59,7 +59,7 @@ void DeferredRenderer::GenerateGBuffer(const std::shared_ptr<Camera>& aCamera, c
     {
         //Object Buffer
         myObjectBufferData.World = model->GetTransform().GetMatrix();
-        memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Matrix4f) * MAX_BONES);
+        memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Utility::Matrix4f) * MAX_BONES);
         ZeroMemory(&myObjectBufferData.HasBones, 16);
         myObjectBufferData.HasBones = model->HasBones();
         myObjectBufferData.IsInstanced = model->HasRenderedInstances();
@@ -111,7 +111,7 @@ void DeferredRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std:
     //Frame Buffer
     D3D11_MAPPED_SUBRESOURCE bufferData;
     ZeroMemory(&myFrameBufferData, sizeof(FrameBufferData));
-    myFrameBufferData.View = Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
+    myFrameBufferData.View = Utility::Matrix4x4<float>::GetFastInverse(aCamera->GetTransform().GetMatrix());
     myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
     myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
     myFrameBufferData.RenderMode = static_cast<UINT>(aRenderMode);

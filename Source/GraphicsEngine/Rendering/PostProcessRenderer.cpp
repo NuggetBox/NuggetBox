@@ -38,17 +38,17 @@ void PostProcessRenderer::Render(PostProcessPass aPass, std::shared_ptr<Camera>&
 	const HWND handle = swapChainDesc.OutputWindow;
 	RECT clientRect;
 	GetClientRect(handle, &clientRect);
-	Vector2<unsigned> resolution = { static_cast<unsigned>(clientRect.right - clientRect.left), static_cast<unsigned>(clientRect.bottom - clientRect.top) };
+	Utility::Vector2<unsigned> resolution = { static_cast<unsigned>(clientRect.right - clientRect.left), static_cast<unsigned>(clientRect.bottom - clientRect.top) };
 
-	myFrameBufferData.View = Matrix4f::GetFastInverse(aCamera->GetTransform().GetMatrix());
+	myFrameBufferData.View = Utility::Matrix4f::GetFastInverse(aCamera->GetTransform().GetMatrix());
 	myFrameBufferData.CamTranslation = aCamera->GetTransform().GetPosition();
 	myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
 	myFrameBufferData.NearPlane = aCamera->GetNearPlane();
 	myFrameBufferData.FarPlane = aCamera->GetFarPlane();
 	myFrameBufferData.Resolution = resolution;
 	myFrameBufferData.RenderMode = 0;
-	myFrameBufferData.DeltaTime = Timer::GetDeltaTime();
-	myFrameBufferData.TotalTime = Timer::GetTotalTime();
+	myFrameBufferData.DeltaTime = Utility::Timer::GetDeltaTime();
+	myFrameBufferData.TotalTime = Utility::Timer::GetTotalTime();
 
 	const float aspectRatio = static_cast<float>(myFrameBufferData.Resolution.x) / static_cast<float>(myFrameBufferData.Resolution.y);
 	const float halfHeight = myFrameBufferData.FarPlane * tanf(0.5f * aCamera->GetFov());

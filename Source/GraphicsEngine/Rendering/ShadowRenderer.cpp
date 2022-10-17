@@ -41,8 +41,8 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
     myFrameBufferData.NearPlane = lightBufferData.NearPlane;
     myFrameBufferData.FarPlane = lightBufferData.FarPlane;
     myFrameBufferData.RenderMode = 0;
-    myFrameBufferData.DeltaTime = Timer::GetDeltaTime();
-    myFrameBufferData.TotalTime = static_cast<float>(Timer::GetTotalTime());
+    myFrameBufferData.DeltaTime = Utility::Timer::GetDeltaTime();
+    myFrameBufferData.TotalTime = static_cast<float>(Utility::Timer::GetTotalTime());
 
     DX11::Context->PSSetShader(nullptr, nullptr, 0);
     DX11::Context->GSSetShader(nullptr, nullptr, 0);
@@ -59,7 +59,7 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
     {
         //Set Object buffer data
         myObjectBufferData.World = model->GetTransform().GetMatrix();
-        memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Matrix4f) * MAX_BONES);
+        memcpy_s(&myObjectBufferData.BoneData, sizeof(myObjectBufferData.BoneData) * MAX_BONES, model->GetBoneTransforms(), sizeof(Utility::Matrix4f) * MAX_BONES);
         ZeroMemory(&myObjectBufferData.HasBones, 16);
         myObjectBufferData.HasBones = model->HasBones();
         myObjectBufferData.IsInstanced = model->HasRenderedInstances();

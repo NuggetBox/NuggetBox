@@ -72,7 +72,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	auto sphere = Model::Load("assets/meshes/sphere.fbx");
 	sphere->AddPosition(500, 250, 0);
-	sphere->SetScale(Vector3f(50, 50, 50));
+	sphere->SetScale(Utility::Vector3f(50, 50, 50));
 	myScene.AddModel(sphere);
 
 	/*auto skybox = Model::Load("meshes/Sphere.fbx");
@@ -86,14 +86,14 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
 	system->SetPosition(0, 170, 0);
 	system->LoadAndInitialize("assets/Json/ParticleSystems/System1.json");
-	//myScene.AddParticleSystem(system);
+	myScene.AddParticleSystem(system);
 
 	std::shared_ptr<ParticleSystem> fire = std::make_shared<ParticleSystem>();
 	fire->SetPosition(200, 97, 0);
 	fire->LoadAndInitialize("assets/Json/ParticleSystems/System2.json");
-	//myScene.AddParticleSystem(fire);
+	myScene.AddParticleSystem(fire);
 
-	myScene.SetDirectionalLight(DirectionalLight::Create(Vector3f::One(), 1.0f, Vector3f(45, -45, 0)));
+	myScene.SetDirectionalLight(DirectionalLight::Create(Utility::Vector3f::One(), 1.0f, Utility::Vector3f(45, -45, 0)));
 	myScene.SetAmbientLight(AmbientLight::Create("assets/Textures/skansen_cubemap.dds"));
 
 	//POINT LIGHT TESTING
@@ -131,7 +131,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 		for (int j = 0; j < 8; ++j)
 		{
 			Transform transform;
-			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Vector3f(i * 200, 0, j * 200));
+			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Utility::Vector3f(i * 200, 0, j * 200));
 			transform.SetRotation(instancedChest->GetTransform().GetRotation());
 			instancedChest->AddRenderedInstance(transform.GetMatrix());
 		}
@@ -166,7 +166,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
-	Timer::Update();
+	Utility::Timer::Update();
 	DEBUGLOG("Graphics Engine Initialized");
 	return true;
 }
@@ -301,7 +301,7 @@ LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WP
 	if (engine != nullptr)
 		engine->AcceptFiles(hWnd);
 
-	if (InputHandler::UpdateEvents(uMsg, wParam, lParam))
+	if (Utility::InputHandler::UpdateEvents(uMsg, wParam, lParam))
 	{
 		return 0;
 	}
@@ -494,57 +494,57 @@ void GraphicsEngine::CameraControls(std::shared_ptr<Camera> aCamera)
 {
 	float cameraSpeed = myCameraSpeed;
 
-	if (InputHandler::GetKeyHeld(VK_SHIFT))
+	if (Utility::InputHandler::GetKeyHeld(VK_SHIFT))
 	{
 		cameraSpeed *= 4.0f;
 	}
 
-	const float step = Timer::GetDeltaTime() * cameraSpeed;
+	const float step = Utility::Timer::GetDeltaTime() * cameraSpeed;
 
-	if (InputHandler::GetKeyHeld('W'))
+	if (Utility::InputHandler::GetKeyHeld('W'))
 	{
 		aCamera->AddPosition(aCamera->GetTransform().GetForward() * step);
 	}
-	if (InputHandler::GetKeyHeld('A'))
+	if (Utility::InputHandler::GetKeyHeld('A'))
 	{
 		aCamera->AddPosition(aCamera->GetTransform().GetLeft() * step);
 	}
-	if (InputHandler::GetKeyHeld('S'))
+	if (Utility::InputHandler::GetKeyHeld('S'))
 	{
 		aCamera->AddPosition(aCamera->GetTransform().GetBackward() * step);
 	}
-	if (InputHandler::GetKeyHeld('D'))
+	if (Utility::InputHandler::GetKeyHeld('D'))
 	{
 		aCamera->AddPosition(aCamera->GetTransform().GetRight() * step);
 	}
 
-	if (InputHandler::GetKeyHeld(VK_CONTROL))
+	if (Utility::InputHandler::GetKeyHeld(VK_CONTROL))
 	{
-		aCamera->AddPosition(Vector3f(0, -1, 0) * step);
+		aCamera->AddPosition(Utility::Vector3f(0, -1, 0) * step);
 	}
-	if (InputHandler::GetKeyHeld(VK_SPACE))
+	if (Utility::InputHandler::GetKeyHeld(VK_SPACE))
 	{
-		aCamera->AddPosition(Vector3f(0, 1, 0) * step);
+		aCamera->AddPosition(Utility::Vector3f(0, 1, 0) * step);
 	}
 
-	const int scrollDelta = InputHandler::GetScrollWheelDelta();
+	const int scrollDelta = Utility::InputHandler::GetScrollWheelDelta();
 
 	//Increase speed on scroll up
 	if (scrollDelta > 0)
 	{
-		myCameraSpeed += Timer::GetDeltaTime() * 1000;
+		myCameraSpeed += Utility::Timer::GetDeltaTime() * 1000;
 	}
 	//Decrease on scroll down
 	else if (scrollDelta < 0)
 	{
-		myCameraSpeed -= Timer::GetDeltaTime() * 1000;
+		myCameraSpeed -= Utility::Timer::GetDeltaTime() * 1000;
 	}
 
-	if (InputHandler::GetRightClickHeld())
+	if (Utility::InputHandler::GetRightClickHeld())
 	{
-		aCamera->SetRotation(Vector3f(
-			aCamera->GetTransform().GetRotation().x + static_cast<float>(InputHandler::GetMouseDelta().y) / 5, 
-			aCamera->GetTransform().GetRotation().y + static_cast<float>(InputHandler::GetMouseDelta().x) / 5, 0));
+		aCamera->SetRotation(Utility::Vector3f(
+			aCamera->GetTransform().GetRotation().x + static_cast<float>(Utility::InputHandler::GetMouseDelta().y) / 5, 
+			aCamera->GetTransform().GetRotation().y + static_cast<float>(Utility::InputHandler::GetMouseDelta().x) / 5, 0));
 	}
 }
 
@@ -574,7 +574,7 @@ std::string GraphicsEngine::RenderModeToString(RenderMode aRenderMode)
 
 void GraphicsEngine::BeginFrame()
 {
-	Timer::Update();
+	Utility::Timer::Update();
 
 	myIntermediateTargetA->Clear(myClearColor);
 	myIntermediateTargetB->Clear(myClearColor);
@@ -607,7 +607,7 @@ void GraphicsEngine::RenderFrame()
 	{
 		if (model->GetShouldSpin())
 		{
-			model->AddRotation(0.f, rotationPerSec * Timer::GetDeltaTime(), 0.f);
+			model->AddRotation(0.f, rotationPerSec * Utility::Timer::GetDeltaTime(), 0.f);
 		}
 		model->Update(myLerpAnimations);
 	}
@@ -780,7 +780,7 @@ void GraphicsEngine::RenderFrame()
 	myIntermediateTargetB->RemoveResource(0);
 	//
 
-	InputHandler::UpdatePreviousState();
+	Utility::InputHandler::UpdatePreviousState();
 }
 
 void GraphicsEngine::EndFrame()

@@ -1,7 +1,7 @@
 #include "NuggetBox.pch.h"
 #include "PointLight.h"
 
-std::shared_ptr<PointLight> PointLight::Create(Vector3f aColor, float anIntensity, Vector3f aPosition, float aRange)
+std::shared_ptr<PointLight> PointLight::Create(Utility::Vector3f aColor, float anIntensity, Utility::Vector3f aPosition, float aRange)
 {
 	PointLight pointLight;
 	ZeroMemory(&pointLight.myLightBufferData, sizeof(LightBufferData));
@@ -23,7 +23,7 @@ std::shared_ptr<PointLight> PointLight::Create(Vector3f aColor, float anIntensit
 	pointLight.ResetAllViewMatrix();
 
 	//MAGIC NUMBER DONT TOUCH 90.05745f FOV
-	pointLight.myLightBufferData.ProjectionMatrix = Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
+	pointLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
 	pointLight.myLightBufferData.CastShadows = true;
 
 	pointLight.myLightBufferData.FarPlane = farPlane;
@@ -96,7 +96,7 @@ void PointLight::SetViewMatrix(unsigned aDir, unsigned aToSlot)
 		}
 	}
 
-	myLightBufferData.ViewMatrix[aToSlot] = Matrix4f::GetFastInverse(newView.GetMatrix());
+	myLightBufferData.ViewMatrix[aToSlot] = Utility::Matrix4f::GetFastInverse(newView.GetMatrix());
 }
 
 
