@@ -1,16 +1,14 @@
 #pragma once
 #include "ControllerStates.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <Xinput.h>
+struct _XINPUT_STATE;
 
 class XboxController
 {
 public:
 	XboxController();
 
-	void Update(const XINPUT_STATE& aState);
+	void Update(const _XINPUT_STATE& aState);
 
 	bool GetButtonDown(XboxButton aButton) const;
 	bool GetButtonHeld(XboxButton aButton) const;

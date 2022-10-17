@@ -1,5 +1,9 @@
 #include "XboxController.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <Xinput.h>
+
 #define SHORT_MAX (32767.0f)
 #define UCHAR_MAX (255.0f)
 
@@ -9,7 +13,7 @@ XboxController::XboxController()
     myPreviousState = {};
 }
 
-void XboxController::Update(const XINPUT_STATE& aState)
+void XboxController::Update(const _XINPUT_STATE& aState)
 {
     myPreviousState = myState;
 
