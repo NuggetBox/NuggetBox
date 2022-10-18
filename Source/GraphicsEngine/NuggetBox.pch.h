@@ -9,6 +9,8 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
+#pragma comment(lib, "d3d11.lib")
+
 // add headers that you want to pre-compile here
 #include <Windows.h>
 #include <WinUser.h>

@@ -27,7 +27,7 @@ project "GraphicsEngine"
 		"Utility",
 		"External.lib",
 		"Utility.lib",
-		"d3d11.lib",
+		--"d3d11.lib",
 		"libfbxsdk.dll"
 	}
 

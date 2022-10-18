@@ -12,15 +12,8 @@ namespace TGA
 
 		bool operator==(const Matrix& other) const
 		{
-			for (int i = 0; i < 16; ++i)
-			{
-				if (Data[i] != other.Data[i])
-				{
-					return false;
-				}
-			}
-
-			return true;
+			other;
+			return false;
 		}
 	};
 
@@ -106,41 +99,71 @@ namespace TGA
 		std::string Name;
 
 		// The structure of a joint/bone.
-		struct Joint
+		struct Bone
 		{
 			Matrix BindPoseInverse;
 			int Parent;
 			std::vector<unsigned int> Children;
 			std::string Name;
 
-			bool operator==(const Joint& aJoint) const
+			bool operator==(const Bone& aBone) const
 			{
-				const bool A = BindPoseInverse == aJoint.BindPoseInverse;
-				const bool B = Parent == aJoint.Parent;
-				const bool C = Name == aJoint.Name;
-				const bool D = Children == aJoint.Children;
+				const bool A = BindPoseInverse == aBone.BindPoseInverse;
+				const bool B = Parent == aBone.Parent;
+				const bool C = Name == aBone.Name;
+				const bool D = Children == aBone.Children;
 
 				return A && B && C && D;
 			}
 
-			Joint()
+			Bone()
 				: BindPoseInverse{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}, Parent(-1)
 			{
 			}
 		};
 
 		// All our joints as an indexed map.
-		std::vector<Joint> Joints;
+		std::vector<Bone> Bones;
 
 		// Acceleration map to find joint index from name.
-		std::unordered_map<std::string, size_t> JointNameToIndex;
+		std::unordered_map<std::string, size_t> BoneNameToIndex;
 
-		const Joint* GetRoot() const { if(!Joints.empty()) { return &Joints[0]; } return nullptr; }
+		const Bone* GetRoot() const { if(!Bones.empty()) { return &Bones[0]; } return nullptr; }
 
 		bool operator==(const FBXSkeleton& aSkeleton) const
 		{
-			return Joints == aSkeleton.Joints;
+			return Bones == aSkeleton.Bones;
 		}
+	};
+
+	struct FBXTexture
+	{
+		std::string Name;
+		std::string Path;
+		std::string RelativePath;
+	};
+
+	struct FBXMaterial
+	{
+		std::string MaterialName;
+		FBXTexture Emissive;
+		FBXTexture Ambient;
+		FBXTexture Diffuse;
+		FBXTexture Specular;
+		FBXTexture Shininess;
+		FBXTexture Bump;
+		FBXTexture NormalMap;
+		FBXTexture TransparentColor;
+		FBXTexture Reflection;
+		FBXTexture Displacement;
+		FBXTexture VectorDisplacement;
+	};
+
+	struct FBXBoxSphereBounds
+	{
+		float BoxExtents[3];
+		float Center[3];
+		float Radius;
 	};
 
 	struct FBXModel
@@ -151,22 +174,62 @@ namespace TGA
 			std::vector<unsigned int> Indices;
 
 			unsigned int MaterialIndex;
-			std::string MaterialName;
 			std::string MeshName;
+			FBXBoxSphereBounds BoxSphereBounds;
+		};
+
+		struct FBXLODGroup
+		{
+			struct FBXLodLevel
+			{
+				unsigned int Level;
+				float Distance;
+				std::vector<FBXMesh> Meshes;
+				FBXBoxSphereBounds BoxSphereBounds;
+			};
+
+			std::vector<FBXLodLevel> Levels;
 		};
 
 		FBXSkeleton Skeleton;
 
 		std::vector<FBXMesh> Meshes;
+		std::vector<FBXMaterial> Materials;
+		std::vector<FBXLODGroup> LODGroups;
+
 		std::string Name;
+
+		FBXBoxSphereBounds BoxSphereBounds;
+	};
+
+	struct FBXNavMesh
+	{
+		struct FBXNavMeshPolygon
+		{
+			std::vector<unsigned int> Indices;
+		};
+
+		struct FBXNavMeshChunk
+		{
+			std::vector<FBXVertex> Vertices;
+			std::vector<FBXNavMeshPolygon> Polygons;
+
+			std::string ChunkName;
+		};
+
+		std::vector<FBXNavMeshChunk> Chunks;
+		std::string Name;
+		FBXBoxSphereBounds BoxSphereBounds;
 	};
 
 	struct FBXAnimation
 	{
 		struct Frame
 		{
-			std::vector<Matrix> GlobalTransforms;
-			std::vector<Matrix> LocalTransforms;
+			// Stores Joint Name to Transform.
+			std::unordered_map<std::string, Matrix> GlobalTransforms;
+			// Stores Joint Name to Transform for Bone Space Transforms.
+			std::unordered_map<std::string, Matrix> LocalTransforms;
 		};
 
 		// The animation frames.

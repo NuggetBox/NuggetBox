@@ -3,6 +3,12 @@
 GBufferOutput main(VertexToPixel input)
 {
 	GBufferOutput result;
+	result.myAlbedo = float4(0, 0, 0, 0);
+	result.myAmbientOcclusion = 0;
+	result.myMaterial = float4(0, 0, 0, 0);
+	result.myNormal = float4(0, 0, 0, 0);
+	result.myVertexNormal = float4(0, 0, 0, 0);
+	result.myWorldPosition = float4(0, 0, 0, 0);
 
 	const float4 albedo = albedoTexture.Sample(defaultSampler, input.myUV0).rgba;
 

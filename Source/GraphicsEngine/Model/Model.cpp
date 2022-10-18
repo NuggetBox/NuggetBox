@@ -39,7 +39,7 @@ void Model::AddRenderedInstance(const Utility::Matrix4f& aTransform)
 
 void Model::UpdateInstanceBuffer()
 {
-	D3D11_BUFFER_DESC instanceVertexBufferDesc;
+	D3D11_BUFFER_DESC instanceVertexBufferDesc = {};
 	instanceVertexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(InstanceData) * myRenderedInstances.size());
 	instanceVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	instanceVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -47,7 +47,7 @@ void Model::UpdateInstanceBuffer()
 	instanceVertexBufferDesc.MiscFlags = 0;
 	instanceVertexBufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA subresourceData;
+	D3D11_SUBRESOURCE_DATA subresourceData = {};
 	subresourceData.pSysMem = myRenderedInstances.data();
 
 	AssertIfFailed(DX11::Device->CreateBuffer(&instanceVertexBufferDesc, &subresourceData, myInstanceBuffer.GetAddressOf()));
@@ -305,34 +305,34 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		{
 			SkeletonData skeletonData;
 			//skeleton.Name = tgaModel.Skeleton.Name;
-			skeletonData.BoneNameToIndex.reserve(tgaModel.Skeleton.Joints.size());
+			skeletonData.BoneNameToIndex.reserve(tgaModel.Skeleton.Bones.size());
 
-			skeletonData.Bones.resize(tgaModel.Skeleton.Joints.size());
-			for (size_t i = 0; i < tgaModel.Skeleton.Joints.size(); ++i)
+			skeletonData.Bones.resize(tgaModel.Skeleton.Bones.size());
+			for (size_t i = 0; i < tgaModel.Skeleton.Bones.size(); ++i)
 			{
-				skeletonData.Bones[i].Name = tgaModel.Skeleton.Joints[i].Name;
+				skeletonData.Bones[i].Name = tgaModel.Skeleton.Bones[i].Name;
 
 #ifdef _DEBUG
 				for (int j = 0; j < i; ++j)
 				{
-					if (skeletonData.Bones[j].Name == tgaModel.Skeleton.Joints[i].Name)
+					if (skeletonData.Bones[j].Name == tgaModel.Skeleton.Bones[i].Name)
 					{
 						DEBUGWARNING("Bone with name " + skeletonData.Bones[j].Name + " was just added but it has the same name as a bone that was already added!");
 					}
 				}
 #endif
 
-				skeletonData.BoneNameToIndex.insert(std::pair(tgaModel.Skeleton.Joints[i].Name, i));
+				skeletonData.BoneNameToIndex.insert(std::pair(tgaModel.Skeleton.Bones[i].Name, i));
 
-				skeletonData.Bones[i].Parent = tgaModel.Skeleton.Joints[i].Parent;
-				memcpy_s(&skeletonData.Bones[i].BindPoseInverse, sizeof(Utility::Matrix4f), &tgaModel.Skeleton.Joints[i].BindPoseInverse, sizeof(TGA::Matrix));
+				skeletonData.Bones[i].Parent = tgaModel.Skeleton.Bones[i].Parent;
+				memcpy_s(&skeletonData.Bones[i].BindPoseInverse, sizeof(Utility::Matrix4f), &tgaModel.Skeleton.Bones[i].BindPoseInverse, sizeof(TGA::Matrix));
 
 				/*skeleton.Bones[i].Children.resize(tgaModel.Skeleton.Joints[i].Children.size());
 				for (size_t c = 0; c < tgaModel.Skeleton.Joints[i].Children.size(); ++c)
 				{
 					skeleton.Bones[i].Children[c] = tgaModel.Skeleton.Joints[i].Children[c];
 				}*/
-				skeletonData.Bones[i].Children = tgaModel.Skeleton.Joints[i].Children;
+				skeletonData.Bones[i].Children = tgaModel.Skeleton.Bones[i].Children;
 			}
 
 			modelData.mySkeleton = std::make_shared<Skeleton>(skeletonData);

@@ -25,16 +25,19 @@ project "External"
 		"TGAFBXImporter/lib/%{cfg.buildcfg}"
 	}
 
-	links{
-		"TGAFBXImporter.lib"
-	}
-
+	
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
+		links{
+			"TGAFBXImporterd.lib"
+		}
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
+		links{
+			"TGAFBXImporter.lib"
+		}
 
 	filter "system:windows"
 		kind "StaticLib"

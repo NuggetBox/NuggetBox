@@ -64,23 +64,23 @@ struct FrameData
 
 struct AnimationData
 {
-	std::string Name;
+	std::string Name = "";
 
 	//In frames
-	unsigned int Length;
+	unsigned int Length = 0;
 
 	//In seconds
-	float Duration;
+	float Duration = 0;
 
-	float FramesPerSecond;
+	float FramesPerSecond = 0;
 	std::vector<FrameData> Frames;
 };
 
 struct BoneData
 {
-	std::string Name;
-	Utility::Matrix4f BindPoseInverse;
-	int Parent;
+	std::string Name = "";
+	Utility::Matrix4f BindPoseInverse = {};
+	int Parent = 0;
 	std::vector<unsigned int> Children;
 };
 

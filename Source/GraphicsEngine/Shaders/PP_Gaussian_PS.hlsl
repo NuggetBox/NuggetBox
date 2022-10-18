@@ -22,8 +22,10 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 
 	const float2 rad = Radius / 2048.f;
 
+	[unroll(3)]
 	for (float d = 0.0f; d < Pi2; d += Pi2 / Directions)
 	{
+		[unroll(4)]
 		for (float i = 1.0f / Quality; i <= 1.0f; i += 1.0f / Quality)
 		{
 			color += TextureSlot1.Sample(defaultSampler, input.UV + float2(cos(d), sin(d)) * rad * i);

@@ -94,7 +94,7 @@ void DX11::CreateDepthBuffer(RECT aClientRect)
 
 void DX11::SetViewport(RECT aClientRect)
 {
-	D3D11_VIEWPORT viewport;
+	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
 	viewport.Width = static_cast<float>(aClientRect.right - aClientRect.left);

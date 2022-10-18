@@ -9,6 +9,8 @@ PixelOutput main(VertexToPixel input)
 {
 	PixelOutput result;
 
+	result.myColor = float4(0, 0, 0, 0);
+
 	//Single color
 	//result.myColor = input.myVertexColor0;
 	//result.myColor = float4(MB_Albedo, 1);

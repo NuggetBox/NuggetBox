@@ -9,6 +9,7 @@
 DeferredPixelOutput main(DeferredVertexToPixel input)
 {
 	DeferredPixelOutput result;
+	result.Color = float4(0, 0, 0, 0);
 
 	const float4 albedo = albedoTexture.Sample(defaultSampler, input.myUV);
 
@@ -40,8 +41,8 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 
 	//Get toeye, speccolor, diffusecolor
 	const float3 toEye = normalize(FB_CamTranslation.xyz - worldPosition.xyz);
-	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
-	const float3 diffuseColor = lerp((float3)0.00f, albedo, 1 - metalness);
+	const float3 specularColor = lerp((float3)0.04f, (float3)albedo, metalness);
+	const float3 diffuseColor = lerp((float3)0.00f, (float3)albedo, 1 - metalness);
 
 	//Calc Ambient+DirLight
 	float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);

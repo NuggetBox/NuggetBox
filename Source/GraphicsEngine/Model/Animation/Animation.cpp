@@ -22,7 +22,7 @@ std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, c
 	}
 
 	TGA::FBXAnimation loadedAnimation;
-	assert(TGA::FBXImporter::LoadAnimation(aPath.string(), aSkeleton->GetBoneNames(), loadedAnimation));
+	assert(TGA::FBXImporter::LoadAnimation(aPath.string(), loadedAnimation));
 	DEBUGLOG("Loaded Animation " + aPath.filename().string());
 
 	AnimationData animationData;
@@ -37,7 +37,7 @@ std::shared_ptr<Animation> Animation::Load(const std::filesystem::path& aPath, c
 		animationData.Frames[f].LocalTransforms.resize(loadedAnimation.Frames[f].LocalTransforms.size());
 		for (size_t t = 0; t < loadedAnimation.Frames[f].LocalTransforms.size(); ++t)
 		{
-			memcpy_s(&animationData.Frames[f].LocalTransforms[t], sizeof(Utility::Matrix4f), &loadedAnimation.Frames[f].LocalTransforms[t], sizeof(TGA::Matrix));
+			//memcpy_s(&animationData.Frames[f].LocalTransforms[t], sizeof(Utility::Matrix4f), &loadedAnimation.Frames[f].LocalTransforms[t], sizeof(TGA::Matrix));
 			animationData.Frames[f].LocalTransforms[t] = Utility::Matrix4f::Transpose(animationData.Frames[f].LocalTransforms[t]);
 		}
 	}
