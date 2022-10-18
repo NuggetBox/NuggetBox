@@ -11,7 +11,10 @@
 
 // add headers that you want to pre-compile here
 #include <Windows.h>
+#include <WinUser.h>
+#include <bitset>
 #include <d3d11.h>
+#include <shellapi.h>
 #include <vector>
 #include <fstream>
 #include <WinUser.h>
