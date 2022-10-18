@@ -50,7 +50,7 @@ public:
 	void AddRenderedInstance(const Utility::Matrix4f& aTransform);
 	void UpdateInstanceBuffer();
 	bool HasRenderedInstances() const { return !myRenderedInstances.empty(); }
-	int GetNumberOfInstances() const { return myRenderedInstances.size(); }
+	int GetNumberOfInstances() const { return static_cast<int>(myRenderedInstances.size()); }
 	ComPtr<ID3D11Buffer> GetInstanceBuffer() const { return myInstanceBuffer; }
 
 private:

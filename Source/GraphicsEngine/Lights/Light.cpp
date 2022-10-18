@@ -9,6 +9,8 @@
 
 void Light::ClearShadowMap(unsigned anIndex)
 {
+	anIndex;
+
 	if (myShadowMap)
 	{
 		myShadowMap->Clear();
@@ -17,6 +19,8 @@ void Light::ClearShadowMap(unsigned anIndex)
 
 void Light::SetShadowMapAsTarget(unsigned anIndex)
 {
+	anIndex;
+
 	if (myShadowMap)
 	{
 		myShadowMap->SetAsRenderTarget();

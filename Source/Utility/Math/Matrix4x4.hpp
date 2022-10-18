@@ -81,7 +81,7 @@ namespace Utility
 		assert(aRow >= 1 && aRow <= 4 && "Row index out of range, allowed indices for Matrix4x4 row: 1, 2, 3, 4");
 		assert(aColumn >= 1 && aColumn <= 4 && "Column index out of range, allowed indices for Matrix4x4 column: 1, 2, 3, 4");
 
-		return myMatrix[aRow - 1][aColumn - 1];
+		return myMatrix[static_cast<int>(aRow) - 1][static_cast<int>(aColumn) - 1];
 	}
 
 	template <class T>
@@ -90,7 +90,7 @@ namespace Utility
 		assert(aRow >= 1 && aRow <= 4 && "Row index out of range, allowed indices for Matrix4x4 row: 1, 2, 3, 4");
 		assert(aColumn >= 1 && aColumn <= 4 && "Column index out of range, allowed indices for Matrix4x4 column: 1, 2, 3, 4");
 
-		return myMatrix[aRow - 1][aColumn - 1];
+		return myMatrix[static_cast<int>(aRow) - 1][static_cast<int>(aColumn) - 1];
 	}
 
 	template <class T>
@@ -98,7 +98,7 @@ namespace Utility
 	{
 		assert(aRow >= 1 && aRow <= 4 && "Row index out of range, allowed indices for Matrix4x4 row: 1, 2, 3, 4");
 
-		return myMatrix[aRow - 1];
+		return myMatrix[static_cast<int>(aRow) - 1];
 	}
 
 	template <class T>

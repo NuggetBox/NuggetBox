@@ -48,7 +48,7 @@ void PostProcessRenderer::Render(PostProcessPass aPass, std::shared_ptr<Camera>&
 	myFrameBufferData.Resolution = resolution;
 	myFrameBufferData.RenderMode = 0;
 	myFrameBufferData.DeltaTime = Utility::Timer::GetDeltaTime();
-	myFrameBufferData.TotalTime = Utility::Timer::GetTotalTime();
+	myFrameBufferData.TotalTime = static_cast<float>(Utility::Timer::GetTotalTime());
 
 	const float aspectRatio = static_cast<float>(myFrameBufferData.Resolution.x) / static_cast<float>(myFrameBufferData.Resolution.y);
 	const float halfHeight = myFrameBufferData.FarPlane * tanf(0.5f * aCamera->GetFov());

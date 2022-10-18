@@ -131,7 +131,7 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 		for (int j = 0; j < 8; ++j)
 		{
 			Transform transform;
-			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Utility::Vector3f(i * 200, 0, j * 200));
+			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Utility::Vector3f(static_cast<float>(i) * 200.0f, 0.0f, static_cast<float>(j) * 200.0f));
 			transform.SetRotation(instancedChest->GetTransform().GetRotation());
 			instancedChest->AddRenderedInstance(transform.GetMatrix());
 		}
@@ -198,6 +198,8 @@ void GraphicsEngine::InitializeWindow(unsigned someX, unsigned someY, unsigned s
 
 void GraphicsEngine::ResizeWindow(HWND aHWND, UINT someWidth, UINT someHeight)
 {
+	someWidth;
+	someHeight;
 	//TODO: Resize Window WIP
 	//Resize funkar så länge fönstret är mindre än ursprungligen
 	if (DX11::SwapChain)

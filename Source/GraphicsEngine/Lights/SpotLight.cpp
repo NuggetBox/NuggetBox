@@ -25,7 +25,7 @@ std::shared_ptr<SpotLight> SpotLight::Create(Utility::Vector3f aColor, float anI
 	constexpr POINT projectionSize = { 2048, 2048 };
 
 	spotLight.myLightBufferData.ViewMatrix[0] = Utility::Matrix4f::GetFastInverse(spotLight.myTransform.GetMatrix());
-	spotLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
+	spotLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixPerspective(static_cast<float>(projectionSize.x), static_cast<float>(projectionSize.y), nearPlane, farPlane, 90);
 	spotLight.myLightBufferData.CastShadows = true;
 
 	spotLight.myLightBufferData.FarPlane = farPlane;

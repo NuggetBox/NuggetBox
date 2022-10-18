@@ -86,6 +86,7 @@ void DebugLogger::WriteCrashLog()
 
 void DebugLogger::SignalHandler(int signal)
 {
+    signal;
     DEBUGLOG("Crash signal detected, writing crash log file");
     WriteCrashLog();
 }
@@ -99,32 +100,7 @@ std::string DebugLogger::GetTimeStamp()
 //yyyy.mm.dd HH:MM:SS.fff
 std::string DebugLogger::GetTimeStampRaw()
 {
-    const std::chrono::time_point curTime = std::chrono::system_clock::now();
-    const __time64_t timeT = std::chrono::system_clock::to_time_t(curTime);
-    const std::chrono::time_point curTimeSec = std::chrono::system_clock::from_time_t(timeT);
-    const std::chrono::milliseconds milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - curTimeSec);
-
-    const std::tm* timeStruct = localtime(&timeT);
-
-    const char dateFormat[] = "%Y.%m.%d %H:%M:%S";
-
-    char timeStr[] = "yyyy.mm.dd HH:MM:SS.fff";
-    strftime(timeStr, strlen(timeStr), dateFormat, timeStruct);
-
-    std::string result(timeStr);
-    result.append(".");
-
-    //Append extra 0's to fill millisecond gap
-	if (milliseconds.count() < 10)
-	{
-        result.append("00");
-	}
-    else if (milliseconds.count() < 100)
-    {
-        result.append("0");
-    }
-
-    result.append(std::to_string(milliseconds.count()));
+    std::string result("Yo");
     return result;
 }
 

@@ -118,7 +118,7 @@ namespace hue
     void set(int c)
     {
         if (is_good(c))
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), c);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), static_cast<WORD>(c));
     }
 
     void set(int a, int b)

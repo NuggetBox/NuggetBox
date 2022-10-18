@@ -15,10 +15,10 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					   _In_ LPWSTR lpCmdLine,
 					   _In_ int nCmdShow)->int
 {
-    /*UNREFERENCED_PARAMETER(hInstance);
+    UNREFERENCED_PARAMETER(hInstance);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    UNREFERENCED_PARAMETER(nCmdShow);*/
+    UNREFERENCED_PARAMETER(nCmdShow);
 
 	//Open console window in debug
 #ifdef _DEBUG
@@ -47,7 +47,6 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(graphicsEngine.GetWindowHandle());
 	ImGui_ImplDX11_Init(DX11::Device.Get(), DX11::Context.Get());
 	ImGui::StyleColorsClassic();

@@ -63,7 +63,7 @@ std::shared_ptr<RenderTarget> RenderTarget::Create(int aWidth, int aHeight, DXGI
 	//
 
 	//Create Viewport
-	renderTarget.myViewport = D3D11_VIEWPORT(0.0f, 0.0f, aWidth, aHeight, 0.0f, 1.0f);
+	renderTarget.myViewport = D3D11_VIEWPORT(0.0f, 0.0f, static_cast<FLOAT>(aWidth), static_cast<FLOAT>(aHeight), 0.0f, 1.0f);
 	//
 
 	return std::make_shared<RenderTarget>(renderTarget);

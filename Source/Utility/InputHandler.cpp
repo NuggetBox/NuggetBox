@@ -125,6 +125,9 @@ namespace Utility
 	bool InputHandler::UpdateKeyboard(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		bool handled = false;
+		lParam;
+		wParam;
+		message;
 
 		switch (message)
 		{

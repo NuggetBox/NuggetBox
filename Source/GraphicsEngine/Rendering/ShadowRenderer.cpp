@@ -103,4 +103,6 @@ void ShadowRenderer::RenderShadowPassPerLight(const std::shared_ptr<Light>& aLig
 
 void ShadowRenderer::RenderShadowPassPerModel(const std::shared_ptr<Model>& aModel, const std::vector<std::shared_ptr<Light>>& aLightList)
 {
+    aModel;
+    aLightList;
 }

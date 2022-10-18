@@ -3,6 +3,9 @@
 #include "Math/Matrix4x4.hpp"
 #include "Math/Vector.h"
 
+#pragma warning( push )
+#pragma warning( disable : 4324)
+
 struct FrameBufferData
 {
 	Utility::Matrix4x4<float> View;
@@ -29,7 +32,7 @@ struct ObjectBufferData
 	alignas(4) bool HasBones = false;
 	alignas(4) bool IsInstanced = false;
 
-	Utility::Vector2<float> Padding;
+	alignas(8) Utility::Vector2<float> Padding;
 	//bool HasBones = false;
 	//Vector3f padding;
 };
@@ -78,3 +81,5 @@ enum class RenderMode
 	Linear,
 	COUNT //Update RenderModeToString in GraphicsEngine when adding new RenderModes
 };
+
+#pragma warning( pop )

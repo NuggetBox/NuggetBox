@@ -37,7 +37,7 @@ std::shared_ptr<DepthStencil> DepthStencil::Create(int aWidth, int aHeight)
 	//
 
 	//Create viewport
-	depthStencil.myViewport = D3D11_VIEWPORT(0.0f, 0.0f, aWidth, aHeight, 0.0f, 1.0f);
+	depthStencil.myViewport = D3D11_VIEWPORT(0.0f, 0.0f, static_cast<FLOAT>(aWidth), static_cast<FLOAT>(aHeight), 0.0f, 1.0f);
 	//
 
 	return std::make_shared<DepthStencil>(depthStencil);

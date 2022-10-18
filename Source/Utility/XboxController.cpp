@@ -80,6 +80,8 @@ bool XboxController::GetButtonDown(XboxButton aButton) const
         case XboxButton::Back:
             return myState.Back && !myPreviousState.Back;
     }
+
+    return false;
 }
 
 bool XboxController::GetButtonHeld(XboxButton aButton) const
@@ -115,6 +117,8 @@ bool XboxController::GetButtonHeld(XboxButton aButton) const
     case XboxButton::Back:
         return myState.Back && myPreviousState.Back;
     }
+
+    return false;
 }
 
 bool XboxController::GetButtonUp(XboxButton aButton) const
@@ -150,6 +154,8 @@ bool XboxController::GetButtonUp(XboxButton aButton) const
     case XboxButton::Back:
         return !myState.Back && myPreviousState.Back;
     }
+
+    return false;
 }
 
 float XboxController::GetLeftStickX() const

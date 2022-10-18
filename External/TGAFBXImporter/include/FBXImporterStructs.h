@@ -12,7 +12,15 @@ namespace TGA
 
 		bool operator==(const Matrix& other) const
 		{
-			return Data == other.Data;
+			for (int i = 0; i < 16; ++i)
+			{
+				if (Data[i] != other.Data[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	};
 

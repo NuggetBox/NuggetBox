@@ -381,11 +381,11 @@ void Model::Update(bool aLerpAnimations)
 
 		if (aLerpAnimations)
 		{
-			LerpAnimationHierarchy(currentFrame, nextFrame, 0, Utility::Matrix4f(), &myBoneTransforms[0], lerpFactor);
+			LerpAnimationHierarchy(static_cast<unsigned>(currentFrame), static_cast<unsigned>(nextFrame), 0, Utility::Matrix4f(), &myBoneTransforms[0], lerpFactor);
 		}
 		else
 		{
-			UpdateAnimationHierarchy(currentFrame, nextFrame, 0, Utility::Matrix4f(), &myBoneTransforms[0]);
+			UpdateAnimationHierarchy(static_cast<unsigned>(currentFrame), static_cast<unsigned>(nextFrame), 0, Utility::Matrix4f(), &myBoneTransforms[0]);
 		}
 	}
 }

@@ -23,17 +23,17 @@ std::shared_ptr<PointLight> PointLight::Create(Utility::Vector3f aColor, float a
 	pointLight.ResetAllViewMatrix();
 
 	//MAGIC NUMBER DONT TOUCH 90.05745f FOV
-	pointLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixPerspective(projectionSize.x, projectionSize.y, nearPlane, farPlane, 90);
+	pointLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixPerspective(static_cast<float>(projectionSize.x), static_cast<float>(projectionSize.y), nearPlane, farPlane, 90);
 	pointLight.myLightBufferData.CastShadows = true;
 
 	pointLight.myLightBufferData.FarPlane = farPlane;
 	pointLight.myLightBufferData.NearPlane = nearPlane;
 
-	pointLight.myShadowMap = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
+	pointLight.myShadowMap = DepthStencil::Create(static_cast<int>(shadowResolution.x), static_cast<int>(shadowResolution.y));
 
 	for (int i = 0; i < 5; ++i)
 	{
-		pointLight.myExtraShadowMaps[i] = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
+		pointLight.myExtraShadowMaps[i] = DepthStencil::Create(static_cast<int>(shadowResolution.x), static_cast<int>(shadowResolution.y));
 	}
 
 	DEBUGLOG("Created a Point Light");

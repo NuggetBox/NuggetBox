@@ -27,7 +27,7 @@ void ContentBrowser::Update()
 		}
 	}
 
-	if (ImGui::BeginTable("##ContentBrowserStuff", ImGui::GetContentRegionAvail().x / 90.0f))
+	if (ImGui::BeginTable("##ContentBrowserStuff", static_cast<int>(ImGui::GetContentRegionAvail().x / 90.0f)))
 	{
 		for (auto& entry : std::filesystem::directory_iterator(myCurrentPath))
 		{
@@ -40,7 +40,7 @@ void ContentBrowser::Update()
 
 				std::string extension = entry.path().extension().string();
 				//To lower
-				std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return std::tolower(c); });
+				std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(static_cast<int>(c))); });
 
 				if (extension == ".dds")
 				{

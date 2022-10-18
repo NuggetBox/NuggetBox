@@ -21,13 +21,13 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Utility::Vector3f aCo
 	constexpr POINT shadowResolution = { 16384, 16384 };
 	constexpr POINT projectionSize = { 2048, 2048 };
 
-	directionalLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixOrthographic(projectionSize.x, projectionSize.y, nearPlane, farPlane);
+	directionalLight.myLightBufferData.ProjectionMatrix = Utility::Matrix4f::CreateProjectionMatrixOrthographic(static_cast<float>(projectionSize.x), static_cast<float>(projectionSize.y), nearPlane, farPlane);
 	directionalLight.myLightBufferData.CastShadows = true;
 
 	directionalLight.myLightBufferData.FarPlane = farPlane;
 	directionalLight.myLightBufferData.NearPlane = nearPlane;
 
-	directionalLight.myShadowMap = DepthStencil::Create(shadowResolution.x, shadowResolution.y);
+	directionalLight.myShadowMap = DepthStencil::Create(static_cast<int>(shadowResolution.x), static_cast<int>(shadowResolution.y));
 
 	DEBUGLOG("Created Directional Light");
 

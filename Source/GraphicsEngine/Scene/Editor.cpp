@@ -295,6 +295,7 @@ void Editor::LoadColorPopup(Utility::Vector4f& aColorToLoad)
 						fileOp.pTo = NULL;
 						fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOERRORUI | FOF_NOCONFIRMATION | FOF_SILENT;
 						int result = SHFileOperation(&fileOp);
+						result;
 					}
 					ImGui::TreePop();
 				}
@@ -378,6 +379,7 @@ void Editor::LoadBlendPopup()
 						fileOp.pTo = NULL;
 						fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOERRORUI | FOF_NOCONFIRMATION | FOF_SILENT;
 						int result = SHFileOperation(&fileOp);
+						result;
 					}
 					ImGui::TreePop();
 				}

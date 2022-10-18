@@ -17,7 +17,7 @@ void ParticleEmitter::Initialize(const ParticleEmitterTemplate& aTemplate, bool 
 	myMaxParticles = static_cast<size_t>(ceilf(myEmitterSettings.SpawnRate * myEmitterSettings.LifeTime) * 1.1f + (2 / static_cast<int>(myEmitterSettings.SpawnRate)));
 	myParticles.resize(myMaxParticles);
 
-	myAvailableParticles.Initialize(myMaxParticles);
+	myAvailableParticles.Initialize(static_cast<int>(myMaxParticles));
 	InitializeEmission();
 
 	myIsEmitting = aStart;
@@ -247,8 +247,8 @@ void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 	myParticles[aParticleIndex].Color = myEmitterSettings.StartColor;
 
 	//TODO: Temp cone emitter code
-	float x = (std::rand() % 200) - 100;
-	float y = (std::rand() % 200) - 100;
+	float x = static_cast<float>(std::rand() % 200) - 100.0f;
+	float y = static_cast<float>(std::rand() % 200) - 100.0f;
 
 	float c = sqrt(x * x + y * y);
 	x /= c;
