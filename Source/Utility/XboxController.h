@@ -1,5 +1,5 @@
 #pragma once
-#include "ControllerStates.h"
+#include "ControllerStructs.h"
 
 struct _XINPUT_STATE;
 

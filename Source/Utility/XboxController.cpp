@@ -22,6 +22,15 @@ void XboxController::Update(const _XINPUT_STATE& aState)
     myState.Dpad.Left = aState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
     myState.Dpad.Right = aState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
 
+    myState.Start = aState.Gamepad.wButtons & XINPUT_GAMEPAD_START;
+    myState.Back = aState.Gamepad.wButtons & XINPUT_GAMEPAD_BACK;
+
+    myState.LeftThumb = aState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
+    myState.RightThumb = aState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
+
+    myState.LeftBumper = aState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
+    myState.RightBumper = aState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
+
     myState.A = aState.Gamepad.wButtons & XINPUT_GAMEPAD_A;
     myState.B = aState.Gamepad.wButtons & XINPUT_GAMEPAD_B;
     myState.X = aState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
@@ -34,15 +43,6 @@ void XboxController::Update(const _XINPUT_STATE& aState)
 
     myState.LeftTrigger = aState.Gamepad.bLeftTrigger;
     myState.RightTrigger = aState.Gamepad.bRightTrigger;
-
-    myState.LeftThumb = aState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
-    myState.RightThumb = aState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
-
-    myState.LeftBumper = aState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
-    myState.RightBumper = aState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
-
-    myState.Start = aState.Gamepad.wButtons & XINPUT_GAMEPAD_START;
-    myState.Back = aState.Gamepad.wButtons & XINPUT_GAMEPAD_BACK;
 
     myState.PreviousPackageNumber = aState.dwPacketNumber;
 }
