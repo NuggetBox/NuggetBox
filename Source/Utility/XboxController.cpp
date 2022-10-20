@@ -13,8 +13,8 @@
 
 XboxController::XboxController()
 {
-    myState = {};
-    myPreviousState = {};
+    ZeroMemory(&myState, sizeof(XboxControllerState));
+    ZeroMemory(&myPreviousState, sizeof(XboxControllerState));
     myID = -1;
     myLowFrequencyVibrationTimer = 0.0f;
     myHighFrequencyVibrationTimer = 0.0f;
@@ -84,6 +84,7 @@ void XboxController::CalculateThumbSticks(const _XINPUT_STATE& aState)
 
         if (leftMagnitude > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
         {
+            //Clamp to allowed values
             leftMagnitude = Utility::Clamp(leftMagnitude, 0.0f, SHORT_MAX);
 
             //Adjust so that magnitude starts at 0 just after deadzone
@@ -113,6 +114,7 @@ void XboxController::CalculateThumbSticks(const _XINPUT_STATE& aState)
 
         if (rightMagnitude > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
         {
+            //Clamp to allowed values
             rightMagnitude = Utility::Clamp(rightMagnitude, 0.0f, SHORT_MAX);
 
             //Adjust so that magnitude starts at 0 just after deadzone
@@ -140,6 +142,7 @@ void XboxController::CalculateTriggers(const _XINPUT_STATE& aState)
 
         if (leftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
         {
+            //Clamp to allowed values
             leftTrigger = Utility::Clamp(leftTrigger, 0.0f, UCHAR_MAX);
 
             //Adjust so that magnitude starts at 0 just after deadzone
@@ -163,6 +166,7 @@ void XboxController::CalculateTriggers(const _XINPUT_STATE& aState)
 
         if (rightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
         {
+            //Clamp to allowed values
             rightTrigger = Utility::Clamp(rightTrigger, 0.0f, UCHAR_MAX);
 
             //Adjust so that magnitude starts at 0 just after deadzone
