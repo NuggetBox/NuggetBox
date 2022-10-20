@@ -4,25 +4,19 @@
 #include <Windows.h>
 #include <Xinput.h>
 
-//#define RIGHT_THUMB_DEADZONE_FLOAT (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE / 32767.0f)
-//#define LEFT_THUMB_DEADZONE_FLOAT (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE / 32767.0f)
-//#define TRIGGER_DEADZONE_FLOAT (XINPUT_GAMEPAD_TRIGGER_THRESHOLD / 255.0f)
-
-//Thumbstick deadzones:
-//XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE
-//XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE
-//Lower limit of trigger input to detect input: XINPUT_GAMEPAD_TRIGGER_THRESHOLD 
-
 void ControllerHandler::Initialize()
 {
-    ZeroMemory(ourXboxControllers, sizeof(XboxControllerState) * MAX_CONTROLLERS);
+    for (int i = 0; i < XUSER_MAX_COUNT; ++i)
+    {
+        ourXboxControllers[i] = XboxController();
+    }
 }
 
 void ControllerHandler::CheckForNewControllers()
 {
     DWORD result;
 
-    for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
+    for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
     {
         XINPUT_STATE state;
         ZeroMemory(&state, sizeof(XINPUT_STATE));
@@ -32,6 +26,7 @@ void ControllerHandler::CheckForNewControllers()
         {
             // Controller is connected
             ourXboxControllers[i].SetConnection(true);
+            ourXboxControllers[i].SetID(i);
         }
         else
         {
@@ -41,7 +36,7 @@ void ControllerHandler::CheckForNewControllers()
     }
 }
 
-void ControllerHandler::Update()
+void ControllerHandler::UpdateInput(float aDeltaTime)
 {
     DWORD result;
     for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
@@ -61,22 +56,16 @@ void ControllerHandler::Update()
                 //Input has changed
                 if (state.dwPacketNumber != controller.GetPackageNumber())
                 {
-                    controller.Update(state);
+                    controller.UpdateInput(state);
                 }
+
+                controller.UpdateVibration(aDeltaTime);
             }
             // Controller is not connected
             else
             {
-
+                controller.SetConnection(false);
             }
-
-            //Vibration example
-            XINPUT_VIBRATION vibration;
-            ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
-            vibration.wLeftMotorSpeed = 32000; //Low frequency motor, 0-65535
-            vibration.wRightMotorSpeed = 16000; //High frequency motor, 0-65535
-            XInputSetState(i, &vibration);
-            //
         }
     }
 }

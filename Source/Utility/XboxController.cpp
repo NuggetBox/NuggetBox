@@ -4,16 +4,23 @@
 #include <Windows.h>
 #include <Xinput.h>
 
+#include "UtilityFunctions.hpp"
+#include "Math/Vector2.hpp"
+
 #define SHORT_MAX (32767.0f)
+#define USHORT_MAX (65535.0f)
 #define UCHAR_MAX (255.0f)
 
 XboxController::XboxController()
 {
     myState = {};
     myPreviousState = {};
+    myID = -1;
+    myLowFrequencyVibrationTimer = 0.0f;
+    myHighFrequencyVibrationTimer = 0.0f;
 }
 
-void XboxController::Update(const _XINPUT_STATE& aState)
+void XboxController::UpdateInput(const _XINPUT_STATE& aState)
 {
     myPreviousState = myState;
 
@@ -36,15 +43,159 @@ void XboxController::Update(const _XINPUT_STATE& aState)
     myState.X = aState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
     myState.Y = aState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
 
-    myState.LeftStickX = aState.Gamepad.sThumbLX;
-    myState.LeftStickY = aState.Gamepad.sThumbLY;
-    myState.RightStickX = aState.Gamepad.sThumbRX;
-    myState.RightStickY = aState.Gamepad.sThumbRY;
+    CalculateThumbSticks(aState);
 
-    myState.LeftTrigger = aState.Gamepad.bLeftTrigger;
-    myState.RightTrigger = aState.Gamepad.bRightTrigger;
+    CalculateTriggers(aState);
 
     myState.PreviousPackageNumber = aState.dwPacketNumber;
+}
+
+void XboxController::UpdateVibration(float aDeltaTime)
+{
+    myLowFrequencyVibrationTimer -= aDeltaTime;
+    if (myLowFrequencyVibrationTimer <= 0.0f)
+    {
+        myLowFrequencyVibrationTimer = 0.0f;
+        myState.LowFrequencyMotorSpeed = 0;
+    }
+
+    myHighFrequencyVibrationTimer -= aDeltaTime;
+    if (myHighFrequencyVibrationTimer <= 0.0f)
+    {
+        myHighFrequencyVibrationTimer = 0.0f;
+        myState.HighFrequencyMotorSpeed = 0;
+    }
+
+    ApplyVibration();
+}
+
+void XboxController::CalculateThumbSticks(const _XINPUT_STATE& aState)
+{
+    //Left stick
+    {
+        const float leftX = aState.Gamepad.sThumbLX;
+        const float leftY = aState.Gamepad.sThumbLY;
+
+        Utility::Vector2f leftDirection(leftX, leftY);
+        float leftMagnitude = leftDirection.Length();
+        leftDirection.Normalize();
+
+        myState.LeftStickDir = leftDirection;
+
+        if (leftMagnitude > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+        {
+            leftMagnitude = Utility::Clamp(leftMagnitude, 0.0f, SHORT_MAX);
+
+            //Adjust so that magnitude starts at 0 just after deadzone
+            leftMagnitude -= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+
+            //normalize magnitude, 0.0f - 1.0f from deadzone to end
+            leftMagnitude /= (SHORT_MAX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+        }
+        //stick is inside deadzone
+        else
+        {
+            leftMagnitude = 0.0f;
+        }
+
+        myState.LeftStickMagnitude = leftMagnitude;
+    }
+    //
+
+    //Right Stick
+    {
+        const float rightX = aState.Gamepad.sThumbRX;
+        const float rightY = aState.Gamepad.sThumbRY;
+
+        Utility::Vector2f rightDirection(rightX, rightY);
+        float rightMagnitude = rightDirection.Length();
+        rightDirection.Normalize();
+
+        if (rightMagnitude > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+        {
+            rightMagnitude = Utility::Clamp(rightMagnitude, 0.0f, SHORT_MAX);
+
+            //Adjust so that magnitude starts at 0 just after deadzone
+            rightMagnitude -= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+
+            //normalize magnitude, 0.0f - 1.0f from deadzone to end
+            rightMagnitude /= (SHORT_MAX - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+        }
+        //stick is inside deadzone
+        else
+        {
+            rightMagnitude = 0.0f;
+        }
+
+        myState.RightStickMagnitude = rightMagnitude;
+    }
+    //
+}
+
+void XboxController::CalculateTriggers(const _XINPUT_STATE& aState)
+{
+    //Left Trigger
+    {
+        float leftTrigger = aState.Gamepad.bLeftTrigger;
+
+        if (leftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+        {
+            leftTrigger = Utility::Clamp(leftTrigger, 0.0f, UCHAR_MAX);
+
+            //Adjust so that magnitude starts at 0 just after deadzone
+            leftTrigger -= XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
+
+            //normalize trigger, 0.0f - 1.0f from deadzone to end
+            leftTrigger /= (UCHAR_MAX - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+        }
+        else
+        {
+            leftTrigger = 0.0f;
+        }
+
+        myState.LeftTrigger = leftTrigger;
+    }
+    //
+
+    //Right trigger
+    {
+        float rightTrigger = aState.Gamepad.bRightTrigger;
+
+        if (rightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+        {
+            rightTrigger = Utility::Clamp(rightTrigger, 0.0f, UCHAR_MAX);
+
+            //Adjust so that magnitude starts at 0 just after deadzone
+            rightTrigger -= XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
+
+            //normalize trigger, 0.0f - 1.0f from deadzone to end
+            rightTrigger /= (UCHAR_MAX - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+        }
+        else
+        {
+            rightTrigger = 0.0f;
+        }
+
+        myState.RightTrigger = rightTrigger;
+    }
+    //
+}
+
+void XboxController::ApplyVibration()
+{
+    if (myState.Connected)
+    {
+        XINPUT_VIBRATION vibration;
+        ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+        vibration.wLeftMotorSpeed = myState.LowFrequencyMotorSpeed;
+        vibration.wRightMotorSpeed = myState.HighFrequencyMotorSpeed;
+        XInputSetState(myID, &vibration);
+    }
+}
+
+void XboxController::SetID(int aID)
+{
+    myID = aID;
 }
 
 bool XboxController::GetButtonDown(XboxButton aButton) const
@@ -152,64 +303,78 @@ bool XboxController::GetButtonUp(XboxButton aButton) const
     }
 }
 
-float XboxController::GetLeftStickX() const
+Utility::Vector2f XboxController::GetLeftStickDir() const
 {
-    return static_cast<float>(myState.LeftStickX) / SHORT_MAX;
+    return myState.LeftStickDir * myState.LeftStickMagnitude;
 }
 
-float XboxController::GetLeftStickXDelta() const
+Utility::Vector2f XboxController::GetLeftStickDelta() const
 {
-    return static_cast<float>(myState.LeftStickX - myPreviousState.LeftStickX) / SHORT_MAX;
+    return GetLeftStickDir() - myPreviousState.LeftStickDir * myPreviousState.LeftStickMagnitude;
 }
 
-float XboxController::GetLeftStickY() const
+Utility::Vector2f XboxController::GetRightStickDelta() const
 {
-    return static_cast<float>(myState.LeftStickY) / SHORT_MAX;
+    return GetRightStickDir() - myPreviousState.RightStickDir * myPreviousState.RightStickMagnitude;
 }
 
-float XboxController::GetLeftStickYDelta() const
+Utility::Vector2f XboxController::GetRightStickDir() const
 {
-    return static_cast<float>(myState.LeftStickY - myPreviousState.LeftStickY) / SHORT_MAX;
-}
-
-float XboxController::GetRightStickX() const
-{
-    return static_cast<float>(myState.RightStickX) / SHORT_MAX;
-}
-
-float XboxController::GetRightStickXDelta() const
-{
-    return static_cast<float>(myState.RightStickX - myPreviousState.RightStickX) / SHORT_MAX;
-}
-
-float XboxController::GetRightStickY() const
-{
-    return static_cast<float>(myState.RightStickY) / SHORT_MAX;
-}
-
-float XboxController::GetRightStickYDelta() const
-{
-    return static_cast<float>(myState.RightStickY - myPreviousState.RightStickY) / SHORT_MAX;
+    return myState.RightStickDir * myState.RightStickMagnitude;
 }
 
 float XboxController::GetLeftTrigger() const
 {
-    return static_cast<float>(myState.LeftTrigger) / UCHAR_MAX;
-}
-
-float XboxController::GetLeftTriggerDelta() const
-{
-    return static_cast<float>(myState.LeftTrigger - myPreviousState.LeftTrigger) / UCHAR_MAX;
+    return myState.LeftTrigger;
 }
 
 float XboxController::GetRightTrigger() const
 {
-    return static_cast<float>(myState.RightTrigger) / UCHAR_MAX;
+    return myState.RightTrigger;
+}
+
+float XboxController::GetLeftTriggerDelta() const
+{
+    return myState.LeftTrigger - myPreviousState.LeftTrigger;
 }
 
 float XboxController::GetRightTriggerDelta() const
 {
-    return static_cast<float>(myState.RightTrigger - myPreviousState.RightTrigger) / UCHAR_MAX;
+    return myState.RightTrigger - myPreviousState.RightTrigger;
+}
+
+void XboxController::SetVibration(float aLowFrequencyMotorSpeed, float aHighFrequencyMotorSpeed, float aVibrationTime)
+{
+    SetLowFrequencyVibration(aLowFrequencyMotorSpeed, aVibrationTime);
+    SetHighFrequencyVibration(aHighFrequencyMotorSpeed, aVibrationTime);
+}
+
+void XboxController::SetLowFrequencyVibration(float aLowFrequencyMotorSpeed, float aVibrationTime)
+{
+    if (myState.Connected)
+    {
+        myLowFrequencyVibrationTimer = aVibrationTime;
+        myState.LowFrequencyMotorSpeed = static_cast<WORD>(USHORT_MAX * aLowFrequencyMotorSpeed);
+    }
+}
+
+void XboxController::SetHighFrequencyVibration(float aHighFrequencyMotorSpeed, float aVibrationTime)
+{
+    if (myState.Connected)
+    {
+        myHighFrequencyVibrationTimer = aVibrationTime;
+        myState.HighFrequencyMotorSpeed = static_cast<WORD>(USHORT_MAX * aHighFrequencyMotorSpeed);
+    }
+}
+
+void XboxController::ResetVibration()
+{
+    myLowFrequencyVibrationTimer = 0.0f;
+    myHighFrequencyVibrationTimer = 0.0f;
+    myState.LowFrequencyMotorSpeed = 0;
+    myState.HighFrequencyMotorSpeed = 0;
+
+    ApplyVibration();
 }
 
 void XboxController::SetConnection(bool aConnected)
@@ -230,4 +395,9 @@ void XboxController::SetPackageNumber(unsigned long aPackageNumber)
 unsigned long XboxController::GetPackageNumber() const
 {
     return myState.PreviousPackageNumber;
+}
+
+int XboxController::GetID() const
+{
+    return myID;
 }

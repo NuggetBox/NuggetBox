@@ -6,37 +6,59 @@ struct _XINPUT_STATE;
 class XboxController
 {
 public:
-	XboxController();
-
-	void Update(const _XINPUT_STATE& aState);
-
 	bool GetButtonDown(XboxButton aButton) const;
 	bool GetButtonHeld(XboxButton aButton) const;
 	bool GetButtonUp(XboxButton aButton) const;
 
-	// -1.0f - 1.0f, Left - Right, Down - Up
-	float GetLeftStickX() const;
-	float GetLeftStickXDelta() const;
-	float GetLeftStickY() const;
-	float GetLeftStickYDelta() const;
-	float GetRightStickX() const;
-	float GetRightStickXDelta() const;
-	float GetRightStickY() const;
-	float GetRightStickYDelta() const;
+	// Direction vector 0-1.0f depending on how far stick is dragged
+	Utility::Vector2f GetLeftStickDir() const;
+	Utility::Vector2f GetRightStickDir() const;
+
+	// Direction vector 0-1.0f depending on how far stick is dragged from last frame to this frame
+	Utility::Vector2f GetLeftStickDelta() const;
+	Utility::Vector2f GetRightStickDelta() const;
 
 	// 0.0f - 1.0f, Released - Pressed
 	float GetLeftTrigger() const;
-	float GetLeftTriggerDelta() const;
 	float GetRightTrigger() const;
+
+	// 0.0f - 1.0f, How much has the press changed since last frame
+	float GetLeftTriggerDelta() const;
 	float GetRightTriggerDelta() const;
 
-	void SetConnection(bool aConnected = true);
+	//0.0f - 1.0f
+	void SetVibration(float aLowFrequencyMotorSpeed, float aHighFrequencyMotorSpeed, float aVibrationTime);
+	void SetLowFrequencyVibration(float aLowFrequencyMotorSpeed, float aVibrationTime);
+	void SetHighFrequencyVibration(float aHighFrequencyMotorSpeed, float aVibrationTime);
+	void ResetVibration();
+
 	bool GetConnection() const;
 
-	void SetPackageNumber(unsigned long aPackageNumber);
-	unsigned long GetPackageNumber() const;
+	int GetID() const;
 
 private:
+	friend class ControllerHandler;
+
+	XboxController();
+
+	void UpdateInput(const _XINPUT_STATE& aState);
+	void UpdateVibration(float aDeltaTime);
+
+	void CalculateThumbSticks(const _XINPUT_STATE& aState);
+	void CalculateTriggers(const _XINPUT_STATE& aState);
+
+	void ApplyVibration();
+
+	void SetConnection(bool aConnected = true);
+	void SetPackageNumber(unsigned long aPackageNumber);
+	unsigned long GetPackageNumber() const;
+	void SetID(int aID);
+
 	XboxControllerState myState;
 	XboxControllerState myPreviousState;
+
+	int myID;
+
+	float myLowFrequencyVibrationTimer;
+	float myHighFrequencyVibrationTimer;
 };

@@ -6,12 +6,14 @@
 class ControllerHandler
 {
 public:
+	ControllerHandler() = delete;
+
 	static void Initialize();
 
 	//Should only check for controllers every few seconds for performance, according to Windows
 	static void CheckForNewControllers();
 
-	static void Update();
+	static void UpdateInput(float aDeltaTime);
 
 private:
 	static inline XboxController ourXboxControllers[MAX_CONTROLLERS];

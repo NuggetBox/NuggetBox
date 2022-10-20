@@ -1,4 +1,6 @@
 #pragma once
+#include "Math/Vector2.hpp"
+
 enum class XboxButton
 {
 	DpadUp = 0x0001,
@@ -25,8 +27,14 @@ struct XboxControllerState
 	bool LeftBumper, RightBumper; //The bumper is above the triggers
 	bool A, B, X, Y;
 
-	short LeftStickX, LeftStickY, RightStickX, RightStickY; //-32768 - 32767. Negative: Left or down. Positive: Right or Up.
-	unsigned char LeftTrigger, RightTrigger; //0-255, The triggers are below the bumpers
+	//short LeftStickX, LeftStickY, RightStickX, RightStickY; //-32768 - 32767. Negative: Left or down. Positive: Right or Up.
+	Utility::Vector2f LeftStickDir, RightStickDir; //Normalized Direction
+	float LeftStickMagnitude, RightStickMagnitude; //0.0f - 1.0f. Direction vector for the sticks
+
+	//unsigned char LeftTrigger, RightTrigger; //0-255, The triggers are below the bumpers
+	float LeftTrigger, RightTrigger; //0.0f - 1.0f, The triggers are below the bumpers
+
+	unsigned short LowFrequencyMotorSpeed, HighFrequencyMotorSpeed; //0 - 65535
 
 	unsigned long PreviousPackageNumber;
 	bool Connected;
