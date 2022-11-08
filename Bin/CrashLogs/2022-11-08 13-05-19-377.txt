@@ -1,0 +1,148 @@
+[13:05:15.804] [MESSAGE] Initialized Window
+[13:05:15.911] [MESSAGE] Created Swap Chain
+[13:05:15.912] [MESSAGE] Created Depth Buffer
+[13:05:15.912] [MESSAGE] Blend States setup successfully
+[13:05:15.913] [MESSAGE] Depth Stencil States setup successfully
+[13:05:15.913] [MESSAGE] Sampler States Setup Successfully
+[13:05:15.919] [MESSAGE] Loaded Vertex Shader Standard_VS.cso
+[13:05:15.919] [MESSAGE] Created Input Layout for Vertex Shader Standard_VS.cso
+[13:05:15.932] [MESSAGE] Loaded Pixel Shader Standard_PS.cso
+[13:05:15.936] [MESSAGE] Loaded Texture T_Default_C.dds
+[13:05:15.937] [MESSAGE] Loaded Texture T_Default_N.dds
+[13:05:15.938] [MESSAGE] Loaded Texture T_Default_M.dds
+[13:05:15.938] [MESSAGE] Created Primitive Cube Mesh
+[13:05:15.939] [MESSAGE] Loaded Model Cube
+[13:05:15.939] [MESSAGE] Loaded Model Cube from registry successfully
+[13:05:15.939] [MESSAGE] Loaded Model Cube from registry successfully
+[13:05:15.940] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[13:05:15.940] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[13:05:15.941] [MESSAGE] Loaded Texture T_Default_C.dds from registry successfully
+[13:05:15.941] [MESSAGE] Loaded Texture T_Default_N.dds from registry successfully
+[13:05:15.941] [MESSAGE] Loaded Texture T_Default_M.dds from registry successfully
+[13:05:15.941] [MESSAGE] Created Primitive Plane Mesh
+[13:05:15.941] [MESSAGE] Loaded Model Plane
+[13:05:15.942] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.942] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.942] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.942] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.942] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.942] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.943] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.943] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.943] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.944] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.944] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.944] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.944] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.945] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.945] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.945] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.946] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.946] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.946] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.946] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.947] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.947] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.947] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.950] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.950] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.950] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.951] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.951] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.951] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.952] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.952] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.952] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.952] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.953] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.953] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.953] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.953] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.954] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.954] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.954] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.954] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.955] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.955] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.955] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.955] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.956] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.956] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.956] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.956] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.957] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.957] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.957] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.957] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.958] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.958] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.958] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.959] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.959] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.959] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.959] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.960] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.960] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.960] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.960] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.961] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.961] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.961] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.962] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.962] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.962] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.964] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.965] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.965] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.965] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.966] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.966] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.966] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.966] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.967] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.967] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.967] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.967] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.968] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.968] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.968] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.968] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.969] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.969] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.969] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.970] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.970] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.970] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.970] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.971] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.971] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.971] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.972] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.972] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.972] [MESSAGE] Loaded Model Plane from registry successfully
+[13:05:15.974] [MESSAGE] Created Directional Light
+[13:05:16.006] [MESSAGE] Loaded Texture skansen_cubemap.dds
+[13:05:16.007] [MESSAGE] Created Ambient Light
+[13:05:16.010] [MESSAGE] Loaded Texture BlueNoise.dds
+[13:05:16.010] [MESSAGE] Created CBuffers for Forward Renderer
+[13:05:16.010] [MESSAGE] Forward Renderer Initialized
+[13:05:16.011] [MESSAGE] Created CBuffers for Deferred Renderer
+[13:05:16.014] [MESSAGE] Loaded Pixel Shader Deferred_PS.cso
+[13:05:16.016] [MESSAGE] Loaded Vertex Shader Fullscreen_VS.cso
+[13:05:16.016] [MESSAGE] Created Input Layout for Vertex Shader Fullscreen_VS.cso
+[13:05:16.107] [MESSAGE] Loaded Pixel Shader Environment_PS.cso
+[13:05:16.107] [MESSAGE] Deferred Renderer Initialized
+[13:05:16.108] [MESSAGE] Created CBuffers for Shadow Renderer
+[13:05:16.108] [MESSAGE] Shadow Renderer Initialized
+[13:05:16.108] [MESSAGE] Loaded Vertex Shader Fullscreen_VS.cso from registry successfully
+[13:05:16.110] [MESSAGE] Loaded Pixel Shader PP_Copy_PS.cso
+[13:05:16.113] [MESSAGE] Loaded Pixel Shader PP_Luminance_PS.cso
+[13:05:16.118] [MESSAGE] Loaded Pixel Shader PP_Gaussian_PS.cso
+[13:05:16.121] [MESSAGE] Loaded Pixel Shader PP_Bloom_PS.cso
+[13:05:16.126] [MESSAGE] Loaded Pixel Shader PP_SSAO_PS.cso
+[13:05:16.130] [MESSAGE] Loaded Pixel Shader PP_TONEMAP_PS.cso
+[13:05:16.132] [MESSAGE] Graphics Engine Initialized
+[13:05:18.183] [MESSAGE] Loaded Vertex Shader Standard_VS.cso from registry successfully
+[13:05:18.183] [MESSAGE] Loaded Pixel Shader Standard_PS.cso from registry successfully
+[13:05:18.184] [MESSAGE] Loaded Model pedal.fbx
+[13:05:19.377] [MESSAGE] Crash signal detected, writing crash log file
