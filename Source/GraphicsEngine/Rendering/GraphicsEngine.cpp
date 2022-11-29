@@ -500,34 +500,24 @@ void GraphicsEngine::RenderFrame()
 
 	InputRenderMode();
 
-	if ((models[0]->GetTransform().GetPosition().z - camera->GetTransform().GetPosition().z) < 1000.0f)
+	if (Utility::InputHandler::GetLeftClickDown())
 	{
-		if (!myFirstThreadStarted)
-		{
-			std::thread firstThread(LoadModel, std::filesystem::path("Assets/Meshes/pedal.fbx"), models[0]);
-			firstThread.detach();
-			myFirstThreadStarted = true;
-		}
+		int x = 0, y = 0;
+		int length = x * x + y * y;
+		int xNormalized = x / length;
+		int yNormalized = y / length;
+
+		std::cout << "X: " << xNormalized << " Y: " << yNormalized << std::endl;
 	}
 
-	if ((models[1]->GetTransform().GetPosition().z - camera->GetTransform().GetPosition().z) < 1000.0f)
+	if (Utility::InputHandler::GetRightClickDown())
 	{
-		if (!mySecondThreadStarted)
-		{
-			std::thread secondThread(LoadModel, std::filesystem::path("assets/meshes/Particle_Chest.fbx"), models[1]);
-			secondThread.detach();
-			mySecondThreadStarted = true;
-		}
-	}
+		int* score = new int(3);
+		int* opponentScore = nullptr;
 
-	if ((models[2]->GetTransform().GetPosition().z - camera->GetTransform().GetPosition().z) < 1000.0f)
-	{
-		if (!myThirdThreadStarted)
-		{
-			std::thread thirdThread(LoadModel, std::filesystem::path("assets/meshes/Buddah_Test_Bakes_low.fbx"), models[2]);
-			thirdThread.detach();
-			myThirdThreadStarted = true;
-		}
+		int scoreDiff = *score - *opponentScore;
+
+		std::cout << scoreDiff << std::endl;
 	}
 
 	//Update position of Directional light to help with shadow map resolution
