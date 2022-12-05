@@ -97,6 +97,21 @@ private:
 	std::shared_ptr<RenderTarget> mySSAOTarget;
 	std::shared_ptr<Texture> myBlueNoise;
 
+	struct GameObject
+	{
+		enum class ObjectType
+		{
+			Cube, Cylinder, Pyramid
+		};
+
+		Utility::Vector2f Position;
+		Utility::Vector2f Direction;
+		float Rotation;
+		int ID;
+	};
+
+	std::vector<GameObject> myGameObjects;
+
 	Utility::Vector4<float> myClearColor = { 0.6f, 0.2f, 0.4f, 1.0f };
 	bool myLerpAnimations;
 

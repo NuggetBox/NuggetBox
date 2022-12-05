@@ -28,114 +28,30 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	Utility::Timer::Start();
 
-	auto spiderCat = Model::Load("assets/meshes/SpiderCat.fbx");
-	spiderCat->AddPosition(0, 150, 0);
-	spiderCat->AddRotation(0, 180, 0);
-	myScene.AddModel(spiderCat);
+	{
+		std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+		camera->SetPosition(0, 100, -500);
+		myScene.SetCamera(camera);
+		myScene.SetDirectionalLight(DirectionalLight::Create(Utility::Vector3f::One(), 1.0f, Utility::Vector3f(45, -45, 0)));
+		myScene.SetAmbientLight(AmbientLight::Create("assets/Textures/skansen_cubemap.dds"));
+	}
 
-	auto plane = Model::Load("Plane");
-	plane->SetScale({ 100, 100, 100 });
-	myScene.AddModel(plane);
+	auto ground = Model::Load("Plane");
+	ground->SetScale({ 1000, 1000, 1000 });
+	myScene.AddModel(ground);
 
 	auto cube = Model::Load("Cube");
-	cube->SetPosition(350, 50, 0);
-	cube->ShouldSpin();
+	cube->SetPosition(-100, 50, 0);
 	myScene.AddModel(cube);
 
 	auto pyramid = Model::Load("Pyramid");
-	pyramid->SetPosition(200, 50, 0);
+	pyramid->SetPosition(100, 50, 0);
 	myScene.AddModel(pyramid);
 
-	auto chest = Model::Load("assets/Meshes/Particle_Chest.fbx");
-	chest->SetPosition(-200, 0, 0);
-	chest->AddRotation(0, 180, 0);
-	myScene.AddModel(chest);
-
-	auto gremlin = Model::Load("assets/Meshes/gremlin.fbx");
-	gremlin->AddPosition(-20, 0, 0);
-	gremlin->AddRotation(0, 180, 0);
-	gremlin->LoadAnimation("assets/Meshes/gremlin@walk.fbx", "Walk");
-	gremlin->LoadAnimation("assets/Meshes/gremlin@run.fbx", "Run");
-	gremlin->PlayAnimation("Walk");
-	myScene.AddModel(gremlin);
-
-	auto gremlin2 = Model::Load("assets/Meshes/gremlin.fbx");
-	gremlin2->AddPosition(40, 0, 0);
-	gremlin2->AddRotation(0, 180, 0);
-	gremlin2->LoadAnimation("assets/Meshes/gremlin@walk.fbx", "Walk");
-	gremlin2->LoadAnimation("assets/Meshes/gremlin@run.fbx", "Run");
-	gremlin2->PlayAnimation("Run");
-	myScene.AddModel(gremlin2);
-
-	auto sphere = Model::Load("assets/meshes/sphere.fbx");
-	sphere->AddPosition(500, 250, 0);
-	sphere->SetScale(Utility::Vector3f(50, 50, 50));
-	myScene.AddModel(sphere);
-
-	/*auto skybox = Model::Load("meshes/Sphere.fbx");
-	skybox->SetScale(Vector3f(9000, 9000, 9000));
-	myScene.AddModel(skybox);*/
-
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->SetPosition(0, 100, -500);
-	myScene.SetCamera(camera);
-
-	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
-	system->SetPosition(0, 170, 0);
-	system->LoadAndInitialize("assets/Json/ParticleSystems/System1.json");
-	myScene.AddParticleSystem(system);
-
-	std::shared_ptr<ParticleSystem> fire = std::make_shared<ParticleSystem>();
-	fire->SetPosition(200, 97, 0);
-	fire->LoadAndInitialize("assets/Json/ParticleSystems/System2.json");
-	myScene.AddParticleSystem(fire);
-
-	myScene.SetDirectionalLight(DirectionalLight::Create(Utility::Vector3f::One(), 1.0f, Utility::Vector3f(45, -45, 0)));
-	myScene.SetAmbientLight(AmbientLight::Create("assets/Textures/skansen_cubemap.dds"));
-
-	//POINT LIGHT TESTING
-	auto pointLight = PointLight::Create({ 0, 1, 0 }, 100000, { -500, 50, 0 }, 300);
-	auto pointTestCube = Model::Load("Cube");
-	pointTestCube->ShouldSpin();
-	pointTestCube->SetPosition(-600, 50, 0);
-
-	/*auto pointLight2 = PointLight::Create({ 0, 1, 0 }, 100000, { -200, 50, 0 }, 300);
-	myScene.AddPointLight(pointLight2);*/
-
-	myScene.AddModel(pointTestCube);
-	myScene.AddPointLight(pointLight);
-	//
-
-	// Add some random pointlights
-	/*for (int i = 0; i < 32 - 1; ++i)
-	{
-		auto pointLight = PointLight::Create({ 
-			(std::rand() % 100) / 100.0f,  (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f }, 
-			10000, { (static_cast<float>(i) - 32 / 2 + 1.5f) * 100.0f, 50.0f, -80.0f }, 300);
-		myScene.AddPointLight(pointLight);
-	}*/
-	//
-
-	auto spotLight = SpotLight::Create({1, 0, 1}, 5999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
-	myScene.AddSpotLight(spotLight);
-
-	auto instancedChest = Model::Load("assets/Meshes/Particle_Chest.fbx");
-	instancedChest->SetPosition(700, 0, 0);
-	instancedChest->SetRotation({ 0, 180, 0 });
-
-	for (int i = 0; i < 8; ++i)
-	{
-		for (int j = 0; j < 8; ++j)
-		{
-			Transform transform;
-			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Utility::Vector3f(i * 200, 0, j * 200));
-			transform.SetRotation(instancedChest->GetTransform().GetRotation());
-			instancedChest->AddRenderedInstance(transform.GetMatrix());
-		}
-	}
-
-	instancedChest->UpdateInstanceBuffer();
-	myScene.AddModel(instancedChest);
+	auto cylinder = Model::Load("Cylinder");
+	cylinder->SetPosition(0, 0, 0);
+	myScene.AddModel(cylinder);
+	
 
 	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	myIntermediateTargetB = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);

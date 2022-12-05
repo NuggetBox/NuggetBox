@@ -222,6 +222,138 @@ std::shared_ptr<Model> Model::Load(const std::filesystem::path& aPath)
 		modelData.myMeshes.push_back(plane);
 		DEBUGLOG("Created Primitive Plane Mesh");
 	}
+	else if (path == "Cylinder")
+	{
+		constexpr float height = 100.0f;
+		constexpr float radius = 50.0f;
+		constexpr int resolution = 80;
+
+		constexpr float anglePerVertex = PI * 2 / resolution;
+		constexpr int vertexCount = 6 * resolution + 2;
+
+		std::vector<VertexData> cylinderVertices;
+		cylinderVertices.reserve(vertexCount);
+
+		//Middle Vertex of Top Face, INDEX = 0
+		cylinderVertices.emplace_back(0.0f, height, 0.0f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f);
+
+		//Add top outer vertices, count = res, INDEX = 1 -> resolution
+		//First vertex is at -z towards camera
+		//Added counterclockwise seen from above
+		for (int i = 0; i < resolution; ++i)
+		{
+			float angle = anglePerVertex * i;
+			float relativeAngle = angle - PI / 2.0f;
+			float x = cos(relativeAngle);
+			float z = sin(relativeAngle);
+			float u = (x + 1.0f) / 2.0f;
+			float v = (z * -1.0f + 1.0f) / 2.0f;
+
+			cylinderVertices.emplace_back(x * radius, height, z * radius, u, v, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f);
+		}
+
+		//Middle Vertex of Bottom Face, INDEX = resolution + 1
+		cylinderVertices.emplace_back(0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+		//Add bottom outer vertices, count = res, INDEX = resolution + 2 -> 2 x resolution + 1
+		//First vertex is at -z towards camera
+		//Added counterclockwise seen from above
+		for (int i = 0; i < resolution; ++i)
+		{
+			float angle = anglePerVertex * i;
+			float relativeAngle = angle - PI / 2.0f;
+			float x = cos(relativeAngle);
+			float z = sin(relativeAngle);
+			float u = (x + 1.0f) / 2.0f;
+			float v = (z + 1.0f) / 2.0f;
+
+			cylinderVertices.emplace_back(x * radius, 0.0f, z * radius, u, v, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		}
+
+		//Add middle part vertices, count = 4 x res, INDEX = 2 x resolution + 2: i < resolution, (i * 4) + 0 -> 3
+		//Create one box for every loop
+		for (int i = 0; i < resolution; ++i)
+		{
+			float angle1 = anglePerVertex * i;
+			float relativeAngle1 = angle1 - PI / 2.0f;
+			float x1 = cos(relativeAngle1);
+			float z1 = sin(relativeAngle1);
+
+			float angle2 = anglePerVertex * (i + 1);
+			float relativeAngle2 = angle2 - PI / 2.0f;
+			float x2 = cos(relativeAngle2);
+			float z2 = sin(relativeAngle2);
+
+			float u1 = (static_cast<float>(i) / static_cast<float>(resolution));
+			float u2 = (static_cast<float>(i + 1) / static_cast<float>(resolution));
+
+			float normalAngle = (relativeAngle1 + relativeAngle2) / 2.0f;
+			Utility::Vector2f normal(cos(normalAngle), sin(normalAngle));
+			normal.Normalize();
+			Utility::Vector2f tangent(cos(normalAngle + PI / 2.0f), sin(normalAngle + PI / 2.0f));
+			tangent.Normalize();
+
+			cylinderVertices.emplace_back(x1 * radius, height, z1 * radius, u1, 0.0f, normal.x, 0.0f, normal.y, tangent.x, 0.0f, tangent.y, 0.0f, -1.0f, 0.0f);
+			cylinderVertices.emplace_back(x2 * radius, height, z2 * radius, u2, 0.0f, normal.x, 0.0f, normal.y, tangent.x, 0.0f, tangent.y, 0.0f, -1.0f, 0.0f);
+			cylinderVertices.emplace_back(x2 * radius, 0.0f, z2 * radius, u2, 1.0f, normal.x, 0.0f, normal.y, tangent.x, 0.0f, tangent.y, 0.0f, -1.0f, 0.0f);
+			cylinderVertices.emplace_back(x1 * radius, 0.0f, z1 * radius, u1, 1.0f, normal.x, 0.0f, normal.y, tangent.x, 0.0f, tangent.y, 0.0f, -1.0f, 0.0f);
+		}
+
+		std::vector<UINT> cylinderIndices;
+		cylinderIndices.reserve(vertexCount);
+
+		//Top vertices
+		for (int i = 0; i < resolution - 1; ++i)
+		{
+			cylinderIndices.push_back(i + 1);
+			cylinderIndices.push_back(0);
+			cylinderIndices.push_back(i + 2);
+		}
+
+		//Add the last triangle that connects to the first outer vertex
+		cylinderIndices.push_back(resolution);
+		cylinderIndices.push_back(0);
+		cylinderIndices.push_back(1);
+
+		//Bottom vertices, reverse winding order because upside down
+		for (int i = resolution + 1; i < 2 * resolution; ++i)
+		{
+			cylinderIndices.push_back(i + 1);
+			cylinderIndices.push_back(i + 2);
+			cylinderIndices.push_back(resolution + 1);
+		}
+
+		//Add the last triangle that connects to the first outer vertex
+		cylinderIndices.push_back(2 * resolution + 1);
+		cylinderIndices.push_back(resolution + 2);
+		cylinderIndices.push_back(resolution + 1);
+
+		//Middle vertices
+		for (int i = 0; i < resolution; ++i)
+		{
+			int index = 2 * resolution + 2 + i * 4;
+
+			cylinderIndices.push_back(index);
+			cylinderIndices.push_back(index + 1);
+			cylinderIndices.push_back(index + 2);
+
+			cylinderIndices.push_back(index);
+			cylinderIndices.push_back(index + 2);
+			cylinderIndices.push_back(index + 3);
+		}
+
+		Mesh cylinder(cylinderVertices, cylinderIndices);
+
+		//TODO: Fix default material load
+		std::shared_ptr<Material> meshMaterial = std::make_shared<Material>();
+		meshMaterial->SetAlbedoTexture(Texture::LoadDefaultAlbedo());
+		meshMaterial->SetNormalMap(Texture::LoadDefaultNormal());
+		meshMaterial->SetSurfaceTexture(Texture::LoadDefaultSurface());
+
+		cylinder.SetMaterial(meshMaterial);
+		modelData.myMeshes.push_back(cylinder);
+		DEBUGLOG("Created Primitive Cylinder Mesh");
+	}
 	else
 	{
 		TGA::FBXModel tgaModel;
