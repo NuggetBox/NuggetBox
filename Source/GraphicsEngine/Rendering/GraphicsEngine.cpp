@@ -14,45 +14,8 @@
 #include "Scene/Hierarchy.h"
 #include "Scene/TextureDropTarget.h"
 
-#include "AStar.hpp"
-
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
-	AStar::Node* start = new AStar::Node(10);
-	AStar::Node* left = new AStar::Node(99);
-	AStar::Node* right = new AStar::Node(5);
-	AStar::Node* left2 = new AStar::Node(5);
-	AStar::Node* right2 = new AStar::Node(99);
-	AStar::Node* end = new AStar::Node(10);
-
-	start->Neighbours.push_back(left);
-	start->Neighbours.push_back(right);
-
-	left->Neighbours.push_back(start);
-	left->Neighbours.push_back(right);
-	left->Neighbours.push_back(left2);
-	left->Neighbours.push_back(right2);
-
-	right->Neighbours.push_back(start);
-	right->Neighbours.push_back(left);
-	right->Neighbours.push_back(left2);
-	right->Neighbours.push_back(right2);
-
-	left2->Neighbours.push_back(left);
-	left2->Neighbours.push_back(right);
-	left2->Neighbours.push_back(right2);
-	left2->Neighbours.push_back(end);
-
-	right2->Neighbours.push_back(left);
-	right2->Neighbours.push_back(right);
-	right2->Neighbours.push_back(left2);
-	right2->Neighbours.push_back(end);
-
-	end->Neighbours.push_back(left2);
-	end->Neighbours.push_back(right2);
-
-	auto path = AStar::GetPath(start, end);
-
 	DebugLogger::SetupCrashDump();
 
 	InitializeWindow(someX, someY, someWidth, someHeight);

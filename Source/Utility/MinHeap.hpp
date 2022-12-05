@@ -12,8 +12,6 @@ namespace Utility
 
 		int GetSize() const;
 		bool IsEmpty() const;
-		bool Contains(const T& anElement);
-		//void Remove(const T& anElement);
 		void Enqueue(const T& anElement);
 		const T& GetTop() const;
 		T Dequeue();
@@ -57,32 +55,6 @@ namespace Utility
 	{
 		return mySize <= 0;
 	}
-
-	template<class T>
-	bool MinHeap<T>::Contains(const T& anElement)
-	{
-		for (int i = 0; i < mySize; ++i)
-		{
-			if (myHeap[i] == anElement)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/*template<class T>
-	void MinHeap<T>::Remove(const T& anElement)
-	{
-		for (int i = 0; i < mySize; ++i)
-		{
-			if (myHeap[i] == anElement)
-			{
-				
-			}
-		}
-	}*/
 
 	template<class T>
 	void MinHeap<T>::Enqueue(const T& anElement)
