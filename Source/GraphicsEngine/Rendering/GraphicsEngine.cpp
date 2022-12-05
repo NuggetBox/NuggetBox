@@ -3,7 +3,6 @@
 
 #include <json.hpp>
 #include <shellapi.h>
-#include <TGAFBXImporter/include/FBXImporter.h>
 
 #include "Camera.h"
 #include "Core/DebugLogger.h"
@@ -11,9 +10,49 @@
 #include "InputHandler.h"
 #include "Timer.h"
 #include "imgui/imgui.h"
+#include "Scene/ContentBrowser.h"
+#include "Scene/Hierarchy.h"
+#include "Scene/TextureDropTarget.h"
+
+#include "AStar.hpp"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
+	AStar::Node* start = new AStar::Node(10);
+	AStar::Node* left = new AStar::Node(99);
+	AStar::Node* right = new AStar::Node(5);
+	AStar::Node* left2 = new AStar::Node(5);
+	AStar::Node* right2 = new AStar::Node(99);
+	AStar::Node* end = new AStar::Node(10);
+
+	start->Neighbours.push_back(left);
+	start->Neighbours.push_back(right);
+
+	left->Neighbours.push_back(start);
+	left->Neighbours.push_back(right);
+	left->Neighbours.push_back(left2);
+	left->Neighbours.push_back(right2);
+
+	right->Neighbours.push_back(start);
+	right->Neighbours.push_back(left);
+	right->Neighbours.push_back(left2);
+	right->Neighbours.push_back(right2);
+
+	left2->Neighbours.push_back(left);
+	left2->Neighbours.push_back(right);
+	left2->Neighbours.push_back(right2);
+	left2->Neighbours.push_back(end);
+
+	right2->Neighbours.push_back(left);
+	right2->Neighbours.push_back(right);
+	right2->Neighbours.push_back(left2);
+	right2->Neighbours.push_back(end);
+
+	end->Neighbours.push_back(left2);
+	end->Neighbours.push_back(right2);
+
+	auto path = AStar::GetPath(start, end);
+
 	DebugLogger::SetupCrashDump();
 
 	InitializeWindow(someX, someY, someWidth, someHeight);
@@ -29,32 +68,114 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 
 	Utility::Timer::Start();
 
-	auto first = Model::Load("Cube");
-	first->SetPosition(350, 50, 1500.0f);
-	myScene.AddModel(first);
+	auto spiderCat = Model::Load("assets/meshes/SpiderCat.fbx");
+	spiderCat->AddPosition(0, 150, 0);
+	spiderCat->AddRotation(0, 180, 0);
+	myScene.AddModel(spiderCat);
 
-	auto second = Model::Load("Cube");
-	second->SetPosition(350, 50, 2000.0f);
-	myScene.AddModel(second);
+	auto plane = Model::Load("Plane");
+	plane->SetScale({ 100, 100, 100 });
+	myScene.AddModel(plane);
 
-	auto third = Model::Load("Cube");
-	third->SetPosition(350, 50, 2500.0f);
-	myScene.AddModel(third);
+	auto cube = Model::Load("Cube");
+	cube->SetPosition(350, 50, 0);
+	cube->ShouldSpin();
+	myScene.AddModel(cube);
 
-	for (int i = 0; i < 100; ++i)
-	{
-		auto plane = Model::Load("Plane");
-		plane->SetPosition(0, 0, 10000.0f * i);
-		plane->SetScale({ 100.0f, 100.0f, 100.0f });
-		myScene.AddModel(plane);
-	}
+	auto pyramid = Model::Load("Pyramid");
+	pyramid->SetPosition(200, 50, 0);
+	myScene.AddModel(pyramid);
+
+	auto chest = Model::Load("assets/Meshes/Particle_Chest.fbx");
+	chest->SetPosition(-200, 0, 0);
+	chest->AddRotation(0, 180, 0);
+	myScene.AddModel(chest);
+
+	auto gremlin = Model::Load("assets/Meshes/gremlin.fbx");
+	gremlin->AddPosition(-20, 0, 0);
+	gremlin->AddRotation(0, 180, 0);
+	gremlin->LoadAnimation("assets/Meshes/gremlin@walk.fbx", "Walk");
+	gremlin->LoadAnimation("assets/Meshes/gremlin@run.fbx", "Run");
+	gremlin->PlayAnimation("Walk");
+	myScene.AddModel(gremlin);
+
+	auto gremlin2 = Model::Load("assets/Meshes/gremlin.fbx");
+	gremlin2->AddPosition(40, 0, 0);
+	gremlin2->AddRotation(0, 180, 0);
+	gremlin2->LoadAnimation("assets/Meshes/gremlin@walk.fbx", "Walk");
+	gremlin2->LoadAnimation("assets/Meshes/gremlin@run.fbx", "Run");
+	gremlin2->PlayAnimation("Run");
+	myScene.AddModel(gremlin2);
+
+	auto sphere = Model::Load("assets/meshes/sphere.fbx");
+	sphere->AddPosition(500, 250, 0);
+	sphere->SetScale(Utility::Vector3f(50, 50, 50));
+	myScene.AddModel(sphere);
+
+	/*auto skybox = Model::Load("meshes/Sphere.fbx");
+	skybox->SetScale(Vector3f(9000, 9000, 9000));
+	myScene.AddModel(skybox);*/
 
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->SetPosition(0, 100, 0);
+	camera->SetPosition(0, 100, -500);
 	myScene.SetCamera(camera);
+
+	std::shared_ptr<ParticleSystem> system = std::make_shared<ParticleSystem>();
+	system->SetPosition(0, 170, 0);
+	system->LoadAndInitialize("assets/Json/ParticleSystems/System1.json");
+	myScene.AddParticleSystem(system);
+
+	std::shared_ptr<ParticleSystem> fire = std::make_shared<ParticleSystem>();
+	fire->SetPosition(200, 97, 0);
+	fire->LoadAndInitialize("assets/Json/ParticleSystems/System2.json");
+	myScene.AddParticleSystem(fire);
 
 	myScene.SetDirectionalLight(DirectionalLight::Create(Utility::Vector3f::One(), 1.0f, Utility::Vector3f(45, -45, 0)));
 	myScene.SetAmbientLight(AmbientLight::Create("assets/Textures/skansen_cubemap.dds"));
+
+	//POINT LIGHT TESTING
+	auto pointLight = PointLight::Create({ 0, 1, 0 }, 100000, { -500, 50, 0 }, 300);
+	auto pointTestCube = Model::Load("Cube");
+	pointTestCube->ShouldSpin();
+	pointTestCube->SetPosition(-600, 50, 0);
+
+	/*auto pointLight2 = PointLight::Create({ 0, 1, 0 }, 100000, { -200, 50, 0 }, 300);
+	myScene.AddPointLight(pointLight2);*/
+
+	myScene.AddModel(pointTestCube);
+	myScene.AddPointLight(pointLight);
+	//
+
+	// Add some random pointlights
+	/*for (int i = 0; i < 32 - 1; ++i)
+	{
+		auto pointLight = PointLight::Create({ 
+			(std::rand() % 100) / 100.0f,  (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f }, 
+			10000, { (static_cast<float>(i) - 32 / 2 + 1.5f) * 100.0f, 50.0f, -80.0f }, 300);
+		myScene.AddPointLight(pointLight);
+	}*/
+	//
+
+	auto spotLight = SpotLight::Create({1, 0, 1}, 5999999, { 500, 600, 0 }, 1000, {90, 0, 0}, 75, 100);
+	myScene.AddSpotLight(spotLight);
+
+	auto instancedChest = Model::Load("assets/Meshes/Particle_Chest.fbx");
+	instancedChest->SetPosition(700, 0, 0);
+	instancedChest->SetRotation({ 0, 180, 0 });
+
+	for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 8; ++j)
+		{
+			Transform transform;
+			transform.SetPosition(instancedChest->GetTransform().GetPosition() + Utility::Vector3f(i * 200, 0, j * 200));
+			transform.SetRotation(instancedChest->GetTransform().GetRotation());
+			instancedChest->AddRenderedInstance(transform.GetMatrix());
+		}
+	}
+
+	instancedChest->UpdateInstanceBuffer();
+	myScene.AddModel(instancedChest);
 
 	myIntermediateTargetA = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	myIntermediateTargetB = RenderTarget::Create(clientSize.x, clientSize.y, DXGI_FORMAT_R32G32B32A32_FLOAT);
@@ -75,6 +196,10 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myDragAccept = false;
 
 	myEditor.Initialize(myClearColor, myLerpAnimations);
+
+	Hierarchy::Initialize();
+	ContentBrowser::Initialize();
+	TextureDropTarget::Initialize();
 
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
@@ -177,6 +302,32 @@ void GraphicsEngine::AcceptFiles(HWND aHwnd)
 
 void GraphicsEngine::HandleDroppedFile(const std::filesystem::path& aPath)
 {
+	ContentBrowser::HandleDragDrop(aPath);
+
+	//Old assignment
+	//if (aPath.extension().string() == ".dds")
+	//{
+	//	std::string pathToCheck = "assets/Textures/" + aPath.filename().string();
+
+	//	//Insert a 0
+	//	int count = 0;
+	//	if (std::filesystem::exists(pathToCheck))
+	//	{
+	//		pathToCheck.insert(pathToCheck.find_last_of("."), std::to_string(count));
+	//	}
+
+	//	while (std::filesystem::exists(pathToCheck))
+	//	{
+	//		count++;
+	//		pathToCheck.replace(pathToCheck.find_last_of(".") - 1, 1, std::to_string(count));
+	//	}
+
+	//	std::filesystem::copy(aPath, pathToCheck);
+	//}
+	//else
+	//{
+	//	FORMATWARNING("Only .dds texture files supported by drag&drop! Drag&Drop detected: {}", aPath.filename().string());
+	//}
 }
 
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
@@ -376,79 +527,61 @@ void GraphicsEngine::ResetViewport()
 	DX11::SetViewport(clientRect);
 }
 
-void GraphicsEngine::LoadModel(std::filesystem::path path, std::shared_ptr<Model> model)
-{
-	std::shared_ptr<Model> modelload = Model::Load(path);
-	model->myModelData = modelload->myModelData;
-	if (path.string() == "Assets/Meshes/pedal.fbx")
-	{
-		model->SetScale({ 10 });
-	}
-}
-
 void GraphicsEngine::CameraControls(std::shared_ptr<Camera> aCamera)
 {
-	if (!Utility::InputHandler::GetRightClickHeld())
+	float cameraSpeed = myCameraSpeed;
+
+	if (Utility::InputHandler::GetKeyHeld(VK_SHIFT))
 	{
-		const float step = Utility::Timer::GetDeltaTime() * myCameraSpeed;
+		cameraSpeed *= 4.0f;
+	}
+
+	const float step = Utility::Timer::GetDeltaTime() * cameraSpeed;
+
+	if (Utility::InputHandler::GetKeyHeld('W'))
+	{
 		aCamera->AddPosition(aCamera->GetTransform().GetForward() * step);
 	}
-	else
+	if (Utility::InputHandler::GetKeyHeld('A'))
 	{
-		float cameraSpeed = myCameraSpeed;
+		aCamera->AddPosition(aCamera->GetTransform().GetLeft() * step);
+	}
+	if (Utility::InputHandler::GetKeyHeld('S'))
+	{
+		aCamera->AddPosition(aCamera->GetTransform().GetBackward() * step);
+	}
+	if (Utility::InputHandler::GetKeyHeld('D'))
+	{
+		aCamera->AddPosition(aCamera->GetTransform().GetRight() * step);
+	}
 
-		if (Utility::InputHandler::GetKeyHeld(VK_SHIFT))
-		{
-			cameraSpeed *= 4.0f;
-		}
+	if (Utility::InputHandler::GetKeyHeld(VK_CONTROL))
+	{
+		aCamera->AddPosition(Utility::Vector3f(0, -1, 0) * step);
+	}
+	if (Utility::InputHandler::GetKeyHeld(VK_SPACE))
+	{
+		aCamera->AddPosition(Utility::Vector3f(0, 1, 0) * step);
+	}
 
-		const float step = Utility::Timer::GetDeltaTime() * cameraSpeed;
+	const int scrollDelta = Utility::InputHandler::GetScrollWheelDelta();
 
-		if (Utility::InputHandler::GetKeyHeld('W'))
-		{
-			aCamera->AddPosition(aCamera->GetTransform().GetForward() * step);
-		}
-		if (Utility::InputHandler::GetKeyHeld('A'))
-		{
-			aCamera->AddPosition(aCamera->GetTransform().GetLeft() * step);
-		}
-		if (Utility::InputHandler::GetKeyHeld('S'))
-		{
-			aCamera->AddPosition(aCamera->GetTransform().GetBackward() * step);
-		}
-		if (Utility::InputHandler::GetKeyHeld('D'))
-		{
-			aCamera->AddPosition(aCamera->GetTransform().GetRight() * step);
-		}
+	//Increase speed on scroll up
+	if (scrollDelta > 0)
+	{
+		myCameraSpeed += Utility::Timer::GetDeltaTime() * 1000;
+	}
+	//Decrease on scroll down
+	else if (scrollDelta < 0)
+	{
+		myCameraSpeed -= Utility::Timer::GetDeltaTime() * 1000;
+	}
 
-		if (Utility::InputHandler::GetKeyHeld(VK_CONTROL))
-		{
-			aCamera->AddPosition(Utility::Vector3f(0, -1, 0) * step);
-		}
-		if (Utility::InputHandler::GetKeyHeld(VK_SPACE))
-		{
-			aCamera->AddPosition(Utility::Vector3f(0, 1, 0) * step);
-		}
-
-		const int scrollDelta = Utility::InputHandler::GetScrollWheelDelta();
-
-		//Increase speed on scroll up
-		if (scrollDelta > 0)
-		{
-			myCameraSpeed += Utility::Timer::GetDeltaTime() * 1000;
-		}
-		//Decrease on scroll down
-		else if (scrollDelta < 0)
-		{
-			myCameraSpeed -= Utility::Timer::GetDeltaTime() * 1000;
-		}
-
-		if (Utility::InputHandler::GetRightClickHeld())
-		{
-			aCamera->SetRotation(Utility::Vector3f(
-				aCamera->GetTransform().GetRotation().x + static_cast<float>(Utility::InputHandler::GetMouseDelta().y) / 5,
-				aCamera->GetTransform().GetRotation().y + static_cast<float>(Utility::InputHandler::GetMouseDelta().x) / 5, 0));
-		}
+	if (Utility::InputHandler::GetRightClickHeld())
+	{
+		aCamera->SetRotation(Utility::Vector3f(
+			aCamera->GetTransform().GetRotation().x + static_cast<float>(Utility::InputHandler::GetMouseDelta().y) / 5, 
+			aCamera->GetTransform().GetRotation().y + static_cast<float>(Utility::InputHandler::GetMouseDelta().x) / 5, 0));
 	}
 }
 
@@ -500,43 +633,19 @@ void GraphicsEngine::RenderFrame()
 
 	InputRenderMode();
 
-	if ((models[0]->GetTransform().GetPosition().z - camera->GetTransform().GetPosition().z) < 1000.0f)
-	{
-		if (!myFirstThreadStarted)
-		{
-			std::thread firstThread(LoadModel, std::filesystem::path("Assets/Meshes/pedal.fbx"), models[0]);
-			firstThread.detach();
-			myFirstThreadStarted = true;
-		}
-	}
-
-	if ((models[1]->GetTransform().GetPosition().z - camera->GetTransform().GetPosition().z) < 1000.0f)
-	{
-		if (!mySecondThreadStarted)
-		{
-			std::thread secondThread(LoadModel, std::filesystem::path("assets/meshes/Particle_Chest.fbx"), models[1]);
-			secondThread.detach();
-			mySecondThreadStarted = true;
-		}
-	}
-
-	if ((models[2]->GetTransform().GetPosition().z - camera->GetTransform().GetPosition().z) < 1000.0f)
-	{
-		if (!myThirdThreadStarted)
-		{
-			std::thread thirdThread(LoadModel, std::filesystem::path("assets/meshes/Buddah_Test_Bakes_low.fbx"), models[2]);
-			thirdThread.detach();
-			myThirdThreadStarted = true;
-		}
-	}
-
 	//Update position of Directional light to help with shadow map resolution
 	myScene.GetDirectionalLight()->Update(camera->GetTransform().GetPosition());
 
 	CameraControls(camera);
 
+	float rotationPerSec = 30.0f;
+
 	for (auto& model : models) 
 	{
+		if (model->GetShouldSpin())
+		{
+			model->AddRotation(0.f, rotationPerSec * Utility::Timer::GetDeltaTime(), 0.f);
+		}
 		model->Update(myLerpAnimations);
 	}
 
@@ -544,6 +653,38 @@ void GraphicsEngine::RenderFrame()
 	{
 		particleSystem->Update();
 	}
+
+	std::filesystem::path path;
+	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
+
+	Hierarchy::Update();
+	ContentBrowser::Update();
+	TextureDropTarget::Update(path);
+
+	if (path != "")
+	{
+		Material mat;
+		mat.SetAlbedoTexture(Texture::Load(path));
+		mat.SetNormalMap(Texture::Load("assets/Textures/T_SpiderCat_N.DDS"));
+		mat.SetSurfaceTexture(Texture::Load("assets/Textures/T_SpiderCat_M.DDS"));
+		myScene.GetModels()[0]->SetMaterial(std::make_shared<Material>(mat));
+	}
+
+	//LEGENDARY TRANSPARENCY MODE
+	/*SetBlendState(BlendState::Additive);
+	SetDepthStencilState(DepthStencilState::ReadOnly);
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);
+	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myRenderMode);*/
+
+	//Render everything with Forward Renderer
+	/*SetBlendState(BlendState::None);
+	SetDepthStencilState(DepthStencilState::ReadWrite);
+	myForwardRenderer.RenderModels(camera, models, myScene.GetDirectionalLight(), myScene.GetAmbientLight(), myScene.GetLights(), myRenderMode);
+
+	SetBlendState(BlendState::Additive);
+	SetDepthStencilState(DepthStencilState::ReadOnly);
+	myForwardRenderer.RenderParticles(camera, myScene.GetParticleSystems(), myRenderMode);*/
+	//
 
 	//Render Models with deferred but particles with forward
 	ResetStates();

@@ -66,13 +66,8 @@ private:
 	void ResetStates();
 	void ResetViewport();
 
-	static void LoadModel(std::filesystem::path path, std::shared_ptr<Model> model);
-	static inline std::atomic_bool myFirstThreadStarted = false;
-	static inline std::atomic_bool mySecondThreadStarted = false;
-	static inline std::atomic_bool myThirdThreadStarted = false;
-
 	void CameraControls(std::shared_ptr<Camera> aCamera);
-	float myCameraSpeed = 250.0f;
+	float myCameraSpeed = 100.0f;
 
 	std::string RenderModeToString(RenderMode aRenderMode);
 

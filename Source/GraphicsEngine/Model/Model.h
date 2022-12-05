@@ -53,7 +53,6 @@ public:
 	int GetNumberOfInstances() const { return myRenderedInstances.size(); }
 	ComPtr<ID3D11Buffer> GetInstanceBuffer() const { return myInstanceBuffer; }
 
-	ModelData myModelData;
 private:
 	void AddSubMesh(const Mesh& aMesh);
 
@@ -65,6 +64,7 @@ private:
 	//TODO: Some sort of animation registry, maybe not AnimationData
 	//static std::unordered_map<std::string, AnimationData> ourAnimationRegistry;
 
+	ModelData myModelData;
 	std::unordered_map<std::string, std::shared_ptr<Animation>> myAnimations;
 
 	//TODO: REFACTOR ANIMATIONS
