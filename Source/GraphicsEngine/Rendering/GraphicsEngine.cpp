@@ -10,9 +10,6 @@
 #include "InputHandler.h"
 #include "Timer.h"
 #include "imgui/imgui.h"
-#include "Scene/ContentBrowser.h"
-#include "Scene/Hierarchy.h"
-#include "Scene/TextureDropTarget.h"
 
 bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWidth, unsigned someHeight, bool enableDeviceDebug)
 {
@@ -158,12 +155,6 @@ bool GraphicsEngine::Initialize(unsigned someX, unsigned someY, unsigned someWid
 	myLerpAnimations = true;
 	myDragAccept = false;
 
-	myEditor.Initialize(myClearColor, myLerpAnimations);
-
-	Hierarchy::Initialize();
-	ContentBrowser::Initialize();
-	TextureDropTarget::Initialize();
-
 	myGBuffer = GBuffer::CreateGBuffer(clientRect);
 
 	Utility::Timer::Update();
@@ -265,32 +256,7 @@ void GraphicsEngine::AcceptFiles(HWND aHwnd)
 
 void GraphicsEngine::HandleDroppedFile(const std::filesystem::path& aPath)
 {
-	ContentBrowser::HandleDragDrop(aPath);
-
-	//Old assignment
-	//if (aPath.extension().string() == ".dds")
-	//{
-	//	std::string pathToCheck = "assets/Textures/" + aPath.filename().string();
-
-	//	//Insert a 0
-	//	int count = 0;
-	//	if (std::filesystem::exists(pathToCheck))
-	//	{
-	//		pathToCheck.insert(pathToCheck.find_last_of("."), std::to_string(count));
-	//	}
-
-	//	while (std::filesystem::exists(pathToCheck))
-	//	{
-	//		count++;
-	//		pathToCheck.replace(pathToCheck.find_last_of(".") - 1, 1, std::to_string(count));
-	//	}
-
-	//	std::filesystem::copy(aPath, pathToCheck);
-	//}
-	//else
-	//{
-	//	FORMATWARNING("Only .dds texture files supported by drag&drop! Drag&Drop detected: {}", aPath.filename().string());
-	//}
+	
 }
 
 LRESULT CALLBACK GraphicsEngine::WinProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
@@ -615,22 +581,6 @@ void GraphicsEngine::RenderFrame()
 	for (auto& particleSystem : particleSystems)
 	{
 		particleSystem->Update();
-	}
-
-	std::filesystem::path path;
-	myEditor.UpdateEditorInterface(myClearColor, myLerpAnimations, path);
-
-	Hierarchy::Update();
-	ContentBrowser::Update();
-	TextureDropTarget::Update(path);
-
-	if (path != "")
-	{
-		Material mat;
-		mat.SetAlbedoTexture(Texture::Load(path));
-		mat.SetNormalMap(Texture::Load("assets/Textures/T_SpiderCat_N.DDS"));
-		mat.SetSurfaceTexture(Texture::Load("assets/Textures/T_SpiderCat_M.DDS"));
-		myScene.GetModels()[0]->SetMaterial(std::make_shared<Material>(mat));
 	}
 
 	//LEGENDARY TRANSPARENCY MODE

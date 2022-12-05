@@ -6,7 +6,6 @@
 #include "RenderStructs.h"
 #include "GBuffer.h"
 #include "ShadowRenderer.h"
-#include "Scene/Editor.h"
 #include "Rendering/RenderTarget.h"
 
 enum class BlendState
@@ -77,8 +76,6 @@ private:
 
 	SIZE myWindowSize{0, 0};
 	HWND myWindowHandle{};
-
-	Editor myEditor;
 
 	Scene myScene;
 

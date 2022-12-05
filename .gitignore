@@ -4,8 +4,11 @@
 #Intermediate files in my engine
 Intermediate/
 
-#Library Debug Database
-*.pdb
+#Debug Databases
+Bin/*.pdb
+
+#Engine-built libs
+Lib/
 
 #Project&Solution files
 *.sln
