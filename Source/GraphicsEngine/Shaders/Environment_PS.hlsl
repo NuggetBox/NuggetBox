@@ -45,7 +45,7 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 
 	//Calc Ambient+DirLight
 	float3 ambientLighting = EvaluateAmbience(environmentTexture, normal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
-	float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
+	float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, normal, roughness, LB_DirectionalLight.ObjectColor, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
 	//
 
 	//Apply SSAO
@@ -146,7 +146,7 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 
 				if (evaluatePointLight)
 				{
-					pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range,
+					pointLight += EvaluatePointLight(diffuseColor, specularColor, normal, roughness, light.ObjectColor, light.Intensity, light.Range,
 						light.Position, toEye, worldPosition.xyz);
 				}
 
@@ -180,7 +180,7 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 					}
 				}
 
-				spotLight += EvaluateSpotLight(diffuseColor, specularColor, normal, roughness, light.Color, light.Intensity, light.Range, 
+				spotLight += EvaluateSpotLight(diffuseColor, specularColor, normal, roughness, light.ObjectColor, light.Intensity, light.Range, 
 					light.Position, light.Direction, light.SpotOuterRadius, light.SpotInnerRadius, toEye, worldPosition.xyz);
 				break;
 			}
@@ -193,8 +193,8 @@ DeferredPixelOutput main(DeferredVertexToPixel input)
 	//
 
 	//assemble light, no more lineartogamma due to postprocess effects
-	result.Color.rgb = ambientLighting + directionalLighting + emissiveColor + pointLight + spotLight;
-	result.Color.a = 1.0f;
+	result.ObjectColor.rgb = ambientLighting + directionalLighting + emissiveColor + pointLight + spotLight;
+	result.ObjectColor.a = 1.0f;
 
 	//TODO: Rendermodes for deferred rendering
 

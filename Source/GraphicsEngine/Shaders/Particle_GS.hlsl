@@ -28,7 +28,7 @@ void main(point ParticleVertexData input[1], inout TriangleStream<ParticleGeomet
 		result.Position = mul(FB_ToView, inputParticle.Position);
 		result.Position.xy += offsets[i] * inputParticle.Scale.xy;
 		result.Position = mul(FB_ToProjection, result.Position);
-		result.Color = inputParticle.Color;
+		result.ObjectColor = inputParticle.ObjectColor;
 		result.LifeTime = inputParticle.LifeTime;
 		result.UV = uvs[i];
 		result.Velocity = inputParticle.Velocity;

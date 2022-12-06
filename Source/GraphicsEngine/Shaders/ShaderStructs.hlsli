@@ -72,7 +72,7 @@ struct DeferredVertexToPixel
 
 struct DeferredPixelOutput
 {
-	float4 Color : SV_TARGET;
+	float4 ObjectColor : SV_TARGET;
 };
 
 SamplerState defaultSampler : register(s0);

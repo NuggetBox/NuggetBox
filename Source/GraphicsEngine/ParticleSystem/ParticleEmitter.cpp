@@ -94,7 +94,7 @@ void ParticleEmitter::Update()
 		//Do not show dead particles
 		if (particle.LifeTime <= 0.0f)
 		{
-			particle.Color.w = 0.0f;
+			particle.ObjectColor.w = 0.0f;
 		}
 		else
 		{
@@ -123,10 +123,10 @@ void ParticleEmitter::Update()
 				particle.Scale.y = Utility::Lerp(myEmitterSettings.StartScale.y, myEmitterSettings.EndScale.y, lifePercentage);
 				particle.Scale.z = Utility::Lerp(myEmitterSettings.StartScale.z, myEmitterSettings.EndScale.z, lifePercentage);
 
-				particle.Color.x = Utility::Lerp(myEmitterSettings.StartColor.x, myEmitterSettings.EndColor.x, lifePercentage);
-				particle.Color.y = Utility::Lerp(myEmitterSettings.StartColor.y, myEmitterSettings.EndColor.y, lifePercentage);
-				particle.Color.z = Utility::Lerp(myEmitterSettings.StartColor.z, myEmitterSettings.EndColor.z, lifePercentage);
-				particle.Color.w = Utility::Lerp(myEmitterSettings.StartColor.w, myEmitterSettings.EndColor.w, lifePercentage);
+				particle.ObjectColor.x = Utility::Lerp(myEmitterSettings.StartColor.x, myEmitterSettings.EndColor.x, lifePercentage);
+				particle.ObjectColor.y = Utility::Lerp(myEmitterSettings.StartColor.y, myEmitterSettings.EndColor.y, lifePercentage);
+				particle.ObjectColor.z = Utility::Lerp(myEmitterSettings.StartColor.z, myEmitterSettings.EndColor.z, lifePercentage);
+				particle.ObjectColor.w = Utility::Lerp(myEmitterSettings.StartColor.w, myEmitterSettings.EndColor.w, lifePercentage);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ void ParticleEmitter::InitParticle(size_t aParticleIndex, float aLifeTime)
 	myParticles[aParticleIndex].Position.x = GetTransform().GetXPosition();
 	myParticles[aParticleIndex].Position.y = GetTransform().GetYPosition();
 	myParticles[aParticleIndex].Position.z = GetTransform().GetZPosition();
-	myParticles[aParticleIndex].Color = myEmitterSettings.StartColor;
+	myParticles[aParticleIndex].ObjectColor = myEmitterSettings.StartColor;
 
 	//TODO: Temp cone emitter code
 	float x = (std::rand() % 200) - 100;

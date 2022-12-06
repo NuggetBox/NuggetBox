@@ -9,7 +9,7 @@ std::shared_ptr<SpotLight> SpotLight::Create(Utility::Vector3f aColor, float anI
 	spotLight.SetRotation(aRotation);
 	spotLight.SetPosition(aPosition);
 
-	spotLight.myLightBufferData.Color = aColor;
+	spotLight.myLightBufferData.ObjectColor = aColor;
 	spotLight.myLightBufferData.Intensity = anIntensity;
 	spotLight.myLightBufferData.Position = aPosition;
 	spotLight.myLightBufferData.Range = aRange;

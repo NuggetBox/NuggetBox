@@ -3,7 +3,7 @@ struct LightData
 	float4x4 ViewMatrix[6];
 	float4x4 ProjectionMatrix;
 
-	float3 Color;
+	float3 ObjectColor;
 	float Intensity;
 
 	float3 Direction;

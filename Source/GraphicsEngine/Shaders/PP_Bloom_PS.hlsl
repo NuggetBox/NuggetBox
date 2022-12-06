@@ -17,7 +17,7 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	//Scaled
 	{
 		float3 scaledResource = resource1.rgb * (1.0f - saturate(resource2.rgb));
-		result.Color.rgb = scaledResource + resource2.rgb;
+		result.ObjectColor.rgb = scaledResource + resource2.rgb;
 	}
 
 	//Luminance based
@@ -27,6 +27,6 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 		result.Color.rgb = resource1 + scaledResource;
 	}*/
 
-	result.Color.a = 1.0f;
+	result.ObjectColor.a = 1.0f;
 	return result;
 }

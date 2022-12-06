@@ -10,7 +10,7 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	if (color.a < 0.05f)
 	{
 		discard;
-		result.Color = 0;
+		result.ObjectColor = 0;
 		return result;
 	}
 
@@ -48,20 +48,20 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 
 		if (luminance >= cutOff)
 		{
-			result.Color.rgb = resource;
+			result.ObjectColor.rgb = resource;
 		}
 		else if (luminance >= cutOff * 0.5f)
 		{
 			float fade = luminance / cutOff;
 			fade = pow(fade, 5);
-			result.Color.rgb = resource * fade;
+			result.ObjectColor.rgb = resource * fade;
 		}
 		else
 		{
-			result.Color.rgb = 0;
+			result.ObjectColor.rgb = 0;
 		}
 	}
 
-	result.Color.a = 1.0f;
+	result.ObjectColor.a = 1.0f;
 	return result;
 }

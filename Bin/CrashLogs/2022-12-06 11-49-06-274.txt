@@ -1,0 +1,15 @@
+[11:48:49.677] [MESSAGE] Initialized Window
+[11:48:49.870] [MESSAGE] Created Swap Chain
+[11:48:49.879] [MESSAGE] Created Depth Buffer
+[11:48:49.879] [MESSAGE] Blend States setup successfully
+[11:48:49.879] [MESSAGE] Depth Stencil States setup successfully
+[11:48:49.880] [MESSAGE] Sampler States Setup Successfully
+[11:48:49.881] [MESSAGE] Created Directional Light
+[11:48:49.913] [MESSAGE] Loaded Texture skansen_cubemap.dds
+[11:48:49.913] [MESSAGE] Created Ambient Light
+[11:48:49.920] [ERROR in Texture.cpp:20] Error HRESULT recieved: Invalid Args
+[11:49:03.199] [MESSAGE] Loaded Texture Red.dds
+[11:49:03.204] [ERROR in Texture.cpp:20] Error HRESULT recieved: Invalid Args
+[11:49:05.282] [MESSAGE] Loaded Texture Blue.dds
+[11:49:05.288] [ERROR in Texture.cpp:20] Error HRESULT recieved: Invalid Args
+[11:49:06.274] [MESSAGE] Crash signal detected, writing crash log file

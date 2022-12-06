@@ -39,7 +39,7 @@ struct LightBufferData
 	Utility::Matrix4x4<float> ViewMatrix[6];
 	Utility::Matrix4x4<float> ProjectionMatrix;
 
-	Utility::Vector3f Color;
+	Utility::Vector3f ObjectColor;
 	float Intensity;
 
 	Utility::Vector3f Direction;

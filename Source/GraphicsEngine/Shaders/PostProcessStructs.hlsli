@@ -6,7 +6,7 @@ struct PostProcessVertexToPixel
 
 struct PostProcessPixelOutput
 {
-	float4 Color : SV_TARGET;
+	float4 ObjectColor : SV_TARGET;
 };
 
 Texture2D TextureSlot1 : register(t0);

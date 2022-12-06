@@ -10,7 +10,7 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	if (color.a < 0.05f)
 	{
 		discard;
-		result.Color = 0;
+		result.ObjectColor = 0;
 		return result;
 	}
 
@@ -32,8 +32,8 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 
 	color /= Quality * Directions - 15.0f;
 
-	result.Color.rgb = color.rgb;
-	result.Color.a = 1.0f;
+	result.ObjectColor.rgb = color.rgb;
+	result.ObjectColor.a = 1.0f;
 
 	return result;
 }

@@ -9,10 +9,10 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	if (color.a < 0.05f)
 	{
 		discard;
-		result.Color = 0;
+		result.ObjectColor = 0;
 		return result;
 	}
 
-	result.Color = color;
+	result.ObjectColor = color;
 	return result;
 }

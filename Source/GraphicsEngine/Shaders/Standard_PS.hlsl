@@ -55,7 +55,7 @@ PixelOutput main(VertexToPixel input)
 	const float3 L = -1 * normalize(LB_DirectionalLight.Direction);
 	const float3 N = pixelNormal;
 	const float LdotN = saturate(dot(L, N));
-	const float3 C = LB_DirectionalLight.Color;
+	const float3 C = LB_DirectionalLight.ObjectColor;
 	const float I = LB_DirectionalLight.Intensity;
 	const float3 finalPixelColor = LdotN * C * I;
 	float3 diffuse = albedo * finalPixelColor;
@@ -70,7 +70,7 @@ PixelOutput main(VertexToPixel input)
 	const float3 specularColor = lerp((float3)0.04f, albedo, metalness);
 	const float3 diffuseColor = lerp((float3)0.00f, albedo, 1 - metalness);
 	const float3 ambientLighting = EvaluateAmbience(environmentTexture, pixelNormal, input.myNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor, defaultSampler);
-	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, pixelNormal, roughness, LB_DirectionalLight.Color, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
+	const float3 directionalLighting = EvaluateDirectionalLight(diffuseColor, specularColor, pixelNormal, roughness, LB_DirectionalLight.ObjectColor, LB_DirectionalLight.Intensity, -LB_DirectionalLight.Direction, toEye);
 	//
 
 	float3 pointLight = 0;
@@ -92,14 +92,14 @@ PixelOutput main(VertexToPixel input)
 			//Point Light
 			case 2:
 			{
-				pointLight += EvaluatePointLight(diffuseColor, specularColor, pixelNormal, roughness, light.Color, light.Intensity, light.Range, 
+				pointLight += EvaluatePointLight(diffuseColor, specularColor, pixelNormal, roughness, light.ObjectColor, light.Intensity, light.Range, 
 					light.Position, toEye, input.myVertexPosition.xyz);
 				break;
 			}
 			//Spot Light
 			case 3:
 			{
-				spotLight += EvaluateSpotLight(diffuseColor, specularColor, pixelNormal, roughness, light.Color, light.Intensity, light.Range, 
+				spotLight += EvaluateSpotLight(diffuseColor, specularColor, pixelNormal, roughness, light.ObjectColor, light.Intensity, light.Range, 
 					light.Position, light.Direction, light.SpotOuterRadius, light.SpotInnerRadius, toEye, input.myVertexPosition.xyz);
 				break;
 			}

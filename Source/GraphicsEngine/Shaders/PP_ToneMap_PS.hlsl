@@ -13,22 +13,22 @@ PostProcessPixelOutput main(PostProcessVertexToPixel input)
 	switch(mode)
 	{
 		case 1:
-			result.Color.rgb = LinearToGamma(Tonemap_Reinhard2(color));
+			result.ObjectColor.rgb = LinearToGamma(Tonemap_Reinhard2(color));
 			break;
 		case 2:
-			result.Color.rgb = Tonemap_UnrealEngine(color);
+			result.ObjectColor.rgb = Tonemap_UnrealEngine(color);
 			break;
 		case 3:
-			result.Color.rgb = LinearToGamma(Tonemap_ACES(color));
+			result.ObjectColor.rgb = LinearToGamma(Tonemap_ACES(color));
 			break;
 		case 4:
-			result.Color.rgb = LinearToGamma(Tonemap_Lottes(color));
+			result.ObjectColor.rgb = LinearToGamma(Tonemap_Lottes(color));
 			break;
 		default:
-			result.Color.rgb = LinearToGamma(color);
+			result.ObjectColor.rgb = LinearToGamma(color);
 			break;
 	}
 
-	result.Color.a = 1;
+	result.ObjectColor.a = 1;
 	return result;
 }

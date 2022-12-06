@@ -6,7 +6,7 @@ std::shared_ptr<PointLight> PointLight::Create(Utility::Vector3f aColor, float a
 	PointLight pointLight;
 	ZeroMemory(&pointLight.myLightBufferData, sizeof(LightBufferData));
 
-	pointLight.myLightBufferData.Color = aColor;
+	pointLight.myLightBufferData.ObjectColor = aColor;
 	pointLight.myLightBufferData.Intensity = anIntensity;
 	pointLight.myLightBufferData.Position = aPosition;
 	pointLight.myLightBufferData.Range = aRange;

@@ -10,7 +10,7 @@ std::shared_ptr<DirectionalLight> DirectionalLight::Create(Utility::Vector3f aCo
 
 	directionalLight.myTransform.SetRotation(aRotation);
 
-	directionalLight.myLightBufferData.Color = aColor;
+	directionalLight.myLightBufferData.ObjectColor = aColor;
 	directionalLight.myLightBufferData.Intensity = anIntensity;
 	directionalLight.myLightBufferData.Direction = directionalLight.myTransform.GetForward();
 	directionalLight.myLightBufferData.LightType = static_cast<unsigned>(LightType::DirectionalLight);
@@ -49,7 +49,7 @@ void DirectionalLight::SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer)
 void DirectionalLight::Update(const Utility::Vector3f& aCameraPosition)
 {
 	//TODO: Find a good distance to move the camera relative to player camera
-	Utility::Vector3f moveBackDiff = myTransform.GetBackward() * 1000.0f;
-	myTransform.SetPosition(aCameraPosition + moveBackDiff);
+	Utility::Vector3f moveBackDiff = myTransform.GetDown() * 1500.0f + myTransform.GetRight();
+	myTransform.SetPosition(aCameraPosition);
 	myLightBufferData.ViewMatrix[0] = Utility::Matrix4f::GetFastInverse(myTransform.GetMatrix());
 }
