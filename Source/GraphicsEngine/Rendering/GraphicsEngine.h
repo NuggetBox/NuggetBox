@@ -57,6 +57,8 @@ public:
 	void SetRenderMode(RenderMode aRenderMode);
 	RenderMode GetRenderMode() const;
 
+	static inline std::atomic_bool globalLockingTime;
+
 private:
 	void SetupBlendStates();
 	void SetupDepthStencilStates();

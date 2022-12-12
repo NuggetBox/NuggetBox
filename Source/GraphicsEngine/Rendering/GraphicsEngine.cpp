@@ -149,132 +149,170 @@ void GraphicsEngine::InputRenderMode()
 
 void GraphicsEngine::LoadGameObjects(const char* aPath)
 {
-	if (std::filesystem::exists(aPath))
+	if (!globalLockingTime)
 	{
-		std::ifstream file(aPath);
-		nlohmann::json json;
-		json.parse(file);
+		globalLockingTime = true;
 
-		int index = 0;
-		while (json[index].is_object())
+		myScene.GetModels().clear();
+		myGameObjects.clear();
+
+		if (std::filesystem::exists(aPath))
 		{
-			GameObject gameObject;
-			gameObject.Color = static_cast<GameObject::ObjectColor>(json["Color"]);
-			gameObject.Type = static_cast<GameObject::ObjectType>(json["Type"]);
-			gameObject.ID = json["ID"];
-			gameObject.Position.x = json["Position"]["X"];
-			gameObject.Position.y = json["Position"]["Y"];
-			gameObject.Direction.x = json["Direction"]["X"];
-			gameObject.Direction.y = json["Direction"]["Y"];
-				
-			index++;
+			std::ifstream file(aPath);
+			nlohmann::json json;
+			json = json.parse(file);
+
+			int index = 0;
+			while (json[index].is_object())
+			{
+				GameObject gameObject;
+				gameObject.Color = static_cast<GameObject::ObjectColor>(json[index]["Color"]);
+				gameObject.Type = static_cast<GameObject::ObjectType>(json[index]["Type"]);
+				gameObject.ID = json[index]["ID"];
+				gameObject.Position.x = json[index]["Position"]["X"];
+				gameObject.Position.y = json[index]["Position"]["Y"];
+				gameObject.Direction.x = json[index]["Direction"]["X"];
+				gameObject.Direction.y = json[index]["Direction"]["Y"];
+				myGameObjects.push_back(gameObject);
+
+				index++;
+			}
 		}
-	}
-	else
-	{
-		//Create initial primitives with different shapes & colors
-		GameObject blueCube;
-		blueCube.Type = GameObject::ObjectType::Cube;
-		blueCube.Color = GameObject::ObjectColor::Blue;
-		myGameObjects.push_back(blueCube);
+		else
+		{
+			//Create initial primitives with different shapes & colors
+			GameObject blueCube;
+			blueCube.Type = GameObject::ObjectType::Cube;
+			blueCube.Color = GameObject::ObjectColor::Blue;
+			myGameObjects.push_back(blueCube);
 
-		GameObject greenCube;
-		greenCube.Type = GameObject::ObjectType::Cube;
-		greenCube.Color = GameObject::ObjectColor::Green;
-		myGameObjects.push_back(greenCube);
+			GameObject greenCube;
+			greenCube.Type = GameObject::ObjectType::Cube;
+			greenCube.Color = GameObject::ObjectColor::Green;
+			myGameObjects.push_back(greenCube);
 
-		GameObject whiteCube;
-		whiteCube.Type = GameObject::ObjectType::Cube;
-		whiteCube.Color = GameObject::ObjectColor::White;
-		myGameObjects.push_back(whiteCube);
+			GameObject whiteCube;
+			whiteCube.Type = GameObject::ObjectType::Cube;
+			whiteCube.Color = GameObject::ObjectColor::White;
+			myGameObjects.push_back(whiteCube);
 
-		GameObject yellowCube;
-		yellowCube.Type = GameObject::ObjectType::Cube;
-		yellowCube.Color = GameObject::ObjectColor::Yellow;
-		myGameObjects.push_back(yellowCube);
+			GameObject yellowCube;
+			yellowCube.Type = GameObject::ObjectType::Cube;
+			yellowCube.Color = GameObject::ObjectColor::Yellow;
+			myGameObjects.push_back(yellowCube);
 
-		GameObject bluePyramid;
-		bluePyramid.Type = GameObject::ObjectType::Pyramid;
-		bluePyramid.Color = GameObject::ObjectColor::Blue;
-		myGameObjects.push_back(bluePyramid);
+			GameObject bluePyramid;
+			bluePyramid.Type = GameObject::ObjectType::Pyramid;
+			bluePyramid.Color = GameObject::ObjectColor::Blue;
+			myGameObjects.push_back(bluePyramid);
 
-		GameObject greenPyramid;
-		greenPyramid.Type = GameObject::ObjectType::Pyramid;
-		greenPyramid.Color = GameObject::ObjectColor::Green;
-		myGameObjects.push_back(greenPyramid);
+			GameObject greenPyramid;
+			greenPyramid.Type = GameObject::ObjectType::Pyramid;
+			greenPyramid.Color = GameObject::ObjectColor::Green;
+			myGameObjects.push_back(greenPyramid);
 
-		GameObject whitePyramid;
-		whitePyramid.Type = GameObject::ObjectType::Pyramid;
-		whitePyramid.Color = GameObject::ObjectColor::White;
-		myGameObjects.push_back(whitePyramid);
+			GameObject whitePyramid;
+			whitePyramid.Type = GameObject::ObjectType::Pyramid;
+			whitePyramid.Color = GameObject::ObjectColor::White;
+			myGameObjects.push_back(whitePyramid);
 
-		GameObject blueCylinder;
-		blueCylinder.Type = GameObject::ObjectType::Cylinder;
-		blueCylinder.Color = GameObject::ObjectColor::Blue;
-		myGameObjects.push_back(blueCylinder);
+			GameObject blueCylinder;
+			blueCylinder.Type = GameObject::ObjectType::Cylinder;
+			blueCylinder.Color = GameObject::ObjectColor::Blue;
+			myGameObjects.push_back(blueCylinder);
 
-		GameObject greenCylinder;
-		greenCylinder.Type = GameObject::ObjectType::Cylinder;
-		greenCylinder.Color = GameObject::ObjectColor::Green;
-		myGameObjects.push_back(greenCylinder);
+			GameObject greenCylinder;
+			greenCylinder.Type = GameObject::ObjectType::Cylinder;
+			greenCylinder.Color = GameObject::ObjectColor::Green;
+			myGameObjects.push_back(greenCylinder);
 
-		GameObject whiteCylinder;
-		whiteCylinder.Type = GameObject::ObjectType::Cylinder;
-		whiteCylinder.Color = GameObject::ObjectColor::White;
-		myGameObjects.push_back(whiteCylinder);
+			GameObject whiteCylinder;
+			whiteCylinder.Type = GameObject::ObjectType::Cylinder;
+			whiteCylinder.Color = GameObject::ObjectColor::White;
+			myGameObjects.push_back(whiteCylinder);
 
-		//Set initial ID and positions
+			//Set initial ID and positions
+			for (int i = 0; i < myGameObjects.size(); ++i)
+			{
+				myGameObjects[i].ID = i;
+				myGameObjects[i].Position = Utility::Vector2f((std::rand() % 1920) - 960, (std::rand() % 1080) - 540);
+				myGameObjects[i].Direction = Utility::Vector2f(((std::rand() % 200) - 100) / 100.0f, ((std::rand() % 200) - 100) / 100.0f);
+				myGameObjects[i].Direction *= 300.0f;
+			}
+		}
+
+		//Initialize models & materials
+		auto red = std::make_shared<Material>();
+		red->SetAlbedoTexture(Texture::Load("Assets/Textures/Red.dds"));
+		red->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
+		red->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
+		auto blue = std::make_shared<Material>();
+		blue->SetAlbedoTexture(Texture::Load("Assets/Textures/Blue.dds"));
+		blue->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
+		blue->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
+		auto green = std::make_shared<Material>();
+		green->SetAlbedoTexture(Texture::Load("Assets/Textures/Green.dds"));
+		green->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
+		green->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
+		auto white = std::make_shared<Material>();
+		white->SetAlbedoTexture(Texture::Load("Assets/Textures/White.dds"));
+		white->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
+		white->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
+		auto yellow = std::make_shared<Material>();
+		yellow->SetAlbedoTexture(Texture::Load("Assets/Textures/Yellow.dds"));
+		yellow->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
+		yellow->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
+
 		for (int i = 0; i < myGameObjects.size(); ++i)
 		{
-			myGameObjects[i].ID = i;
-			myGameObjects[i].Position = Utility::Vector2f((std::rand() % 1920) - 960, (std::rand() % 1080) - 540);
-			myGameObjects[i].Direction = Utility::Vector2f(((std::rand() % 200) - 100) / 100.0f, ((std::rand() % 200) - 100) / 100.0f);
+			std::shared_ptr<Model> model;
+			if (myGameObjects[i].Type == GameObject::ObjectType::Cube) model = Model::Load("Cube");
+			else if (myGameObjects[i].Type == GameObject::ObjectType::Pyramid) model = Model::Load("Pyramid");
+			else if (myGameObjects[i].Type == GameObject::ObjectType::Cylinder) model = Model::Load("Cylinder");
+
+			if (myGameObjects[i].Color == GameObject::ObjectColor::Blue) model->SetMaterial(blue);
+			else if (myGameObjects[i].Color == GameObject::ObjectColor::Green) model->SetMaterial(green);
+			else if (myGameObjects[i].Color == GameObject::ObjectColor::White) model->SetMaterial(white);
+			else if (myGameObjects[i].Color == GameObject::ObjectColor::Yellow)  model->SetMaterial(yellow);
+
+			float y = myGameObjects[i].Type == GameObject::ObjectType::Cylinder ? 0.0f : 50.0f;
+			model->SetPosition(myGameObjects[i].Position.x, y, myGameObjects[i].Position.y);
+
+			myScene.AddModel(model);
 		}
-	}
 
-	//Initialize models & materials
-	auto red = std::make_shared<Material>();
-	red->SetAlbedoTexture(Texture::Load("Assets/Textures/Red.dds"));
-	red->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
-	red->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
-	auto blue = std::make_shared<Material>();
-	blue->SetAlbedoTexture(Texture::Load("Assets/Textures/Blue.dds"));
-	blue->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
-	blue->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
-	auto green = std::make_shared<Material>();
-	green->SetAlbedoTexture(Texture::Load("Assets/Textures/Green.dds"));
-	green->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
-	green->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
-	auto white = std::make_shared<Material>();
-	white->SetAlbedoTexture(Texture::Load("Assets/Textures/White.dds"));
-	white->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
-	white->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
-	auto yellow = std::make_shared<Material>();
-	yellow->SetAlbedoTexture(Texture::Load("Assets/Textures/Yellow.dds"));
-	yellow->SetNormalMap(Texture::Load("Assets/Textures/Defaults/T_Default_N.dds"));
-	yellow->SetSurfaceTexture(Texture::Load("Assets/Textures/Defaults/T_Default_M.dds"));
-
-	for (int i = 0; i < myGameObjects.size(); ++i)
-	{
-		std::shared_ptr<Model> model;
-		if (myGameObjects[i].Type == GameObject::ObjectType::Cube) model = Model::Load("Cube");
-		else if (myGameObjects[i].Type == GameObject::ObjectType::Pyramid) model = Model::Load("Pyramid");
-		else if (myGameObjects[i].Type == GameObject::ObjectType::Cylinder) model = Model::Load("Cylinder");
-
-		if (myGameObjects[i].Color == GameObject::ObjectColor::Blue) model->SetMaterial(blue);
-		else if (myGameObjects[i].Color == GameObject::ObjectColor::Green) model->SetMaterial(green);
-		else if (myGameObjects[i].Color == GameObject::ObjectColor::White) model->SetMaterial(white);
-		else if (myGameObjects[i].Color == GameObject::ObjectColor::Yellow)  model->SetMaterial(yellow);
-
-		float y = myGameObjects[i].Type == GameObject::ObjectType::Cylinder ? 0.0f : 50.0f;
-		model->SetPosition(myGameObjects[i].Position.x, y, myGameObjects[i].Position.y);
-
-		myScene.AddModel(model);
+		globalLockingTime = false;
 	}
 }
 
 void GraphicsEngine::SaveGameObjects(const char* aPath)
 {
+	if (!globalLockingTime)
+	{
+		globalLockingTime = true;
+
+		std::ofstream file(aPath);
+		nlohmann::json json;
+
+		for (int i = 0; i < myGameObjects.size(); ++i)
+		{
+			auto& gameObject = myGameObjects[i];
+			auto& j = json[i];
+
+			j["Color"] = static_cast<GameObject::ObjectColor>(gameObject.Color);
+			j["Type"] = static_cast<GameObject::ObjectColor>(gameObject.Type);
+
+			j["ID"] = gameObject.ID;
+			j["Position"]["X"] = gameObject.Position.x;
+			j["Position"]["Y"] = gameObject.Position.y;
+			j["Direction"]["X"] = gameObject.Direction.x;
+			j["Direction"]["Y"] = gameObject.Direction.y;
+		}
+
+		file << json;
+
+		globalLockingTime = false;
+	}
 }
 
 void GraphicsEngine::AcceptFiles(HWND aHwnd)
@@ -599,9 +637,29 @@ void GraphicsEngine::RenderFrame()
 
 	CameraControls(camera);
 
-	for (auto& model : models) 
+	if (Utility::InputHandler::GetKeyDown('S'))
 	{
+		SaveGameObjects("Level.json");
+	}
 
+	if (Utility::InputHandler::GetKeyDown('L'))
+	{
+		LoadGameObjects("Level.json");
+	}
+
+	for (int i = 0; i < myGameObjects.size(); ++i)
+	{
+		myGameObjects[i].Position += myGameObjects[i].Direction * Utility::Timer::GetDeltaTime();
+
+		if (myGameObjects[i].Position.x < -960.0f) myGameObjects[i].Position.x = 960.0f;
+		if (myGameObjects[i].Position.x > 960.0f) myGameObjects[i].Position.x = -960.0f;
+		if (myGameObjects[i].Position.y < -540.0f) myGameObjects[i].Position.y = 540.0f;
+		if (myGameObjects[i].Position.y > 540.0f) myGameObjects[i].Position.y = -540.0f;
+
+		auto& model = myScene.GetModels()[i];
+
+		float y = myGameObjects[i].Type == GameObject::ObjectType::Cylinder ? 0.0f : 50.0f;
+		model->SetPosition(myGameObjects[i].Position.x, y, myGameObjects[i].Position.y);
 
 		model->Update(myLerpAnimations);
 	}
